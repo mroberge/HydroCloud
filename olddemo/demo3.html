@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8">
+	<title>Histogram</title>
+	<link rel="shortcut icon" href="favicon.ico" />
+	<style>
+		svg {
+			font: 10px sans-serif;
+		}
+
+		.axisTitle {
+			font: 14px serif;
+		}
+
+		.Title {
+			font: 20px serif;
+		}
+
+		.subTitle {
+			font: 12px serif;
+		}
+
+		path {
+			fill: lightskyblue;
+		}
+
+		.axis path, .axis line {
+			fill: none;
+			stroke: #000;
+			shape-rendering: crispEdges;
+		}
+
+		.bar rect {
+			fill: lightskyblue;
+			shape-rendering: crispEdges;
+		}
+
+		.bar text {
+			fill: black;
+		}
+
+		.brush .extent {
+			stroke: #fff;
+			fill-opacity: .125;
+			shape-rendering: crispEdges;
+		}
+
+	</style>
+	<body>
+		<h1>Histogram</h1>
+		<p>This demonstration page generates a histogram on a logarithmic scale from 28,721 observations of stream discharge.</p>
+		<p>
+			This file created by Martin Roberge on March 7, 2013.
+		</p>
+		<script src="d3/d3.v3.js"></script>
+		<script>
+			var data = [];
+
+			function getUSGS(id) {//This function is for grabbing USGS data objects that are stored locally in WaterJSON format.
+				var filename = id + ".txt";
+				d3.json(filename, function(error, json) {
+					if (error)
+						return console.warn(error);
+					temp = json.value.timeSeries[0].values[0].value;
+					temp.forEach(function(d, index, array) {
+						d.date = new Date(d.dateTime);
+						d.value = +d.value;
+						data[index] = {
+							date : d.date,
+							value : d.value
+						};
+					});
+
+					flowduration(id);
+				});
+			};
+
+
+
+			function flowduration(id) {
+				var sitename = id;
+				var margin = {
+					top : 10,
+					right : 10,
+					bottom : 100,
+					left : 70
+				}
+				var width = 960 - margin.left - margin.right
+				var height = 500 - margin.top - margin.bottom
+
+				var values = [];
+				data.forEach(function(element, index, array){
+					values[index]=element.value;
+				})
+				console.log(values);
+				// A formatter for counts.
+				var formatCount = d3.format(",.0f");
+				//A formatter for frequencies.
+				var formatFreq = d3.format("%");
+
+				var min = d3.min(values);
+				var max = d3.max(values);
+				var x = d3.scale.log()
+					.domain(d3.extent(values)).nice()//This is a little too "nice".  Pads the min and max too much.
+					//.domain([min,max]) //No padding here. the result will spill over the end.
+					.range([0, width]);
+
+					
+				var low = x.domain()[0];
+
+				var high = x.domain()[1];
+				//console.log("low, min, max, high: " + low, min, max, high);
+				
+				var myBins = [];
+				var i = 0;
+				do {
+					myBins[i]=low * Math.pow(1.1,i);//vary the first number to determine the number of bins. Must be above 1.0
+					//console.log(i, myBins[i], high)
+					i++;
+				}while (myBins[i-1]<high);
+				//console.log(myBins);
+				
+				
+				var counts = d3.layout.histogram()
+					.bins(myBins) //This works well- I created a logarithmic sequence of bins called myBins.
+					.frequency(false)//change from counts to frequencies
+					(values);
+					
+				var y = d3.scale.linear()
+					.domain([0, d3.max(counts, function(d) {return d.y;})])
+					.range([height, 0]);
+
+				var xAxis = d3.svg.axis().scale(x).orient("bottom");
+				var yAxis = d3.svg.axis().scale(y).orient("left");
+
+				var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+				var bar = svg.selectAll(".bar").data(counts).enter().append("g").attr("class", "bar").attr("transform", function(d) {
+					return "translate(" + x(d.x) + "," + y(d.y) + ")";
+				});
+
+				bar.append("rect").attr("x", 1).attr("width", width / myBins.length-1).attr("height", function(d) {
+				//bar.append("rect").attr("x", 1).attr("width", 10).attr("height", function(d) {
+					return height - y(d.y);
+				});
+
+				
+				svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
+				svg.append("g").attr("class", "y axis").call(yAxis);
+				svg.append("svg:text").attr("class", "axisTitle").attr("x", ((width/2)-48)).attr("y", height + 30).text("Discharge (cfs)");
+			}
+
+		</script>
+		<script>
+			getUSGS("USGS01646500");
+		</script>
+	</body>
+</html>
