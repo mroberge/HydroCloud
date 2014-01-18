@@ -120,10 +120,7 @@ var timeData =[
 
                 d3.select("#chart_div1")
                     .datum([elevData])
-                    .call(scatterChart()
-                        //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
-                        //.y(function(d) { return +d[1]; })
-                    );
+                    .call(scatterChart());
 
 var secondChart = scatterChart().width(window.innerWidth-10);
 
