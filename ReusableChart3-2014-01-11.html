@@ -1,158 +1,104 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		
-		<title>ReusableChart</title>
-		<style>
-			/* "class" referenced by a dot:  .pass { background-color: limegreen } */
-			/* "id" referenced by a hash: #menu {} */
-			
-			.line {
-				fill: none;
-				stroke: blue;
-				stroke-width: 1px;
-				}
-				
-			.line:hover {
-			    stroke-width: 2px;
-			}	
+  <head>
+    <meta charset="utf-8" />
 
-			.area {
-				fill: #969696;
-				}
-				
-		svg {
-            font: 10px sans-serif;
-        }
+    <title>ReusableChart</title>
+    <style>
+      /* "class" referenced by a dot:  .pass { background-color: limegreen } */
+      /* "id" referenced by a hash: #menu {} */
 
+      .line {
+        fill: none;
+        stroke: blue;
+        stroke-width: 1px;
+      }
 
+      .line:hover {
+        stroke-width: 2px;
+      }
 
-        .axis path, .axis line {
-            fill: none;
-            stroke: #000;
-            shape-rendering: crispEdges;
-        }
+      .area {
+        fill: #969696;
+      }
 
+      svg {
+        font: 10px sans-serif;
+      }
 
-		</style>
-		
-	</head>
-	<body>
-		<h1>Towards a Reusable Chart</h1>
-		<div id="chart_div1">chart1</div>
-		<div id="chart_div2">chart2</div>
-		<div id="chart_div3">scatter chart</div>
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
 
-		<script src="./lib/d3/d3.js">//Place scripts at end of body.</script>
-		<script src="reuseableScatterChart.js"></script>
-		<script>//Based on Mike Bostock's 'Towards Reusable Charts' http://bost.ocks.org/mike/chart/
+    </style>
 
+  </head>
+  <body>
+    <h1>Towards a Reusable Chart</h1>
+    <div id="chart_div1">
+      chart1
+    </div>
+    <div id="chart_div2">
+      chart2
+    </div>
+    <div id="chart_div3">
+      scatter chart
+    </div>
 
+    <script src="./lib/d3/d3.js">
+      //Place scripts at end of body.
+    </script>
+    <script src="reuseableScatterChart.js"></script>
+    <script>
+      //Based on Mike Bostock's 'Towards Reusable Charts' http://bost.ocks.org/mike/chart/
 
-var elevData = [
-    [0,118],
-    [10,114],
-    [20,120],
-    [30,102],
-    [40,124],
-    [50,100],
-    [60,85],
-    [70,131],
-    [80,122],
-    [90,150],
-    [100,109],
-    [130,121]
-];
+      var elevData = [[0, 118], [10, 114], [20, 120], [30, 102], [40, 124], [50, 100], [60, 85], [70, 131], [80, 122], [90, 150], [100, 109], [130, 121]];
 
-var elevData2 = [
-    [0,128],
-    [15,154],
-    [25,140],
-    [33,282],
-    [48,134],
-    [52,140],
-    [61,115],
-    [75,131],
-    [87,102],
-    [93,110],
-    [109,149],
-    [110,131]
-];
+      var elevData2 = [[0, 128], [15, 154], [25, 140], [33, 282], [48, 134], [52, 140], [61, 115], [75, 131], [87, 102], [93, 110], [109, 149], [110, 131]];
 
-var elevData3 = [
-    [0,56],
-    [15,54],
-    [25,40],
-    [33,62],
-    [48,34],
-    [52,40],
-    [61,15],
-    [75,31],
-    [87,10],
-    [93,11],
-    [109,49],
-    [150,0]
-];
+      var elevData3 = [[0, 56], [15, 54], [25, 40], [33, 62], [48, 34], [52, 40], [61, 15], [75, 31], [87, 10], [93, 11], [109, 49], [150, 0]];
 
-//console.log(elevData2);
+      //console.log(elevData2);
 
-var bigData = [elevData,elevData2, elevData3];
+      var bigData = [elevData, elevData2, elevData3];
 
-//console.log(bigData);
+      //console.log(bigData);
 
-var timeData =[
-["date","price"],
-["Jan 2000", 1394.46],
-["Feb 2000", 1366.42],
-["Mar 2000",1498.58],
-["Apr 2000",1452.43],
-["May 2000",1420.6],
-["Jun 2000",1454.6],
-["Jul 2000",1430.83],
-["Aug 2000",1517.68]
-];
+      var timeData = [["date", "price"], ["Jan 2000", 1394.46], ["Feb 2000", 1366.42], ["Mar 2000", 1498.58], ["Apr 2000", 1452.43], ["May 2000", 1420.6], ["Jun 2000", 1454.6], ["Jul 2000", 1430.83], ["Aug 2000", 1517.68]];
 
+      //console.log(elevData);
+      //console.log("elevData: "+ elevData[0][1]);
+      //console.log(elevData[0][1]);
 
-//console.log(elevData);
-//console.log("elevData: "+ elevData[0][1]);
-//console.log(elevData[0][1]);
+      d3.select("#chart_div1").datum([elevData]).call(scatterChart());
 
-                d3.select("#chart_div1")
-                    .datum([elevData])
-                    .call(scatterChart());
+      var secondChart = scatterChart().width(window.innerWidth - 10);
 
-var secondChart = scatterChart().width(window.innerWidth-10);
+      d3.select("#chart_div2").datum([elevData, elevData3]).call(secondChart
+      //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
+      //.y(function(d) { return +d[1]; })
+      );
 
-                d3.select("#chart_div2")
-                    .datum([elevData,elevData3])
-                    .call(secondChart
-                        //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
-                        //.y(function(d) { return +d[1]; })
-                    );  
+      var thirdChart = scatterChart().width(window.innerWidth - 20);
+      //thirdChart.width(200);
+      var thirdDiv = d3.select("#chart_div3");
+      thirdDiv.datum(bigData).call(thirdChart
+      //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
+      //.y(function(d) { return +d[1]; })
+      );
+      window.onresize = resized;
 
-var thirdChart = scatterChart().width(window.innerWidth-20);
-//thirdChart.width(200);
-var thirdDiv = d3.select("#chart_div3");
-                thirdDiv
-                    .datum(bigData)
-                    .call(thirdChart
-                        //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
-                        //.y(function(d) { return +d[1]; })
-                    ); 
-window.onresize = resized;
+      function resized() {
+        //secondChart.width(window.innerWidth-10);
+        //secondDiv.call(secondChart);
+        thirdChart.width(window.innerWidth - 10);
+        thirdDiv.call(thirdChart);
+      }
 
-function resized(){
-    //secondChart.width(window.innerWidth-10);
-    //secondDiv.call(secondChart);
-    thirdChart.width(window.innerWidth-10);
-    thirdDiv.call(thirdChart);
-}
+      //thirdDiv.call(thirdChart);
 
-
-//thirdDiv.call(thirdChart);
-
-            
-		</script>
-	</body>
+    </script>
+  </body>
 </html>
