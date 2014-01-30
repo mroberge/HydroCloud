@@ -5,8 +5,6 @@
 
     <title>ReusableChart</title>
     <style>
-      /* "class" referenced by a dot:  .pass { background-color: limegreen } */
-      /* "id" referenced by a hash: #menu {} */
 
       .line {
         fill: none;
@@ -77,7 +75,8 @@
       var secondChart = scatterChart().width(window.innerWidth - 10);
 
       d3.select("#chart_div2").datum([elevData, elevData3]).call(secondChart
-      //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
+      //use .x to replace the default function to access the x element.
+      //.x(function(d) { return +d[0]; })
       //.y(function(d) { return +d[1]; })
       );
 
@@ -85,7 +84,7 @@
       //thirdChart.width(200);
       var thirdDiv = d3.select("#chart_div3");
       thirdDiv.datum(bigData).call(thirdChart
-      //.x(function(d) { return +d[0]; })//use this to replace the default function to access the x element.
+      //.x(function(d) { return +d[0]; })
       //.y(function(d) { return +d[1]; })
       );
       window.onresize = resized;
