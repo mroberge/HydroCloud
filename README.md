@@ -8,14 +8,29 @@ Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how 
 
 Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project. 
 
-A Note to Visitors:
-------------------
-Please excuse the mess while I migrate the project to GitHub. I am still getting used to the system and figuring out the best way to take advantage of all of GitHub's features.
-
 Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/) (not ready yet)
 * Unit tests: [http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html](http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html)
-* temp D3js demo: [http://mroberge.github.io/HydroCloud/olddemo/mapdemo.html](http://mroberge.github.io/HydroCloud/olddemo/mapdemo.html)
+* temp D3js demo: [http://mroberge.github.io/HydroCloud/olddemo/demo.html](http://mroberge.github.io/HydroCloud/olddemo/mapdemo.html)
+
+###Features
+* Map view shows location of stream gauges & NEXRAD imagery
+* click on a stream gauge to select it for plotting
+* Plot multiple time series:
+  * stream hydrographs
+  * hyetographs
+* Plot time series as a culmulative probability function (flow duration graph)
+* Plot time series as a histogram
+* Axes that show discharge can plot linear or logarithmic
+* User can download time-series data as a *.CSV file for MS Excel, JSON, or tab-delimited.
+* Works on mobile.
+* Stream gauge data from USGS
+* NEXRAD time series from our cloud-based back-end system
+
+###A Note to Visitors:
+
+Please excuse the mess while I migrate the project to GitHub. I am still getting used to the system and figuring out the best way to take advantage of all of GitHub's features.
 
 Thanks!
+
 -Marty
