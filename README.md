@@ -4,6 +4,8 @@ HydroCloud is a system for viewing and analyzing hydrologic data from multiple s
 
 This repository hosts the web client.
 
+Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how I have organized the folders, branches, and for the style guide.
+
 Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project. 
 
 A Note to Visitors:
@@ -14,3 +16,6 @@ Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/) (not ready yet)
 * Unit tests: [http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html](http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html)
 * temp D3js demo: [http://mroberge.github.io/HydroCloud/olddemo/mapdemo.html](http://mroberge.github.io/HydroCloud/olddemo/mapdemo.html)
+
+Thanks!
+-Marty
