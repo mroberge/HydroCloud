@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="favicon.ico" />
+	<meta name="description" content="A light-weight data viewer for hydrologic data" />
+	<meta name="author" content="Martin Roberge" />
+	<meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
+	<link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+	<title>HydroCloud hydrograph demo</title>
+	<style type="text/css">
+		svg {
+			font: 10px sans-serif;
+		}
+
+		.axisTitle {
+			font: 14px serif;
+		}
+
+		.Title {
+			font: 20px serif;
+		}
+
+		.subTitle {
+			font: 12px serif;
+		}
+
+		path {
+			stroke: lightskyblue;
+			fill: none;
+					}
+		
+		path:hover {
+			stroke: red;
+		}
+
+		.axis path, .axis line {
+			fill: none;
+			stroke: #000;
+			shape-rendering: crispEdges;
+		}
+
+		.bar rect {
+			fill: lightskyblue;
+			shape-rendering: crispEdges;
+		}
+
+		.bar text {
+			fill: black;
+		}
+
+		.brush .extent {
+			stroke: #fff;
+			fill-opacity: .125;
+			shape-rendering: crispEdges;
+		}
+
+	</style>
+	    <style>
+	    /*These styles are from mobileMap.html*/
+      html, body, #map_canvas {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+    </style>
+	<style type="text/css">
+      
+      #pull {
+        font-family: 'Vollkorn', serif;
+        font-style: italic;
+        font-size: 24pt;
+        color: white;
+        text-shadow: 3px 3px 10px #002;
+      }
+      
+      header h1 {
+        margin: 0;
+        padding-left: 16px;
+        padding-bottom: 5px;
+        font-family: 'Vollkorn', serif;
+        font-style: italic;
+        font-size: 24pt;
+        color: white;
+        text-shadow: 3px 3px 10px #002;
+        background-color: #679;
+      }
+      footer {
+        height: 20px;
+        clear: both;
+        margin: 0;
+        padding: 0;
+        color: #bbb;
+        text-align: center;
+        font-size: 8pt;
+      }
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="normalize.css">
+	<link rel="stylesheet" href="mobile.css">
+	<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+	<script src="lib/jquery-1.9.1.min.js"></script>
+	<script>
+
+
+		$(function() {
+			//Menu design from Thoriq Firdaus www.hongkiat.com/blog/responsive-web-nav/
+			var pull 		= $('#pull');
+				menu 		= $('nav ul');
+				menuHeight	= menu.height();
+
+			$(pull).on('click', function(e) {
+				e.preventDefault();
+				menu.slideToggle();
+			});
+			
+			$(intro).on('click',function(e){
+        console.log("intro");
+        d3.select("svg").remove();
+        document.getElementById("map_canvas").style.display = "none";
+        document.getElementById("introText").style.display = "block";
+      });
+      
+      $(showMap).on('click',function(e){
+        console.log("map");
+        d3.select("svg").remove();
+        document.getElementById("map_canvas").style.display = "block";
+        document.getElementById("introText").style.display = "none";
+      });
+      
+			$(hydro).on('click',function(e){
+				console.log("hydro");
+				d3.select("svg").remove();
+        document.getElementById("map_canvas").style.display = "none";
+        document.getElementById("introText").style.display = "none";
+				hydrograph("name");
+			});
+			
+			$(flow).on('click',function(e){
+				console.log("flow");
+				d3.select("svg").remove();
+        document.getElementById("map_canvas").style.display = "none";
+        document.getElementById("introText").style.display = "none";
+				flowduration("name");
+			});
+			
+			$(histo).on('click',function(e){
+				console.log("histo");
+				d3.select("svg").remove();
+        document.getElementById("map_canvas").style.display = "none";
+        document.getElementById("introText").style.display = "none";
+				loghistogram("name");
+			});
+			
+			$(window).resize(function(){
+        		var w = $(window).width();
+        		if(w > 320 && menu.is(':hidden')) {
+        			menu.removeAttr('style');
+        		myScreen.width = $(window).width()-20;
+				myScreen.height = $(window).height()-(header+60);
+				hydrograph(id);
+        		}
+    		});
+		});
+	</script>
+	    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
+    <script>
+      var map;
+      function initialize() {
+        //document.getElementById('map_canvas').style.display = "none";
+        var mapOptions = {
+          zoom: 8,
+          center: new google.maps.LatLng(39.395, -76.609),
+          mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions);
+        
+        tileNEX = new google.maps.ImageMapType({
+            getTileUrl: function(tile, zoom) {
+                return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/" + zoom + "/" + tile.x + "/" + tile.y +".png?"+ (new Date()).getTime(); 
+            },
+            tileSize: new google.maps.Size(256, 256),
+            opacity:0.90,
+            name : 'NEXRAD',
+            isPng: true
+        });
+
+        
+        goes = new google.maps.ImageMapType({
+            getTileUrl: function(tile, zoom) {
+                return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/goes-east-vis-1km-900913/" + zoom + "/" + tile.x + "/" + tile.y +".png?"+ (new Date()).getTime(); 
+            },
+            tileSize: new google.maps.Size(256, 256),
+            opacity:0.40,
+            name : 'GOES East Vis',
+            isPng: true
+        });
+
+        map.overlayMapTypes.push(null); // create empty overlay entry
+        //map.overlayMapTypes.setAt("0",goes);
+        map.overlayMapTypes.setAt("1",tileNEX);
+
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+<body>
+	<header><h1 id="logo">HydroCloud</h1></header>
+	
+	<nav class="clearfix">
+		<ul class="clearfix">
+			<li><a id="intro" href="#">Introduction</a></li>
+			<li><a id="showMap" href="#">Map/Select</a></li>
+			<li><a id="hydro" href="#">Hydrograph</a></li>
+			<li><a id="flow" href="#">Flow Duration</a></li>
+			<li><a id="histo" href="#">Histogram</a></li>
+			<li><a  href="http://www.towson.edu/set/Projects/HydroCloud.asp">About</a></li>
+		</ul>
+		<a href="#" id="pull">HydroCloud</a>
+	</nav>
+
+		<label for="selectRes">Resource request:</label>
+		<select name="selectRes" id="selectRes">
+			<option value="default" disabled="disabled" selected="selected" style="display:none">Please select a resource.</option>
+			<option value="01584050">USGS site 01584050</option>
+			<option value="01585200">USGS site 01585200</option>
+			<option value="01583500">USGS site 01583500</option>
+			<option value="local">local data (same origin)</option>
+		</select>
+		<button id="submitReq" onclick="dataReq();">Submit request</button>
+		
+
+		<script src="lib/d3/d3.min.js"></script>
+		<script src="hydroGraphs2.js"></script>
+		<script src="getData.js"> </script>
+		<script>
+			function dataReq(){
+				console.log("dataReq");
+				var select = document.getElementById('selectRes');
+				var siteID = select.options[select.selectedIndex].value;
+				getUSGS(siteID);
+				}
+		</script>
+<div id="introText" style="display:none">
+  <h2>Description of the HydroCloud project</h2>
+  <p>HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
+    Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
+  </p>
+</div>
+<div id="target"> </div>
+<div id="map_canvas"> </div>
+		<script>
+			var myEvent = new Event("parsed");
+			var body = document.getElementById('target');
+			//console.log(body);
+			body.addEventListener("parsed", function (e){alert("parsed!" + e);}, false);
+		
+			var myEvent2 = new CustomEvent("parsed2",{'detail':"site name"});
+			//everytime we load new data, it draws a hydrograph. That's not what we want anymore.
+			//body.addEventListener("parsed2", function (e){hydrograph(e.detail);}, false);
+		  body.addEventListener("parsed2", function (e){console.log("data loaded: site " + e.detail);}, false);
+		
+			var data = [];
+			getUSGS("01646500");//Initial data request.
+
+		</script>
+	</body>
+</html>
