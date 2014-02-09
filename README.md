@@ -11,7 +11,6 @@ Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early pro
 Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/) (not ready yet)
 * Unit tests: [http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html](http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html)
-* temp D3js demo: [http://mroberge.github.io/HydroCloud/olddemo/demo.html](http://mroberge.github.io/HydroCloud/olddemo/mapdemo.html)
 
 ###Features
 * Map view shows location of stream gauges & NEXRAD imagery
