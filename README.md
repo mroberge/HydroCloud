@@ -6,11 +6,10 @@ This repository hosts the web client.
 
 Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how I have organized the folders, branches, and for the style guide.
 
-Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project. 
-
 Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/)
 * Unit tests: [http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html](http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html)
+* Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project.
 
 ###Features
 * Map view shows location of stream gauges & NEXRAD imagery
