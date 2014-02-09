@@ -8,7 +8,7 @@ Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how 
 
 Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/)
-* A reformulated version of the hydrograph function rewritten as a closure: [http://mroberge.github.io/HydroCloud/reuseableChart.html](http://mroberge.github.io/HydroCloud/reuseableChart.html)
+* A reformulated version of the hydrograph function rewritten as a closure: [reuseableChart.html](http://mroberge.github.io/HydroCloud/reuseableChart.html)
 * Unit tests: [http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html](http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html)
 * Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project.
 
