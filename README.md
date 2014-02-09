@@ -9,7 +9,7 @@ Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how 
 Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project. 
 
 Links:
-* Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/) (not ready yet)
+* Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/)
 * Unit tests: [http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html](http://mroberge.github.io/HydroCloud/spec/SpecRunner.ReusableScatterChart.html)
 
 ###Features
