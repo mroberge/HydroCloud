@@ -10,6 +10,7 @@ describe ("The reusableScatterChart library", function(){
         expect(scatterChart).toBeDefined();
         //expect(scatterChart).not.toBeDefined();
         expect(scatterChart().x).toBeDefined();
+        expect(scatterChart().y).toBeDefined();
         expect(scatterChart().margin).toBeDefined();
         expect(scatterChart().width).toBeDefined();
         
