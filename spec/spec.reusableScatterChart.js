@@ -8,21 +8,28 @@ describe ("The D3 library", function(){
 describe ("The reusableScatterChart library", function(){
     it("has been loaded", function(){
         expect(scatterChart).toBeDefined();
-        //expect(scatterChart).not.toBeDefined();
+    });
+    
+    it("includes margin, width, and height", function(){
+        expect(scatterChart().margin).toBeDefined();
+        expect(scatterChart().width).toBeDefined();
+        expect(scatterChart().height).toBeDefined();
         expect(scatterChart().x).toBeDefined();
         expect(scatterChart().y).toBeDefined();
-        expect(scatterChart().margin).toBeDefined();
-        expect(scatterChart().width).toBeDefined();
+
+        // .margin returns the function.
+        expect(scatterChart().margin).toEqual(jasmine.any(Function));
+        //  .margin() returns the default value.
+        expect(scatterChart().margin()).toEqual(jasmine.any(Number));
+        expect(scatterChart().width).toEqual(jasmine.any(Function));
+        expect(scatterChart().width()).toEqual(jasmine.any(Number));
+        expect(scatterChart().height).toEqual(jasmine.any(Function));
+        expect(scatterChart().height()).toEqual(jasmine.any(Number));
+        expect(scatterChart().x).toEqual(jasmine.any(Function));
+        expect(scatterChart().x()).toEqual(jasmine.any(Number));
+        expect(scatterChart().y).toEqual(jasmine.any(Function));
+        expect(scatterChart().y()).toEqual(jasmine.any(Number));
         
-    });
-    it("includes margin, width, and height", function(){
-        expect(scatterChart().width).toBeDefined();
-        expect(scatterChart().width()).toEqual(760);
-        expect(scatterChart().margin).toBeDefined();
-        expect(scatterChart().height).toBeDefined();
-        
-        expect(scatterChart().width).toEqual(jasmine.any(Function));// .width returns the function.
-        expect(scatterChart().width()).toEqual(jasmine.any(Number));//  .width() returns the default value.
         var test = scatterChart().width(5);
         //console.log(test);
         //console.log(scatterChart().width(5));
