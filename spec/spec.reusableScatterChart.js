@@ -10,27 +10,38 @@ describe ("The reusableScatterChart library", function(){
         expect(scatterChart).toBeDefined();
     });
     
-    it("includes margin, width, and height", function(){
+    it("includes margin, width, height, x, and y...", function(){
         expect(scatterChart().margin).toBeDefined();
         expect(scatterChart().width).toBeDefined();
         expect(scatterChart().height).toBeDefined();
         expect(scatterChart().x).toBeDefined();
         expect(scatterChart().y).toBeDefined();
+    });
 
+	it("...which return functions...", function(){
         // .margin returns the function.
         expect(scatterChart().margin).toEqual(jasmine.any(Function));
-        //  .margin() returns the default value.
-        expect(scatterChart().margin()).toEqual(jasmine.any(Number));
         expect(scatterChart().width).toEqual(jasmine.any(Function));
-        expect(scatterChart().width()).toEqual(jasmine.any(Number));
         expect(scatterChart().height).toEqual(jasmine.any(Function));
+		expect(scatterChart().x).toEqual(jasmine.any(Function));
+		expect(scatterChart().y).toEqual(jasmine.any(Function));
+	});
+
+    it("...or values.", function(){
+        //  .margin() returns the default value.
+        expect(scatterChart().margin()).toEqual(jasmine.any(Object));
+		expect(scatterChart().margin().top).toEqual(jasmine.any(Number));
+		expect(scatterChart().margin().right).toEqual(jasmine.any(Number));
+		expect(scatterChart().margin().bottom).toEqual(jasmine.any(Number));
+		expect(scatterChart().margin().left).toEqual(jasmine.any(Number));
+        expect(scatterChart().width()).toEqual(jasmine.any(Number));
         expect(scatterChart().height()).toEqual(jasmine.any(Number));
-        expect(scatterChart().x).toEqual(jasmine.any(Function));
-        expect(scatterChart().x()).toEqual(jasmine.any(Number));
-        expect(scatterChart().y).toEqual(jasmine.any(Function));
-        expect(scatterChart().y()).toEqual(jasmine.any(Number));
+		//.x and .y return function xValue() and yValue().
+        expect(scatterChart().x()).toEqual(jasmine.any(Function));
+        expect(scatterChart().y()).toEqual(jasmine.any(Function));
         
-        var test = scatterChart().width(5);
+
+        //var test = scatterChart().width(5);
         //console.log(test);
         //console.log(scatterChart().width(5));
         //expect(scatterChart().width(5)).toBe(test);  //doesn't work.
