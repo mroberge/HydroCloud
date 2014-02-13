@@ -268,17 +268,7 @@ function flowduration(id) {
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("Number of measurements that exceed this discharge");
 };
 
-function downloadCSV(id) {
-  data.forEach(function(d, index, array) {
-    var mstime = (+d.date / 86400000) + 25569;
-    data[index].mstimeGMT = mstime.toFixed(4);
-    //console.log(data.mstimeGMT);
-  });
-  //console.log(data);
-  var output = d3.csv.format(data).replace(/\n/g, "\r\n");
-  //console.log(output);
-  CSVfile("data.csv", output);
-}
+
 
 function CSVfile(filename, text) {
   var link = document.createElement('a');
@@ -311,7 +301,7 @@ function USGScsv(id) {//This will request fresh data and output as CSV.
       var mstime = (+date / 86400000) + 25569;
       data[index] = {
         date : date,
-        MStimeGMT : mstime.toFixed(4),
+        MStimeGMT : mstime.toFixed(5),
         value : value
       };
     });
@@ -324,3 +314,18 @@ function USGScsv(id) {//This will request fresh data and output as CSV.
   });
 
 };
+
+
+
+function dataCsv(id) {
+  data.forEach(function(d, index, array){
+    var mstime = (+d.date / 86400000) + 25569;
+    data[index].MStimeGMT = mstime.toFixed(5);
+  });
+  text = d3.csv.format(data).replace(/\n/g, "\r\n");
+  var link = document.createElement('a');
+  var filename = id + ".csv";
+  link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+  link.setAttribute('download', filename);
+  link.click();
+}
