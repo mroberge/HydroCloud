@@ -119,8 +119,8 @@ function getUSGS2(id) {
     //Don't assume data are sorted by date yet.
     //document.getElementById("body").dispatchEvent(dataEvent);//post flag that the new data is ready
 
-    //body.dispatchEvent(myEvent);
-    body.dispatchEvent(myEvent2);
+
+//    body.dispatchEvent(myEvent2);//IE doesn't allow the creation of custom events.
 
     //hydrograph(id);
     //flowduration(id);
@@ -156,7 +156,7 @@ function getUSGS(id) {
       };
     });
 
-    target.dispatchEvent(myEvent2);
+//    target.dispatchEvent(myEvent2);
     //hydrograph(id);
     //flowduration(id);
     //loghistogram(id);
