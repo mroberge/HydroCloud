@@ -97,7 +97,7 @@
   <link rel="stylesheet" href="resources/normalize.css">
   <link rel="stylesheet" href="resources/mobile.css">
   <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
-  <script src="lib/jquery-1.9.1.min.js"></script>
+  <script src="lib/jquery/jquery-2.0.2.js"></script>
   <script>
     $(function() {
       //Menu design from Thoriq Firdaus www.hongkiat.com/blog/responsive-web-nav/
@@ -110,25 +110,18 @@
         menu.slideToggle();
       });
 
-      $(intro).on('click', function(e) {
-        console.log("intro");
-        d3.select("svg").remove();
-        document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("introText").style.display = "block";
-      });
-
       $(showMap).on('click', function(e) {
         console.log("map");
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "block";
-        document.getElementById("introText").style.display = "none";
+        document.getElementById("aboutText").style.display = "none";
       });
 
       $(hydro).on('click', function(e) {
         console.log("hydro");
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("introText").style.display = "none";
+        document.getElementById("aboutText").style.display = "none";
         hydrograph("name");
       });
 
@@ -136,7 +129,7 @@
         console.log("flow");
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("introText").style.display = "none";
+        document.getElementById("aboutText").style.display = "none";
         flowduration("name");
       });
 
@@ -144,8 +137,20 @@
         console.log("histo");
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("introText").style.display = "none";
+        document.getElementById("aboutText").style.display = "none";
         loghistogram("name");
+      });
+
+      $(download).on('click', function(e) {
+        console.log("download");
+        dataCsv("stream");
+      });
+
+      $(about).on('click', function(e) {
+        console.log("about");
+        d3.select("svg").remove();
+        document.getElementById("map_canvas").style.display = "none";
+        document.getElementById("aboutText").style.display = "block";
       });
 
       $(window).resize(function() {
@@ -154,7 +159,7 @@
           menu.removeAttr('style');
           myScreen.width = $(window).width() - 20;
           myScreen.height = $(window).height() - (header + 60);
-          hydrograph(id);
+          //hydrograph(id);
         }
       });
     });
@@ -209,9 +214,6 @@
     <nav class="clearfix">
       <ul class="clearfix">
         <li>
-          <a id="intro" href="#">Introduction</a>
-        </li>
-        <li>
           <a id="showMap" href="#">Map/Select</a>
         </li>
         <li>
@@ -224,7 +226,10 @@
           <a id="histo" href="#">Histogram</a>
         </li>
         <li>
-          <a  href="http://www.towson.edu/set/Projects/HydroCloud.asp">About</a>
+          <a id="download" href="#">Download</a>
+        </li>
+        <li>
+          <a id="about" href="#">About</a>
         </li>
       </ul>
       <a href="#" id="pull">HydroCloud</a>
@@ -243,8 +248,8 @@
     </button>
 
     <script src="lib/d3/d3.min.js"></script>
-    <script src="hydroGraphs2.js"></script>
-    <script src="getData.js"></script>
+    <script src="src/hydroGraphs2.js"></script>
+    <script src="src/getData.js"></script>
     <script>
       function dataReq() {
         console.log("dataReq");
@@ -253,17 +258,24 @@
         getUSGS(siteID);
       }
     </script>
-    <div id="introText" style="display:none">
+    <div id="aboutText" style="display:none">
       <h2>Description of the HydroCloud project</h2>
       <p>
         HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
         Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
       </p>
+    <p>Learn more about the HydroCloud project:</p>
+    <ul>
+      <li>Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a></li>
+      <li>The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a></li>
+    </ul>
+              
     </div>
     <div id="target"> </div>
     <div id="map_canvas"> </div>
     <script>
-      var myEvent = new Event("parsed");
+    /*
+      var myEvent = new Event("parsed");//IE doesn't let you create custom events.
       var body = document.getElementById('target');
       //console.log(body);
       body.addEventListener("parsed", function(e) {
@@ -278,7 +290,7 @@
       body.addEventListener("parsed2", function(e) {
         console.log("data loaded: site " + e.detail);
       }, false);
-
+*/
       var data = [];
       getUSGS("01646500");
       //Initial data request.
