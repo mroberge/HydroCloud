@@ -1,211 +1,29 @@
 <!DOCTYPE html>
 <html>
   <meta charset="utf-8">
-  <link rel="shortcut icon" href="resources/favicon.ico" />
   <meta name="description" content="A light-weight data viewer for hydrologic data" />
   <meta name="author" content="Martin Roberge" />
   <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
-  <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
-
-  <title>HydroCloud hydrograph demo</title>
-  <style type="text/css">
-    svg {
-      font: 10px sans-serif;
-    }
-
-    .axisTitle {
-      font: 14px serif;
-    }
-
-    .Title {
-      font: 20px serif;
-    }
-
-    .subTitle {
-      font: 12px serif;
-    }
-
-    path {
-      stroke: lightskyblue;
-      fill: none;
-    }
-
-    path:hover {
-      stroke: red;
-    }
-
-    .axis path, .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-
-    .bar rect {
-      fill: lightskyblue;
-      shape-rendering: crispEdges;
-    }
-
-    .bar text {
-      fill: black;
-    }
-
-    .brush .extent {
-      stroke: #fff;
-      fill-opacity: .125;
-      shape-rendering: crispEdges;
-    }
-
-  </style>
-  <style>
-    html, body, #map_canvas {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-  </style>
-  <style type="text/css">
-    #pull {
-      font-family: 'Vollkorn', serif;
-      font-style: italic;
-      font-size: 24pt;
-      color: white;
-      text-shadow: 3px 3px 10px #002;
-    }
-
-    header h1 {
-      margin: 0;
-      padding-left: 16px;
-      padding-bottom: 5px;
-      font-family: 'Vollkorn', serif;
-      font-style: italic;
-      font-size: 24pt;
-      color: white;
-      text-shadow: 3px 3px 10px #002;
-      background-color: #679;
-    }
-    footer {
-      height: 20px;
-      clear: both;
-      margin: 0;
-      padding: 0;
-      color: #bbb;
-      text-align: center;
-      font-size: 8pt;
-    }
-  </style>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>HydroCloud hydrograph demo</title>
+
+  <link rel="shortcut icon" href="resources/favicon.ico" />
+  <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+  <link href="src/hydrocloud.css" rel="stylesheet" type="text/css" media="all">
   <link rel="stylesheet" href="resources/normalize.css">
   <link rel="stylesheet" href="resources/mobile.css">
   <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
   <script src="lib/jquery/jquery-2.0.2.js"></script>
-  <script>
-    $(function() {
-      //Menu design from Thoriq Firdaus www.hongkiat.com/blog/responsive-web-nav/
-      var pull = $('#pull');
-      menu = $('nav ul');
-      menuHeight = menu.height();
-
-      $(pull).on('click', function(e) {
-        e.preventDefault();
-        menu.slideToggle();
-      });
-
-      $(showMap).on('click', function(e) {
-        console.log("map");
-        d3.select("svg").remove();
-        document.getElementById("map_canvas").style.display = "block";
-        document.getElementById("aboutText").style.display = "none";
-      });
-
-      $(hydro).on('click', function(e) {
-        console.log("hydro");
-        d3.select("svg").remove();
-        document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("aboutText").style.display = "none";
-        hydrograph("name");
-      });
-
-      $(flow).on('click', function(e) {
-        console.log("flow");
-        d3.select("svg").remove();
-        document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("aboutText").style.display = "none";
-        flowduration("name");
-      });
-
-      $(histo).on('click', function(e) {
-        console.log("histo");
-        d3.select("svg").remove();
-        document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("aboutText").style.display = "none";
-        loghistogram("name");
-      });
-
-      $(download).on('click', function(e) {
-        console.log("download");
-        dataCsv("stream");
-      });
-
-      $(about).on('click', function(e) {
-        console.log("about");
-        d3.select("svg").remove();
-        document.getElementById("map_canvas").style.display = "none";
-        document.getElementById("aboutText").style.display = "block";
-      });
-
-      $(window).resize(function() {
-        var w = $(window).width();
-        if (w > 320 && menu.is(':hidden')) {
-          menu.removeAttr('style');
-          myScreen.width = $(window).width() - 20;
-          myScreen.height = $(window).height() - (header + 60);
-          //hydrograph(id);
-        }
-      });
-    });
-  </script>
   <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
-  <script>
-    var map;
-    function initialize() {
-      //document.getElementById('map_canvas').style.display = "none";
-      var mapOptions = {
-        zoom : 8,
-        center : new google.maps.LatLng(39.395, -76.609),
-        mapTypeId : google.maps.MapTypeId.TERRAIN
-      };
-      map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+  <script src="lib/d3/d3.min.js"></script>
+  <script src="src/hydroGraphs2.js"></script>
+  <script src="src/getData.js"></script>
+  <script src="src/menu.js"></script>
+  <script src="src/map.js"></script>
+  <script src="src/datareq.js"></script>
+  <script src="src/start.js"></script>
 
-      tileNEX = new google.maps.ImageMapType({
-        getTileUrl : function(tile, zoom) {
-          return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
-        },
-        tileSize : new google.maps.Size(256, 256),
-        opacity : 0.90,
-        name : 'NEXRAD',
-        isPng : true
-      });
-
-      goes = new google.maps.ImageMapType({
-        getTileUrl : function(tile, zoom) {
-          return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/goes-east-vis-1km-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
-        },
-        tileSize : new google.maps.Size(256, 256),
-        opacity : 0.40,
-        name : 'GOES East Vis',
-        isPng : true
-      });
-
-      map.overlayMapTypes.push(null);
-      // create empty overlay entry
-      //map.overlayMapTypes.setAt("0",goes);
-      map.overlayMapTypes.setAt("1", tileNEX);
-
-    }
-
-
-    google.maps.event.addDomListener(window, 'load', initialize);
-  </script>
   <body>
     <header>
       <h1 id="logo">HydroCloud</h1>
@@ -247,54 +65,26 @@
       Submit request
     </button>
 
-    <script src="lib/d3/d3.min.js"></script>
-    <script src="src/hydroGraphs2.js"></script>
-    <script src="src/getData.js"></script>
-    <script>
-      function dataReq() {
-        console.log("dataReq");
-        var select = document.getElementById('selectRes');
-        var siteID = select.options[select.selectedIndex].value;
-        getUSGS(siteID);
-      }
-    </script>
     <div id="aboutText" style="display:none">
       <h2>Description of the HydroCloud project</h2>
       <p>
         HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
         Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
       </p>
-    <p>Learn more about the HydroCloud project:</p>
-    <ul>
-      <li>Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a></li>
-      <li>The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a></li>
-    </ul>
-              
+      <p>
+        Learn more about the HydroCloud project:
+      </p>
+      <ul>
+        <li>
+          Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
+        </li>
+        <li>
+          The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
+        </li>
+      </ul>
+
     </div>
     <div id="target"> </div>
     <div id="map_canvas"> </div>
-    <script>
-    /*
-      var myEvent = new Event("parsed");//IE doesn't let you create custom events.
-      var body = document.getElementById('target');
-      //console.log(body);
-      body.addEventListener("parsed", function(e) {
-        alert("parsed!" + e);
-      }, false);
-
-      var myEvent2 = new CustomEvent("parsed2", {
-        'detail' : "site name"
-      });
-      //everytime we load new data, it draws a hydrograph. That's not what we want anymore.
-      //body.addEventListener("parsed2", function (e){hydrograph(e.detail);}, false);
-      body.addEventListener("parsed2", function(e) {
-        console.log("data loaded: site " + e.detail);
-      }, false);
-*/
-      var data = [];
-      getUSGS("01646500");
-      //Initial data request.
-
-    </script>
   </body>
 </html>

@@ -268,8 +268,6 @@ function flowduration(id) {
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("Number of measurements that exceed this discharge");
 };
 
-
-
 function CSVfile(filename, text) {
   var link = document.createElement('a');
   link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
@@ -315,10 +313,8 @@ function USGScsv(id) {//This will request fresh data and output as CSV.
 
 };
 
-
-
 function dataCsv(id) {
-  data.forEach(function(d, index, array){
+  data.forEach(function(d, index, array) {
     var mstime = (+d.date / 86400000) + 25569;
     data[index].MStimeGMT = mstime.toFixed(5);
   });
