@@ -15,6 +15,7 @@ $(function() {
     //document.getElementById("map_div").style.display = "block";
     //document.getElementById("about_div").style.display = "none";
     //document.getElementById("svg").style.
+    document.getElementById("map_div").style.opacity = "1";
     document.getElementById("map_div").style.visibility = "visible";
     document.getElementById("about_div").style.display = "none";
     document.getElementById("graph_div").style.visibility = "visible";
@@ -25,6 +26,7 @@ $(function() {
     d3.select("svg").remove();
     //document.getElementById("map_div").style.display = "none";
     //document.getElementById("about_div").style.display = "none";
+    document.getElementById("map_div").style.opacity = "0";
     document.getElementById("map_div").style.visibility = "hidden";
     document.getElementById("about_div").style.display = "none";
     document.getElementById("graph_div").style.visibility = "visible";

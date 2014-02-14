@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>HydroCloud layout</title>
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="resources/mobile2.css">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      header {
+        position: relative;
+        top: 0px;
+        width: 100%;
+        height: 40px;
+        background-color: steelblue;
+      }
+
+      footer {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 30px;
+        background-color: blue;
+      }
+      #content {
+        position: absolute;
+        top: 40px;
+        width: 100%;
+        background-color: gray;
+      }
+      #legend {
+        position: absolute;
+        top: 80px;
+        right: 20px;
+        height: 40px;
+        width: 60px;
+        background-color: red;
+      }
+
+      .content_div {
+        position: absolute;
+        visibility: hidden;
+      }
+
+      #pull {
+        font-family: 'Vollkorn', serif;
+        font-style: italic;
+        font-size: 24pt;
+        color: white;
+        text-shadow: 3px 3px 10px #002;
+      }
+    </style>
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <script>
+      $(function() {
+        //Menu design from Thoriq Firdaus www.hongkiat.com/blog/responsive-web-nav/
+        var pull = $('#pull');
+        menu = $('nav ul');
+        menuHeight = menu.height();
+
+        $(pull).on('click', function(e) {
+          e.preventDefault();
+          menu.slideToggle();
+        });
+
+        $(map).on('click', function(e) {
+          console.log("map");
+          document.getElementById("map_div").style.visibility = "visible";
+          document.getElementById("graph_div").style.visibility = "hidden";
+          document.getElementById("about_div").style.visibility = "hidden";
+
+        });
+        $(graph).on('click', function(e) {
+          console.log("graph");
+          document.getElementById("map_div").style.visibility = "hidden";
+          document.getElementById("graph_div").style.visibility = "visible";
+          document.getElementById("about_div").style.visibility = "hidden";
+
+        });
+        $(about).on('click', function(e) {
+          console.log("about");
+          document.getElementById("map_div").style.visibility = "hidden";
+          document.getElementById("graph_div").style.visibility = "hidden";
+          document.getElementById("about_div").style.visibility = "visible";
+
+        });
+        $(window).resize(function() {
+          var w = $(window).width();
+          if (w > 320 && menu.is(':hidden')) {
+            menu.removeAttr('style');
+            myScreen.width = $(window).width() - 20;
+            myScreen.height = $(window).height() - (header + 60);
+          }
+        });
+      });
+
+    </script>
+  </head>
+  <body>
+    <div id="legend">
+      Legend
+    </div>
+
+    <div id="content">
+      <div id="map_div" class="content_div">
+        map
+      </div>
+      <div id="graph_div" class="content_div">
+        graph
+      </div>
+      <div id="about_div" class="content_div">
+        about
+      </div>
+ 
+    </div>
+    <header>
+      <nav class="clearfix">
+        <a href="#" id="pull">HydroCloud</a>
+        <ul class="clearfix">
+          <li>
+            <a href="#" id="map">map</a>
+          </li>
+          <li>
+            <a href="#" id="graph">graph</a>
+          </li>
+          <li>
+            <a href="#"  id="about">about</a>
+          </li>
+        </ul>
+
+      </nav>
+    </header>
+    <footer>
+      footer
+    </footer>
+  </body>
+</html>
