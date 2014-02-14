@@ -17,17 +17,17 @@
   <script src="lib/jquery/jquery-2.0.2.js"></script>
   <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
   <script src="lib/d3/d3.min.js"></script>
-  <script src="src/hydroGraphs2.js"></script>
+  <script src="src/oldHydroGraph.js"></script>
   <script src="src/getData.js"></script>
   <script src="src/menu.js"></script>
-  <script src="src/map.js"></script>
+  <script src="src/initialize.js"></script>
   <script src="src/datareq.js"></script>
   <script src="src/start.js"></script>
 
   <body>
     <header>
       <h1 id="logo">HydroCloud</h1>
-    </header>
+</header>
 
     <nav class="clearfix">
       <ul class="clearfix">
@@ -53,6 +53,7 @@
       <a href="#" id="pull">HydroCloud</a>
     </nav>
 
+    
     <label for="selectRes">Resource request:</label>
     <select name="selectRes" id="selectRes">
       <option value="default" disabled="disabled" selected="selected" style="display:none">Please select a resource.</option>
@@ -65,7 +66,7 @@
       Submit request
     </button>
 
-    <div id="aboutText" style="display:none">
+    <div id="about_div" style="display:none">
       <h2>Description of the HydroCloud project</h2>
       <p>
         HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
@@ -85,6 +86,7 @@
 
     </div>
     <div id="target"> </div>
-    <div id="map_canvas"> </div>
+    <div id="map_div"> </div>
+    <div id="graph_div"> </div>
   </body>
 </html>

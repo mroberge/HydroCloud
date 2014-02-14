@@ -1,3 +1,8 @@
+function map(){
+  //this will create a mapping closure.
+}
+
+
 function scatterChart() {
   /*
    * Based on Mike Bostock's system for creating reusable charts, described

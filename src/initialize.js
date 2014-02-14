@@ -1,12 +1,14 @@
 var map;
 function initialize() {
-  //document.getElementById('map_canvas').style.display = "none";
+  //document.getElementById('map_div').style.display = "none";
   var mapOptions = {
     zoom : 8,
     center : new google.maps.LatLng(39.395, -76.609),
     mapTypeId : google.maps.MapTypeId.TERRAIN
   };
-  map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+  
+  //console.log(document.getElementById('map_div'));
+  map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
   tileNEX = new google.maps.ImageMapType({
     getTileUrl : function(tile, zoom) {
