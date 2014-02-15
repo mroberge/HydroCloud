@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!--- My mapping files here. --->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
+    <script src="src/initialize.js"></script>
+
+    <!-- D3 graphing stuff here -->
+    <script src="lib/d3/d3.min.js"></script>
+    <script src="src/datareq.js"></script>
+
+    <script src="src/bootstraplayout.js"></script>
+
+    <!-- My styles here -->
+    <style>
+      body {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        background-color: lightgray;
+      }
+      /*for google maps*/
+      html, body, #carousel-example-generic, .carousel-inner, .item {
+        height: 100%
+      }
+      #map_canvas {
+        width: 100%;
+        height: 100%;
+      }
+      /*For graphs*/
+      svg {
+        font: 10px sans-serif;
+      }
+
+      .axisTitle {
+        font: 14px serif;
+      }
+
+      .Title {
+        font: 20px serif;
+      }
+
+      .subTitle {
+        font: 12px serif;
+      }
+
+      path {
+        stroke: lightskyblue;
+        fill: none;
+      }
+
+      path:hover {
+        stroke: red;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      .bar rect {
+        fill: lightskyblue;
+        shape-rendering: crispEdges;
+      }
+
+      .bar text {
+        fill: black;
+      }
+
+      .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+      }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">HydroCloud</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li data-target="#carousel-example-generic" data-slide-to="0">
+              <a href="#">Map</a>
+            </li>
+            <li class="dropdown" data-target="#carousel-example-generic" data-slide-to="1">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#">Hydrograph</a>
+                </li>
+                <li>
+                  <a href="#">Flow Duration</a>
+                </li>
+                <li>
+                  <a href="#">Histogram</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="#">Separated link</a>
+                </li>
+              </ul>
+            </li>
+            <li data-target="#carousel-example-generic" data-slide-to="2">
+              <a href="#">Stats</a>
+            </li>
+            <li data-target="#carousel-example-generic" data-slide-to="3">
+              <a href="#"><strong>?</strong></a>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
+          </li>
+          <li class="active">
+            <a href="#carousel-example-generic" data-slide-to="0" ><span class="glyphicon glyphicon-globe"> </span></a>
+          </li>
+          <li>
+            <a href="#carousel-example-generic" data-slide-to="1"><span class="glyphicon glyphicon-stats"> </span></a>
+          </li>
+          <li>
+            <a href="#carousel-example-generic" data-slide-to="2"><span class="glyphicon glyphicon-th-list"> </span></a>
+          </li>
+          <li>
+            <a href="#carousel-example-generic" data-slide-to="3"><span class="glyphicon glyphicon-question-sign"> </span></a>
+          </li>
+          <li>
+            <a  href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Carousel Content -->
+
+    <div id="carousel-example-generic" class="carousel slide" data-interval="false">
+      <!-- Indicators If you add this class, it will replace any text or icon with empty dots that are kept updated with slide status.-->
+      <ol class="carousel-indicators">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active">
+          <span class="glyphicon glyphicon-globe"> </span>
+        </li>
+        <li data-target="#carousel-example-generic" data-slide-to="1">
+          <span class="glyphicon glyphicon-stats"> </span>
+        </li>
+        <li data-target="#carousel-example-generic" data-slide-to="2">
+          <span class="glyphicon glyphicon-th-list"> </span>
+        </li>
+        <li data-target="#carousel-example-generic" data-slide-to="2">
+          <span class="glyphicon glyphicon-question-sign"> </span>
+        </li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+        <div class="item active" id="map_div">
+
+          slide one: Map
+
+        </div>
+        <div class="item" >
+          <p>
+            slide two: D3 graphs go here.
+          </p>
+          <label for="selectRes">Resource request:</label>
+          <select name="selectRes" id="selectRes">
+            <option value="default" disabled="disabled" selected="selected" style="display:none">Please select a resource.</option>
+            <option value="01584050">USGS site 01584050</option>
+            <option value="01585200">USGS site 01585200</option>
+            <option value="01583500">USGS site 01583500</option>
+            <option value="local">local data (same origin)</option>
+          </select>
+          <button id="submitReq" onclick="dataReq();">
+            Submit request
+          </button>
+          <div id="graph_div"> </div>
+        </div>
+        <div class="item">
+          slide three: This is for a page of stats and the download.
+          <br>
+          NOTES:
+          <ul>
+            <li>
+              Google maps goes into slide one, D3 graph in two,
+            </li>
+            <li>
+              Do I even need to have a menu at the top? Maybe just the logo.
+            </li>
+            <li>
+
+            </li>
+            <li>
+              The header and footer collapse too early. This needs to happen at a narrower width. may require LESS files to adjust.
+            </li>
+            <li>
+              Replace the special bottom nav with a footer; put content inside: see my text file: bootstraplayout-footer.txt.
+            </li>
+          </ul>
+          <div class="carousel-caption">
+            Centered caption for the carousel
+            <br>
+            in ugly white text with a shadow.
+            <br>
+            Can this fade out after a little bit? That would be cool.
+
+          </div>
+        </div>
+        <div class="item">
+          <h2>Description of the HydroCloud project</h2>
+          <p>
+            HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
+            Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
+          </p>
+          <p>
+            Learn more about the HydroCloud project:
+          </p>
+          <ul>
+            <li>
+              Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
+            </li>
+            <li>
+              The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
