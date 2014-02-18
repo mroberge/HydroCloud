@@ -231,6 +231,23 @@ nav a#pull {
   <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="lib/jquery/jquery-2.0.2.js"></script>
   <script>
+  var viewState = "map";
+  function checkState(){
+    console.log("checkState: " + viewState);
+    if (viewState === "hydro"){
+      d3.select("svg").remove();
+      hydrograph("graph");
+    } else if (viewState === "flow"){
+      d3.select("svg").remove();
+      flowduration("graph");
+    } else if (viewState === "histo"){
+      d3.select("svg").remove();
+      loghistogram("graph");
+    } else {
+      //don't need to plot a thing if we aren't showing a graph.
+    };
+  }
+  
     $(function() {
       //Menu design from Thoriq Firdaus www.hongkiat.com/blog/responsive-web-nav/
       var pull = $('#pull');
@@ -243,14 +260,16 @@ nav a#pull {
       });
 
       $(showMap).on('click', function(e) {
-        console.log("map");
+        viewState = "map";
+        console.log(viewState);
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "block";
         document.getElementById("aboutText").style.display = "none";
       });
 
       $(hydro).on('click', function(e) {
-        console.log("hydro");
+        viewState = "hydro";
+        console.log(viewState);
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
         document.getElementById("aboutText").style.display = "none";
@@ -258,7 +277,8 @@ nav a#pull {
       });
 
       $(flow).on('click', function(e) {
-        console.log("flow");
+        viewState = "flow";
+        console.log(viewState);
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
         document.getElementById("aboutText").style.display = "none";
@@ -266,7 +286,8 @@ nav a#pull {
       });
 
       $(histo).on('click', function(e) {
-        console.log("histo");
+        viewState = "histo";
+        console.log(viewState);
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
         document.getElementById("aboutText").style.display = "none";
@@ -279,7 +300,8 @@ nav a#pull {
       });
 
       $(about).on('click', function(e) {
-        console.log("about");
+        viewState = "about";
+        console.log(viewState);
         d3.select("svg").remove();
         document.getElementById("map_canvas").style.display = "none";
         document.getElementById("aboutText").style.display = "block";
@@ -292,6 +314,7 @@ nav a#pull {
           myScreen.width = $(window).width() - 20;
           myScreen.height = $(window).height() - (header + 60);
           //hydrograph(id);
+          //checkState();
         }
       });
     });
@@ -372,6 +395,7 @@ nav a#pull {
     //hydrograph(id);
     //flowduration(id);
     //loghistogram(id);
+    checkState();
   });
 
 };
