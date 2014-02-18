@@ -1,0 +1,63 @@
+    <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li>
+            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="0" class="active">
+            <a href="#"><span class="glyphicon glyphicon-globe"> </span></a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="1">
+            <a href="#"><span class="glyphicon glyphicon-stats"> </span></a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="2">
+            <a href="#"><span class="glyphicon glyphicon-th-list"> </span></a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="3">
+            <a href="#"><span class="glyphicon glyphicon-question-sign"> </span></a>
+          </li>
+          <li>
+            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+
+Alternative version:
+
+      .marty-list {
+        display:inline-block;
+        list-style: none;
+      }
+      footer {
+        position: absolute;
+        bottom: 0px;
+        height: 50px;
+        width: 100%
+      }
+
+    <footer class="navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <ul class="marty-list">
+          <li>
+            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="0" class="active">
+            <a href="#"><span class="glyphicon glyphicon-globe"> </span></a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="1">
+            <a href="#"><span class="glyphicon glyphicon-stats"> </span></a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="2">
+            <a href="#"><span class="glyphicon glyphicon-th-list"> </span></a>
+          </li>
+          <li data-target="#carousel-example-generic" data-slide-to="3">
+            <a href="#"><span class="glyphicon glyphicon-question-sign"> </span></a>
+          </li>
+          <li>
+            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+          </li>
+        </ul>
+      </div>
+    </footer>

@@ -5,7 +5,6 @@
 
     <title>ReusableChart</title>
     <style>
-
       .line {
         fill: none;
         stroke: blue;
@@ -42,13 +41,16 @@
       chart2
     </div>
     <div id="chart_div3">
-      scatter chart
+      chart 3
+    </div>
+    <div id="chart_div4">
+      chart 4
     </div>
 
-    <script src="./lib/d3/d3.js">
+    <script src="./lib/d3/d3.v3.js">
       //Place scripts at end of body.
     </script>
-    <script src="reuseableScatterChart.js"></script>
+    <script src="src/hydrograph.js"></script>
     <script>
       //Based on Mike Bostock's 'Towards Reusable Charts' http://bost.ocks.org/mike/chart/
 
@@ -90,13 +92,33 @@
       window.onresize = resized;
 
       function resized() {
-        //secondChart.width(window.innerWidth-10);
+        //Do I need to do the width here?
+        //secondChart;
+        d3.select("#chart_div2").call(secondChart.width(window.innerWidth - 10));
         //secondDiv.call(secondChart);
         thirdChart.width(window.innerWidth - 10);
         thirdDiv.call(thirdChart);
+        fourthDiv.call(fourthChart.width(window.innerWidth - 10));
       }
 
       //thirdDiv.call(thirdChart);
+      // Timie to create  a fourth chart using the time data!
+      
+      var fourthChart = scatterChart().width(window.innerWidth - 20);
+      var fourthDiv = d3.select("#chart_div4");
+      var newData = [];
+      console.log(newData);
+      //add timeData to the array, but without the headers in the first row.
+      newData.push(elevData);
+      console.log(newData);
+
+      fourthDiv.datum(newData).call(fourthChart);
+      newData.push(elevData2);
+      //This doesn't work to replot the graph.'
+      fourthDiv.datum(newData).call(fourthChart);
+      //window.onresize = fourthDiv.call(fourthChart.width(window.innerWidth - 10));
+      
+      
 
     </script>
   </body>

@@ -1,0 +1,96 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#map_div {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /*position: absolute;*/
+}
+
+#graph_div {
+  position: relative;
+}
+
+#about_div {
+  
+}
+
+#pull {
+  font-family: 'Vollkorn', serif;
+  font-style: italic;
+  font-size: 24pt;
+  color: white;
+  text-shadow: 3px 3px 10px #002;
+}
+
+header h1 {
+  margin: 0;
+  padding-left: 16px;
+  padding-bottom: 5px;
+  font-family: 'Vollkorn', serif;
+  font-style: italic;
+  font-size: 24pt;
+  color: white;
+  text-shadow: 3px 3px 10px #002;
+  background-color: #679;
+}
+footer {
+  height: 20px;
+  clear: both;
+  margin: 0;
+  padding: 0;
+  color: #bbb;
+  text-align: center;
+  font-size: 8pt;
+}
+
+svg {
+  font: 10px sans-serif;
+  position: absolute;
+}
+
+.axisTitle {
+  font: 14px serif;
+}
+
+.Title {
+  font: 20px serif;
+}
+
+.subTitle {
+  font: 12px serif;
+}
+
+path {
+  stroke: lightskyblue;
+  fill: none;
+}
+
+path:hover {
+  stroke: red;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar rect {
+  fill: lightskyblue;
+  shape-rendering: crispEdges;
+}
+
+.bar text {
+  fill: black;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
