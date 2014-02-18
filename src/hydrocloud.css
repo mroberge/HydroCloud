@@ -1,8 +1,56 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 
-/*I'm not sure why the line above creates an error.*/
+#map_div {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /*position: absolute;*/
+}
+
+#graph_div {
+  position: relative;
+}
+
+#about_div {
+  
+}
+
+#pull {
+  font-family: 'Vollkorn', serif;
+  font-style: italic;
+  font-size: 24pt;
+  color: white;
+  text-shadow: 3px 3px 10px #002;
+}
+
+header h1 {
+  margin: 0;
+  padding-left: 16px;
+  padding-bottom: 5px;
+  font-family: 'Vollkorn', serif;
+  font-style: italic;
+  font-size: 24pt;
+  color: white;
+  text-shadow: 3px 3px 10px #002;
+  background-color: #679;
+}
+footer {
+  height: 20px;
+  clear: both;
+  margin: 0;
+  padding: 0;
+  color: #bbb;
+  text-align: center;
+  font-size: 8pt;
+}
 
 svg {
   font: 10px sans-serif;
+  position: absolute;
 }
 
 .axisTitle {
@@ -45,38 +93,4 @@ path:hover {
   stroke: #fff;
   fill-opacity: .125;
   shape-rendering: crispEdges;
-}
-html, body, #map_canvas {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-#pull {
-  font-family: 'Vollkorn', serif;
-  font-style: italic;
-  font-size: 24pt;
-  color: white;
-  text-shadow: 3px 3px 10px #002;
-}
-
-header h1 {
-  margin: 0;
-  padding-left: 16px;
-  padding-bottom: 5px;
-  font-family: 'Vollkorn', serif;
-  font-style: italic;
-  font-size: 24pt;
-  color: white;
-  text-shadow: 3px 3px 10px #002;
-  background-color: #679;
-}
-footer {
-  height: 20px;
-  clear: both;
-  margin: 0;
-  padding: 0;
-  color: #bbb;
-  text-align: center;
-  font-size: 8pt;
 }

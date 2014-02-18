@@ -49,7 +49,7 @@ nav a {
 	color: #fff;
 	display: inline-block;
 	width: 100px;
-	text-align: center;
+	text-align: left;
 	text-decoration: none;
 	line-height: 40px;
 	text-shadow: 1px 1px 0px #283744;
@@ -73,7 +73,7 @@ nav a#pull {
 }
 
 /*Styles for screen 600px and lower*/
-@media screen and (max-width: 600px) {
+/*@media screen and (max-width: 600px) {
 	nav { 
   		height: auto;
   	}
@@ -98,9 +98,9 @@ nav a#pull {
 	  	text-indent: 25px;
   	}
 }
-
+*/
 /*Styles for screen 480px and lower*/
-@media only screen and (max-width : 480px) {
+@media only screen and (max-width : 600px) {
 	nav {
 		border-bottom: 0;
 	}
