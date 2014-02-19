@@ -24,13 +24,66 @@
     <!-- My styles here -->
     <style>
       body {
+        /*bootstrap sets the navbar height at 50px.*/
         padding-top: 50px;
-        padding-bottom: 50px;
+        padding-bottom: 40px;
         background-color: lightgray;
       }
       /*for google maps*/
       html, body, #carousel-example-generic, .carousel-inner, .item {
         height: 100%
+      }
+
+      /*for carousel indicators */
+      .carousel-indicators {
+        position: absolute;
+        bottom: -45px;
+        color: #666;
+      }
+      .carousel-indicators :hover {
+        color: #bbb;
+      }
+      .carousel-indicators .active {
+        height: 20px;
+        width: 40px;
+        background-color: transparent;
+        color: white;
+      }
+
+      .carousel-indicators li {
+        /*override default behavior*/
+        text-indent: 0px;
+        height: 20px;
+        width: 40px;
+        border-style: none;
+        margin: 0;
+        font-size: 20px;
+      }
+
+      /*for my bottom button bar*/
+      #button-bar {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+      }
+
+      #button-bar a {
+        font-size: 30px;
+        color: #bbb;
+      }
+
+      #my-legend-modal {
+        position: absolute;
+        top: 80px;
+        right: 30px;
+        width: 150px;
+        height: 250px;
+        padding: 5px;
+        background-color: silver;
+        border: solid black;
+        border-width: 1px;
+        z-index: 50;
+        display: none;
       }
 
       /*For graphs*/
@@ -52,7 +105,7 @@
       }
 
       path {
-        stroke: lightskyblue;
+        stroke: blue;
         fill: none;
       }
 
@@ -91,7 +144,7 @@
   </head>
   <body>
 
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -103,7 +156,6 @@
           </button>
           <a class="navbar-brand" href="#">HydroCloud</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
@@ -139,36 +191,32 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-    <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation">
-      <div class="container-fluid">
-        <ul class="nav navbar-nav">
-          <li>
-            <a href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
-          </li>
-          <li class="active">
-            <a href="#carousel-example-generic" data-slide-to="0" ><span class="glyphicon glyphicon-globe"> </span></a>
-          </li>
-          <li>
-            <a href="#carousel-example-generic" data-slide-to="1"><span class="glyphicon glyphicon-stats"> </span></a>
-          </li>
-          <li>
-            <a href="#carousel-example-generic" data-slide-to="2"><span class="glyphicon glyphicon-th-list"> </span></a>
-          </li>
-          <li>
-            <a href="#carousel-example-generic" data-slide-to="3"><span class="glyphicon glyphicon-question-sign"> </span></a>
-          </li>
-          <li>
-            <a  href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
-          </li>
-        </ul>
+    <div id="button-bar" class="navbar-inverse">
+      <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
+      <div class="pull-right">
+        <button id="legend-btn" class="btn btn-default" ><span class="glyphicon glyphicon-list-alt"></span></button>
+        <a  href="#carousel-example-generic" data-slide="next" > <span class="glyphicon glyphicon-chevron-right"></span> </a>
       </div>
-    </nav>
+    </div>
+
+<div id="my-legend-modal" >
+  <div class="modal-header">
+            <button type="button" class="close" id="my-legend-modal-dismiss" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Legend</h4>
+          </div>
+          <div>
+            Body of the legend.
+          </div>
+</div>
+
 
     <!-- Main Carousel Content -->
-
     <div id="carousel-example-generic" class="carousel slide" data-interval="false">
-      <!-- Indicators If you add this class, it will replace any text or icon with empty dots that are kept updated with slide status.-->
-      <ol class="carousel-indicators">
+
+      <!-- Indicators This is a built-in set of js and css that goes with the Bootstrap Carousel. Can't mess with it too much. -->
+      <ol class="carousel-indicators" id="bottom-nav">
         <li data-target="#carousel-example-generic" data-slide-to="0" class="active">
           <span class="glyphicon glyphicon-globe"> </span>
         </li>
@@ -178,21 +226,18 @@
         <li data-target="#carousel-example-generic" data-slide-to="2">
           <span class="glyphicon glyphicon-th-list"> </span>
         </li>
-        <li data-target="#carousel-example-generic" data-slide-to="2">
+        <li data-target="#carousel-example-generic" data-slide-to="3">
           <span class="glyphicon glyphicon-question-sign"> </span>
         </li>
       </ol>
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner">
-        <div class="item active" id="map_div">
 
-          slide one: Map
+        <div class="item active" id="map_div"></div>
 
-        </div>
-        <div class="item" id="graph_div" >
+        <div class="item" id="graph_div" ></div>
 
-        </div>
         <div class="item">
           slide three: This is for a page of stats and the download.
           <br>
@@ -220,9 +265,9 @@
             in ugly white text with a shadow.
             <br>
             Can this fade out after a little bit? That would be cool.
-
           </div>
         </div>
+
         <div class="item">
           <h2>Description of the HydroCloud project</h2>
           <p>
@@ -248,6 +293,11 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+  $("#legend-btn").click(function () {$("#my-legend-modal").toggle();});
+  $("#my-legend-modal-dismiss").click(function () {$("#my-legend-modal").toggle();});
+
+</script>
   </body>
 </html>
