@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Bootstrap Layout</title>
+    <meta name="author" content="Martin Roberge" />
+    <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
+
+    <link rel="shortcut icon" href="resources/favicon.ico" />
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+    <title>HydroCloud Bootstrap Layout</title>
 
     <!-- Bootstrap -->
     <script src="lib/jquery/jquery-2.0.2.js"></script>
@@ -26,18 +32,26 @@
       body {
         /*bootstrap sets the navbar height at 50px.*/
         padding-top: 50px;
-        padding-bottom: 40px;
+        padding-bottom: 50px;
         background-color: lightgray;
       }
       /*for google maps*/
       html, body, #carousel-example-generic, .carousel-inner, .item {
         height: 100%
       }
+      
+      #brand {
+        font-family: 'Vollkorn', serif;
+        font-style: italic;
+        font-size: 30pt;
+        color: white;
+        text-shadow: 3px 3px 10px #aaf;
+      }
 
       /*for carousel indicators */
       .carousel-indicators {
         position: absolute;
-        bottom: -45px;
+        bottom: -50px;
         color: #666;
       }
       .carousel-indicators :hover {
@@ -64,20 +78,26 @@
       #button-bar {
         position: absolute;
         bottom: 0px;
+        height: 50px;
         width: 100%;
       }
 
       #button-bar a {
         font-size: 30px;
         color: #bbb;
+        
+        bottom: 0px;
+      }
+      
+      #button-bar a span {
+        vertical-align: middle;
       }
 
       #my-legend-modal {
         position: absolute;
         top: 80px;
         right: 30px;
-        width: 150px;
-        height: 250px;
+
         padding: 5px;
         background-color: silver;
         border: solid black;
@@ -154,7 +174,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">HydroCloud</a>
+          <a id="brand" class="navbar-brand" href="#">HydroCloud</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -195,7 +215,7 @@
       <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
       <div class="pull-right">
         <button id="legend-btn" class="btn btn-default" ><span class="glyphicon glyphicon-list-alt"></span></button>
-        <a  href="#carousel-example-generic" data-slide="next" > <span class="glyphicon glyphicon-chevron-right"></span> </a>
+        <a  href="#carousel-example-generic" data-slide="next" class=""><span class="glyphicon glyphicon-chevron-right"></span> </a>
       </div>
     </div>
 
@@ -207,7 +227,22 @@
             <h4 class="modal-title" id="myModalLabel">Legend</h4>
           </div>
           <div>
-            Body of the legend.
+            <p>
+              Click on a point to read its name and description tags.
+            </p>
+            <p>
+              <b>Site Name:</b>
+              <br>
+              <span id="siteName"> </span>
+            </p>
+            <p>
+              <b>Site Id#: </b><span id="siteId"> </span>
+            </p>
+            <p>
+              <b>Current Stream Discharge: </b>
+              <br>
+              <span id="siteQ"> </span>
+            </p>
           </div>
 </div>
 
