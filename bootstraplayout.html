@@ -39,7 +39,7 @@
       html, body, #carousel-example-generic, .carousel-inner, .item {
         height: 100%
       }
-      
+
       #brand {
         font-family: 'Vollkorn', serif;
         font-style: italic;
@@ -85,10 +85,9 @@
       #button-bar a {
         font-size: 30px;
         color: #bbb;
-        
         bottom: 0px;
       }
-      
+
       #button-bar a span {
         vertical-align: middle;
       }
@@ -97,7 +96,6 @@
         position: absolute;
         top: 80px;
         right: 30px;
-
         padding: 5px;
         background-color: silver;
         border: solid black;
@@ -214,38 +212,39 @@
     <div id="button-bar" class="navbar-inverse">
       <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
       <div class="pull-right">
-        <button id="legend-btn" class="btn btn-default" ><span class="glyphicon glyphicon-list-alt"></span></button>
+        <button id="legend-btn" class="btn btn-default" >
+          <span class="glyphicon glyphicon-list-alt"></span>
+        </button>
         <a  href="#carousel-example-generic" data-slide="next" class=""><span class="glyphicon glyphicon-chevron-right"></span> </a>
       </div>
     </div>
 
-<div id="my-legend-modal" >
-  <div class="modal-header">
-            <button type="button" class="close" id="my-legend-modal-dismiss" data-dismiss="modal" aria-hidden="true">
-              &times;
-            </button>
-            <h4 class="modal-title" id="myModalLabel">Legend</h4>
-          </div>
-          <div>
-            <p>
-              Click on a point to read its name and description tags.
-            </p>
-            <p>
-              <b>Site Name:</b>
-              <br>
-              <span id="siteName"> </span>
-            </p>
-            <p>
-              <b>Site Id#: </b><span id="siteId"> </span>
-            </p>
-            <p>
-              <b>Current Stream Discharge: </b>
-              <br>
-              <span id="siteQ"> </span>
-            </p>
-          </div>
-</div>
-
+    <div id="my-legend-modal" >
+      <div class="modal-header">
+        <button type="button" class="close" id="my-legend-modal-dismiss" data-dismiss="modal" aria-hidden="true">
+          &times;
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Legend</h4>
+      </div>
+      <div>
+        <p>
+          Click on a point to read its name and description tags.
+        </p>
+        <p>
+          <b>Site Name:</b>
+          <br>
+          <span id="siteName"> </span>
+        </p>
+        <p>
+          <b>Site Id#: </b><span id="siteId"> </span>
+        </p>
+        <p>
+          <b>Current Stream Discharge: </b>
+          <br>
+          <span id="siteQ"> </span>
+        </p>
+      </div>
+    </div>
 
     <!-- Main Carousel Content -->
     <div id="carousel-example-generic" class="carousel slide" data-interval="false">
@@ -320,6 +319,21 @@
               The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
             </li>
           </ul>
+          <p></p>
+          <p>
+            We've made several versions of the layout:
+          </p>
+          <ul>
+            <li>
+              <a href="http://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
+            </li>
+            <li>
+              <a href="http://mroberge.github.io/HydroCloud/" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="http://d3js.org/">D3 library</a> for graphing.
+            </li>
+            <li>
+              <a href="http://mroberge.github.io/HydroCloud/bootstraplayout.html" >Our latest app</a> This site is set up using <a href="http://getbootstrap.com/">Bootstrap</a> for the styling.
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -329,10 +343,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 
-<script type="text/javascript">
-  $("#legend-btn").click(function () {$("#my-legend-modal").toggle();});
-  $("#my-legend-modal-dismiss").click(function () {$("#my-legend-modal").toggle();});
+    <script type="text/javascript">
+      $("#legend-btn").click(function() {
+        $("#my-legend-modal").toggle();
+      });
+      $("#my-legend-modal-dismiss").click(function() {
+        $("#my-legend-modal").toggle();
+      });
 
-</script>
+    </script>
   </body>
 </html>
