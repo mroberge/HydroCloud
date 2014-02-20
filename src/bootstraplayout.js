@@ -60,6 +60,7 @@ function hydrograph(id) {
     return y2(d.value);
   });
 
+  d3.select("#graph_div svg").remove();
   var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
   svg.append("defs").append("clipPath").attr("id", "clip").append("rect").attr("width", width).attr("height", height);
   var focus = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -120,6 +121,8 @@ function getUSGS(id) {
     });
 
     //    target.dispatchEvent(myEvent2);
+    console.log(id);
+    console.log(data);
     hydrograph(id);
     //flowduration(id);
     //loghistogram(id);
