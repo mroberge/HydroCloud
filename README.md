@@ -25,11 +25,3 @@ Links:
 * Works on mobile.
 * Stream gauge data from USGS
 * NEXRAD time series from our cloud-based back-end system
-
-###A Note to Visitors:
-
-Please excuse the mess while I migrate the project to GitHub. I am still getting used to the system and figuring out the best way to take advantage of all of GitHub's features.
-
-Thanks!
-
--Marty
