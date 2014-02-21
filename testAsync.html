@@ -11,7 +11,6 @@
     <script type="text/javascript" src="lib/jasmine-2.0.0/jasmine-html.js"></script>
     <script type="text/javascript" src="lib/jasmine-2.0.0/boot.js"></script>
 
-
     <!-- include library files here... -->
     <script type="text/javascript" src="lib/d3/d3.v3.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery-2.0.2.js  "></script>
@@ -25,5 +24,63 @@
 
   </head>
 
-  <body> </body>
+  <body>
+    <h1>Test of data server availability</h1>
+    <h4>TU NEXRAD service</h4>
+    <ul>
+      <li>
+        View JSON result: <a href="http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02">http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02</a>
+      </li>
+      <li>
+        HTTP status code: <span id="TUstatusCode"></span>
+      </li>
+      <li>
+        return text: <span id="TUstatusText"></span>
+      </li>
+    </ul>
+    <br>
+        <h4>USGS real-time stream gauge service</h4>
+    <ul>
+      <li>
+        View JSON result: <a href="http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060">http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060</a>
+      </li>
+      <li>
+        HTTP status code: <span id="USGSstatusCode"></span>
+      </li>
+      <li>
+        return text: <span id="USGSstatusText"></span>
+      </li>
+    </ul>
+
+    <script type="text/javascript">
+      $.ajax({
+        url : "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02",
+        dataType : "json",
+        error : function(request, textStatus, errorThrown) {
+          $("#statusCode").append(errorThrown);
+        },
+        complete : function(tuJSON) {
+          console.log("request complete");
+          console.log(tuJSON);
+          $("#TUstatusCode").append(tuJSON.status);
+          $("#TUstatusText").append(tuJSON.statusText);
+        }
+      });
+
+      $.ajax({
+        url : "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060",
+        dataType : "json",
+        error : function(request, textStatus, errorThrown) {
+          $("#USGSstatusCode").append(errorThrown);
+        },
+        complete : function(JSON) {
+          console.log("request complete");
+          console.log(JSON);
+          $("#USGSstatusCode").append(JSON.status);
+          $("#USGSstatusText").append(JSON.statusText);
+        }
+      });
+
+    </script>
+  </body>
 </html>

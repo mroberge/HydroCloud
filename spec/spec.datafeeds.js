@@ -46,14 +46,8 @@ describe("This server", function(done) {
 
 describe("The USGS real-time service", function() {
   var result = 1;
-  var jsondata;
 
-  /*beforeEach(function(done) {
-   result = $.ajax({
-   url : "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060",
-   success : done
-   });
-   });*/
+  //I would like to request the data once and then test it, but this done() system doesn't seem to be up to it.
   beforeEach(function(done) {
     console.log("start USGS request");
     result = 5;
@@ -62,7 +56,7 @@ describe("The USGS real-time service", function() {
       dataType : "json",
       complete : function() {
         console.log("request complete");
-        
+
         done();
       }
     });
@@ -78,18 +72,59 @@ describe("The USGS real-time service", function() {
     expect(result.responseJSON).toEqual(jasmine.any(Object));
     done();
   });
-  it("should return data for site #01646500", function(){
+  it("should return data for site #01646500", function() {
     expect(result.responseJSON.value.timeSeries[0].sourceInfo.siteCode[0].value).toEqual("01646500");
   });
-    it("should return data for site name POTOMAC RIVER NEAR WASH, DC LITTLE FALLS PUMP STA", function(){
+  it("should return data for site name POTOMAC RIVER NEAR WASH, DC LITTLE FALLS PUMP STA", function() {
     expect(result.responseJSON.value.timeSeries[0].sourceInfo.siteName).toEqual("POTOMAC RIVER NEAR WASH, DC LITTLE FALLS PUMP STA");
   });
-  it("should return numeric data", function(){
+  it("should return numeric data", function() {
     expect(+result.responseJSON.value.timeSeries[0].values[0].value[0].value).toEqual(jasmine.any(Number));
   });
-  it("should return data that is less than 12 hours old.", function(){
+  it("should return data that is less than 12 hours old.", function() {
     //console.log(Date.parse(result.responseJSON.value.timeSeries[0].sourceInfo.siteCode[0].dateTime));
     console.log("Time of last measurement: " + result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime);
-    expect(Date.parse(result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime)).toBeGreaterThan(Date.now()-(12*60*60*1000));
+    expect(Date.parse(result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime)).toBeGreaterThan(Date.now() - (12 * 60 * 60 * 1000));
+  });
+});
+
+describe("The TU NEXRAD service", function() {
+  var result = 2;
+
+  //I would like to request the data once and then test it, but this done() system doesn't seem to be up to it.
+  beforeEach(function(done) {
+    console.log("start TU NEXRAD request");
+    result = 6;
+    result = $.ajax({
+      url : "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02",
+      dataType : "json",
+      complete : function() {
+        console.log("request complete");
+
+        done();
+      }
+    });
+  });
+  it("should return a 200 code.", function(done) {
+    console.log(result.responseJSON);
+    expect(result.status).toEqual(200);
+    done();
+  });
+  it("should return some data", function(done) {
+    //console.log(result.responseText);
+    expect(result.responseText).toEqual(jasmine.any(String));
+    expect(result.responseJSON).toEqual(jasmine.any(Object));
+    done();
+  });
+  it("should return data for site #01646500", function() {
+    expect(result.responseJSON[0].SITE_NO).toEqual("01646500");
+  });
+  it("should return numeric precipitation data", function() {
+    expect(+result.responseJSON[0].precipitation).toEqual(jasmine.any(Number));
+  });
+  it("should return data that is less than 12 hours old.", function() {
+    //console.log(Date.parse(result.responseJSON.value.timeSeries[0].sourceInfo.siteCode[0].dateTime));
+    console.log("Time of last measurement: " + result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime);
+    expect(Date.parse(result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime)).toBeGreaterThan(Date.now() - (12 * 60 * 60 * 1000));
   });
 });
