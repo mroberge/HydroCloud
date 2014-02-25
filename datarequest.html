@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="resources/favicon.ico" />
+  <meta name="description" content="A light-weight data viewer for hydrologic data" />
+  <meta name="author" content="Martin Roberge" />
+  <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
+  <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+  <title>HydroCloud hydrograph demo</title>
+  <body>
+    <label for="selectRes">Resource request:</label>
+    <select name="selectRes" id="selectRes">
+      <option value="default" disabled="disabled" selected="selected" style="display:none">Please select a resource.</option>
+      <option value="01584050">USGS site 01584050</option>
+      <option value="01585200">USGS site 01585200</option>
+      <option value="01583500">USGS site 01583500</option>
+      <option value="local">local data (same origin)</option>
+    </select>
+    <button id="submitReq" onclick="dataReq();">
+      Submit request
+    </button>
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <script src="lib/d3/d3.min.js"></script>
+    <script src="src/oldHydroGraph.js"></script>
+    <script type="text/javascript">
+      function dataReq() {
+        console.log("dataReq");
+        var select = document.getElementById('selectRes');
+        var siteID = select.options[select.selectedIndex].value;
+        getUSGS(siteID);
+      }
+
+      function getUSGS(id) {
+        if (id == "local") {
+          var filename = "resources/USGSshort.txt";
+        } else {
+          var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+        };
+        d3.json(filename, function(error, json) {
+          if (error) {
+            if (error.status === 0) {
+              alert("CORS is not enabled.");
+            };
+            return console.warn(error);
+          }
+          //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
+          temp = json.value.timeSeries[0].values[0].value;
+          //I need to check if this even has a value!!
+          //MR Create a new array of objects from the JSON.
+          data = [];
+          //Clear out the array.
+          temp.forEach(function(d, index, array) {
+            d.date = new Date(d.dateTime);
+            d.value = +d.value;
+            data[index] = {
+              date : d.date,
+              value : d.value
+            };
+          });
+
+          //checkState();
+          d3.select("svg").remove();
+          hydrograph("Hydrograph");
+        });
+      }
+    </script>
+  </body>
+</html>
