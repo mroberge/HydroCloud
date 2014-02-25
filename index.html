@@ -321,45 +321,7 @@
   </script>
   <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
   <script src="src/initialize.js"></script>
-  <script type="text/javascript">
-    function getUSGS(id) {
-      if (id == "local") {
-        var filename = "resources/USGSshort.txt";
-      } else {
-        var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
-      }
-      d3.json(filename, function(error, json) {
-        if (error) {
-          if (error.status === 0) {
-            alert("CORS is not enabled.");
-          };
-          return console.warn(error);
-        }
-        //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
-        temp = json.value.timeSeries[0].values[0].value;
-        //I need to check if this even has a value!!
-        //MR Create a new array of objects from the JSON.
-        data = [];
-        //Clear out the array.
-        temp.forEach(function(d, index, array) {
-          d.date = new Date(d.dateTime);
-          d.value = +d.value;
-          data[index] = {
-            date : d.date,
-            value : d.value
-          };
-        });
 
-        //    target.dispatchEvent(myEvent2);
-        //d3.select("svg").remove();
-        //hydrograph(id);
-        //flowduration(id);
-        //loghistogram(id);
-        checkState();
-      });
-
-    };
-  </script>
   <body>
     <header>
       <h1 id="logo">HydroCloud</h1>
@@ -389,28 +351,50 @@
       <a href="#" id="pull">HydroCloud</a>
     </nav>
 
-    <label for="selectRes">Resource request:</label>
-    <select name="selectRes" id="selectRes">
-      <option value="default" disabled="disabled" selected="selected" style="display:none">Please select a resource.</option>
-      <option value="01584050">USGS site 01584050</option>
-      <option value="01585200">USGS site 01585200</option>
-      <option value="01583500">USGS site 01583500</option>
-      <option value="local">local data (same origin)</option>
-    </select>
-    <button id="submitReq" onclick="dataReq();">
-      Submit request
-    </button>
+
 
     <script src="lib/d3/d3.min.js"></script>
     <script src="src/oldHydroGraph.js"></script>
 
     <script>
-      function dataReq() {
-        console.log("dataReq");
-        var select = document.getElementById('selectRes');
-        var siteID = select.options[select.selectedIndex].value;
-        getUSGS(siteID);
+      function getUSGS(id) {
+        if (id == "local") {
+          var filename = "resources/USGSshort.txt";
+        } else {
+          var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+        };
+        d3.json(filename, function(error, json) {
+          if (error) {
+            if (error.status === 0) {
+              alert("CORS is not enabled.");
+            };
+            return console.warn(error);
+          }
+          //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
+          temp = json.value.timeSeries[0].values[0].value;
+          //I need to check if this even has a value!!
+          //MR Create a new array of objects from the JSON.
+          data = [];
+          //Clear out the array.
+          temp.forEach(function(d, index, array) {
+            d.date = new Date(d.dateTime);
+            d.value = +d.value;
+            data[index] = {
+              date : d.date,
+              value : d.value
+            };
+          });
+
+          //    target.dispatchEvent(myEvent2);
+          //d3.select("svg").remove();
+          //hydrograph(id);
+          //flowduration(id);
+          //loghistogram(id);
+          checkState();
+        });
       }
+
+
     </script>
     <div id="aboutText" style="display:none">
       <h2>Description of the HydroCloud project</h2>
