@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="resources/favicon.ico" />
+  <meta name="author" content="Martin Roberge" />
+
+  <title>CDO request page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <style>
+    header {
+      font-family: Arial;
+      color: green;
+      background-color: darkgray;
+    }
+    .ready {
+      background-color: yellow;
+    }
+  </style>
+  <script src="lib/jquery/jquery-2.0.2.js"></script>
+
+  <body>
+    <header>
+      <h1>CDO Data Request Page</h1>
+    </header>
+    <p>I have yet to make a sucessful request for data!</p>
+    <p>And they take forever to return their empty objects!</p>
+    <p>Learn more here: <a href="http://www.ncdc.noaa.gov/cdo-web/webservices/v2">http://www.ncdc.noaa.gov/cdo-web/webservices/v2</a></p>
+    <hr><br/>
+    <div id="target"> </div>
+    
+    <script>
+      var url = "http://www.ncdc.noaa.gov/cdo-web/api/v2/data";
+      var myToken = "pWmAdZysIShKsPkxbGeKAjeutJYqpOus";
+      var request1 = {
+        datasetid: "GHCND",
+        //datasetid : "HPCP",//internal server error. WTF?
+        stationid : "COOP:180465"//BWI
+      };
+      var request2 = {
+        //datasetid: "HPCP",//precip? But it gives a 500 error.
+        //datasetid : "GHCND", //returns {}
+        datasetid: "GHCNDMS",//returns {}
+        stationid : "COOP:180465", //BWI
+        //locationid: "FIPS:02",//don't request this from /data
+        //startdate : "2010-05-01",
+        //enddate : "2010-05-31",
+        limit : "50"//default is 25
+      };
+      function CDOrequest(myData) {
+        $("#target").append("<p>starting request using " + JSON.stringify(myData) + "</p>");
+        console.log("starting request...");
+        $.ajax({
+          url : url,
+          data : myData,
+          headers : {
+            token : myToken
+          }
+        }).done(function(data) {
+          console.log(data);
+          $("#target").append(JSON.stringify(data)).addClass("ready");
+        });
+      }
+      
+      CDOrequest(request1);
+      CDOrequest(request2);
+    </script>
+  </body>
+</html>
