@@ -10,7 +10,7 @@ function initialize() {
   //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
-        var points = new google.maps.KmlLayer("http://mroberge.github.io/real.kmz", {
+        var points = new google.maps.KmlLayer("http://waterwatch.usgs.gov/kmls/real.kmz", {
           suppressInfoWindows : true,
           preserveViewport : true,
           map : map
