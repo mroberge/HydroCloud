@@ -12,10 +12,11 @@
 
     <title>HydroCloud Bootstrap Layout</title>
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap, jQuery, Knockout -->
     <script src="lib/jquery/jquery-2.0.2.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script type='text/javascript' src='lib/knockout-3.0.0.js'></script>
 
     <!--- My mapping files here. --->
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
@@ -26,6 +27,7 @@
     <script src="src/datareq.js"></script>
 
     <script src="src/bootstraplayout.js"></script>
+
 
     <!-- My styles here -->
     <style>
@@ -91,8 +93,19 @@
       #button-bar a span {
         vertical-align: middle;
       }
+      
+      #legend-btn {
+        color: white;
+        background-color: #444;
+        border-color: #444;
+      }
+      
+      #legend-btn.active {
+        color: black;
+        background-color: #aaa;
+      }
 
-      #my-legend-modal {
+      #legend-modal {
         position: absolute;
         top: 80px;
         right: 30px;
@@ -101,7 +114,7 @@
         border: solid black;
         border-width: 1px;
         z-index: 50;
-        display: none;
+        /*display: none;*/
       }
 
       /*For graphs*/
@@ -212,16 +225,16 @@
     <div id="button-bar" class="navbar-inverse">
       <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
       <div class="pull-right">
-        <button id="legend-btn" class="btn btn-default" >
+        <button id="legend-btn" class="btn"  data-bind="click: toggleLegend(), css: { active: showLegend}">
           <span class="glyphicon glyphicon-list-alt"></span>
         </button>
         <a  href="#carousel-example-generic" data-slide="next" class=""><span class="glyphicon glyphicon-chevron-right"></span> </a>
       </div>
     </div>
 
-    <div id="my-legend-modal" >
+    <div id="legend-modal" data-bind="visible: showLegend">
       <div class="modal-header">
-        <button type="button" class="close" id="my-legend-modal-dismiss" data-dismiss="modal" aria-hidden="true">
+        <button type="button" class="close" id="legend-modal-dismiss" data-bind="click: toggleLegend()" aria-hidden="true">
           &times;
         </button>
         <h4 class="modal-title" id="myModalLabel">Legend</h4>
@@ -340,14 +353,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 
-    <script type="text/javascript">
-      $("#legend-btn").click(function() {
-        $("#my-legend-modal").toggle();
-      });
-      $("#my-legend-modal-dismiss").click(function() {
-        $("#my-legend-modal").toggle();
-      });
 
+        <script type="text/javascript">
+      var viewModel = {
+        showLegend: ko.observable(true),//Sigh. The initial state will always be the opposite of what we set it here.
+        toggleLegend: function() {
+          console.log("click");
+          this.showLegend() ? this.showLegend(false) : this.showLegend(true);
+        }
+      };
+      //viewModel.showLegend(false);
+      $(function(){
+        //needed to wrap this. This script was running before knockout was loaded.
+        ko.applyBindings(viewModel);
+      });
+      
     </script>
   </body>
 </html>
