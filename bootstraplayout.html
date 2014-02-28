@@ -190,23 +190,23 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li data-target="#carousel-example-generic" data-slide-to="0">
-              <a href="#">Map</a>
+              <a href="#" data-bind="click: map">Map</a>
             </li>
             <li class="dropdown" data-target="#carousel-example-generic" data-slide-to="1">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="#">Hydrograph</a>
+                  <a href="#"  data-bind="click: hydro">Hydrograph</a>
                 </li>
                 <li>
-                  <a href="#">Flow Duration</a>
+                  <a href="#" data-bind="click: flow">Flow Duration</a>
                 </li>
                 <li>
-                  <a href="#">Histogram</a>
+                  <a href="#" data-bind="click: histo">Histogram</a>
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="#" data-bind="click: toggleLegend()">Show Legend</a>
+                  <a href="#" data-bind="click: toggleLegend">Show Legend</a>
                 </li>
               </ul>
             </li>
@@ -224,7 +224,7 @@
     <div id="button-bar" class="navbar-inverse">
       <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"></span> </a>
       <div class="pull-right">
-        <button id="legend-btn" class="btn"  data-bind="click: toggleLegend(), css: { active: showLegend}">
+        <button id="legend-btn" class="btn"  data-bind="click: toggleLegend, css: { active: showLegend}">
           <span class="glyphicon glyphicon-list-alt"></span>
         </button>
         <a  href="#carousel-example-generic" data-slide="next" class=""><span class="glyphicon glyphicon-chevron-right"></span> </a>
@@ -233,7 +233,7 @@
 
     <div id="legend-modal" data-bind="visible: showLegend">
       <div class="modal-header">
-        <button type="button" class="close" id="legend-modal-dismiss" data-bind="click: toggleLegend()" aria-hidden="true">
+        <button type="button" class="close" id="legend-modal-dismiss" data-bind="click: toggleLegend" aria-hidden="true">
           &times;
         </button>
         <h3 class="modal-title" id="myModalLabel">Legend</h3>
@@ -247,7 +247,17 @@
           <br>
           <span data-bind="text: siteName"> </span>
         </p>
-
+        <p>
+          ViewModel information:
+        </p>
+        <p>
+          graph: <span data-bind="text: graph"></span>
+          <br>
+          width: <span data-bind="text: width"></span>
+          <br>
+          height: <span data-bind="text: height"></span>
+          <br>
+        </p>
       </div>
     </div>
 
@@ -256,7 +266,7 @@
 
       <!-- Indicators This is a built-in set of js and css that goes with the Bootstrap Carousel. Can't mess with it too much. -->
       <ol class="carousel-indicators" id="bottom-nav">
-        <li data-target="#carousel-example-generic" data-slide-to="0" class="active">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active" data-bind="click: map">
           <span class="glyphicon glyphicon-globe"> </span>
         </li>
         <li data-target="#carousel-example-generic" data-slide-to="1">
@@ -282,64 +292,113 @@
           <strong>Site name:</strong><span data-bind="text: siteName"></span>
           <ul>
             <li>
-              Site Id#: <span data-bind="text: siteId"</li>
-              <li>Site Description: <span data-bind="text: siteDescription"></span></li>
-              </ul>
-              </div>
+              Site Id#: <span data-bind="text: siteId"></span>
+            </li>
+            <li>
+              Site Description: <span data-bind="text: siteDescription"></span>
+            </li>
+          </ul>
+        </div>
 
-              <div class="item">
-              <h2>Description of the HydroCloud project</h2>
-              <p>
-              HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
-              Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
-              </p>
-              <p>
-              Learn more about the HydroCloud project:
-              </p>
-              <ul>
-              <li>
+        <div class="item">
+          <h2>Description of the HydroCloud project</h2>
+          <p>
+            HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
+            Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
+          </p>
+          <p>
+            Learn more about the HydroCloud project:
+          </p>
+          <ul>
+            <li>
               Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
-              </li>
-              <li>
+            </li>
+            <li>
               The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
-              </li>
-              </ul>
-              <p></p>
-              <p>
-              We've made several versions of the layout:
-              </p>
-              <ul>
-              <li>
+            </li>
+          </ul>
+          <p></p>
+          <p>
+            We've made several versions of the layout:
+          </p>
+          <ul>
+            <li>
               <a href="http://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
-              </li>
-              <li>
+            </li>
+            <li>
               <a href="http://mroberge.github.io/HydroCloud/" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="http://d3js.org/">D3 library</a> for graphing.
-              </li>
-              <li>
+            </li>
+            <li>
               <a href="http://mroberge.github.io/HydroCloud/bootstraplayout.html" >Our latest app</a> This site is set up using <a href="http://getbootstrap.com/">Bootstrap</a> for the styling.
-              </li>
-              </ul>
-              </div>
-              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-              </div>
+    </div>
 
-              <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> <!-- Include all compiled plugins (below), or include individual files as needed -->
-                <script type="text/javascript">
-                  var viewModel = {
-                    showLegend : ko.observable(true), //Sigh. The initial state will always be the opposite of what we set it here.
-                    toggleLegend : function() {
-                      console.log("click");
-                      this.showLegend() ? this.showLegend(false) : this.showLegend(true);
-                    },
-                    siteId : ko.observable(),
-                    siteName : ko.observable(),
-                    siteDescription : ko.observable()
-                  };
-                  ko.applyBindings(viewModel);
-                  var data = [];
-                  viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
-                  getUSGS("01580000");
-                </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript">
+      var viewModel = {
+        width : ko.observable($(window).width()),
+        height : ko.observable($(".carousel-inner").height()),
+        showLegend : ko.observable(true), //Sigh. The initial state will always be the opposite of what we set it here.
+        toggleLegend : function() {
+          console.log("click");
+          this.showLegend() ? this.showLegend(false) : this.showLegend(true);
+        },
+        graph : ko.observable("hydro"),
+        hydro : function() {
+          this.graph("hydro");
+          this.plotGraph();
+        },
+        flow : function() {
+          this.graph("flow");
+          this.plotGraph();
+        },
+        histo : function() {
+          this.graph("histo");
+          this.plotGraph();
+        },
+        map : function() {
+          google.maps.event.trigger(map, 'resize');
+          //almost works! the transition is messing this up.
+        },
+        plotGraph : function() {
+          console.log(this.graph());
+          if (this.graph() == "hydro") {
+            hydrograph(this.siteId);
+          } else if (this.graph() === "flow") {
+            flowduration(this.siteId);
+          } else if (this.graph() === "histo") {
+            loghistogram(this.siteId);
+          } else {
+            console.log("no option selected");
+          }
+          ;
+        },
+        siteId : ko.observable(),
+        siteName : ko.observable(),
+        siteDescription : ko.observable()
+      };
+      ko.applyBindings(viewModel);
+      var data = [];
+
+      //var $window = $(window);
+      $(window).resize(function() {
+        viewModel.width($(window).width());
+        viewModel.height($(".carousel-inner").height());
+        //var center = map.getCenter();
+        google.maps.event.trigger(map, 'resize');
+        //Not eliminating the problem with missing tiles on resize.
+        //map.setCenter(center);
+        console.log("resize");
+      });
+
+      viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
+      getUSGS("01580000");
+    </script>
   </body>
 </html>
