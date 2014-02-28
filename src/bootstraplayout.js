@@ -1,7 +1,7 @@
 function hydrograph(id) {
   var myScreen = {
-    width: $("#map_div").width(),
-    height: $("#map_div").height()
+    width : $("#map_div").width(), //map_div is defined at start; graph_div is not.
+    height : $("#map_div").height()
   };
 
   data.sort(function(a, b) {
@@ -85,7 +85,8 @@ function hydrograph(id) {
 
   //title block
   var title = focus.append("g").attr("transform", "translate(125,20)");
-  title.append("svg:text").attr("class", "Title").text(sitename);
+  //title.append("svg:text").attr("class", "Title").text(sitename);
+  title.append("svg:text").attr("class", "Title").text(viewModel.siteName());
   title.append("svg:text").attr("class", "subTitle").attr("dy", "1em").text(data.length + " measurements");
 
   //axis labels
@@ -129,5 +130,3 @@ function getUSGS(id) {
   });
 
 };
-var data = [];
-getUSGS("01646500"); 
