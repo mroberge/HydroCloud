@@ -28,7 +28,6 @@
 
     <script src="src/bootstraplayout.js"></script>
 
-
     <!-- My styles here -->
     <style>
       body {
@@ -93,13 +92,13 @@
       #button-bar a span {
         vertical-align: middle;
       }
-      
+
       #legend-btn {
         color: white;
         background-color: #444;
         border-color: #444;
       }
-      
+
       #legend-btn.active {
         color: black;
         background-color: #aaa;
@@ -207,7 +206,7 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                  <a href="#">Separated link</a>
+                  <a href="#" data-bind="click: toggleLegend()">Show Legend</a>
                 </li>
               </ul>
             </li>
@@ -237,25 +236,18 @@
         <button type="button" class="close" id="legend-modal-dismiss" data-bind="click: toggleLegend()" aria-hidden="true">
           &times;
         </button>
-        <h4 class="modal-title" id="myModalLabel">Legend</h4>
+        <h3 class="modal-title" id="myModalLabel">Legend</h3>
       </div>
       <div>
         <p>
-          Click on a point to read its name and description tags.
+          Click on a point to read its name and load its data.
         </p>
         <p>
           <b>Site Name:</b>
           <br>
-          <span id="siteName"> </span>
+          <span data-bind="text: siteName"> </span>
         </p>
-        <p>
-          <b>Site Id#: </b><span id="siteId"> </span>
-        </p>
-        <p>
-          <b>Current Stream Discharge: </b>
-          <br>
-          <span id="siteQ"> </span>
-        </p>
+
       </div>
     </div>
 
@@ -286,88 +278,68 @@
         <div class="item" id="graph_div" ></div>
 
         <div class="item">
-          slide three: This is for a page of stats and the download.
-          <br>
-          NOTES:
+          <h3>Site Statistics</h3>
+          <strong>Site name:</strong><span data-bind="text: siteName"></span>
           <ul>
             <li>
-              Slide one: map
-            </li>
-            <li>
-              Slide two: graphs
-            </li>
-            <li>
-              Slide three: stats, download
-            </li>
-            <li>
-              Slide four: about, help
-            </li>
-          </ul>
-          <div class="carousel-caption">
-            Centered caption for the carousel
-            <br>
-            in ugly white text with a shadow.
-            <br>
-            Can this fade out after a little bit? That would be cool.
-          </div>
-        </div>
+              Site Id#: <span data-bind="text: siteId"</li>
+              <li>Site Description: <span data-bind="text: siteDescription"></span></li>
+              </ul>
+              </div>
 
-        <div class="item">
-          <h2>Description of the HydroCloud project</h2>
-          <p>
-            HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
-            Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
-          </p>
-          <p>
-            Learn more about the HydroCloud project:
-          </p>
-          <ul>
-            <li>
+              <div class="item">
+              <h2>Description of the HydroCloud project</h2>
+              <p>
+              HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
+              Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
+              </p>
+              <p>
+              Learn more about the HydroCloud project:
+              </p>
+              <ul>
+              <li>
               Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
-            </li>
-            <li>
+              </li>
+              <li>
               The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
-            </li>
-          </ul>
-          <p></p>
-          <p>
-            We've made several versions of the layout:
-          </p>
-          <ul>
-            <li>
+              </li>
+              </ul>
+              <p></p>
+              <p>
+              We've made several versions of the layout:
+              </p>
+              <ul>
+              <li>
               <a href="http://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
-            </li>
-            <li>
+              </li>
+              <li>
               <a href="http://mroberge.github.io/HydroCloud/" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="http://d3js.org/">D3 library</a> for graphing.
-            </li>
-            <li>
+              </li>
+              <li>
               <a href="http://mroberge.github.io/HydroCloud/bootstraplayout.html" >Our latest app</a> This site is set up using <a href="http://getbootstrap.com/">Bootstrap</a> for the styling.
-            </li>
-          </ul>
-        </div>
-      </div>
+              </li>
+              </ul>
+              </div>
+              </div>
 
-    </div>
+              </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-
-
-        <script type="text/javascript">
-      var viewModel = {
-        showLegend: ko.observable(true),//Sigh. The initial state will always be the opposite of what we set it here.
-        toggleLegend: function() {
-          console.log("click");
-          this.showLegend() ? this.showLegend(false) : this.showLegend(true);
-        }
-      };
-      //viewModel.showLegend(false);
-      $(function(){
-        //needed to wrap this. This script was running before knockout was loaded.
-        ko.applyBindings(viewModel);
-      });
-      
-    </script>
+              <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> <!-- Include all compiled plugins (below), or include individual files as needed -->
+                <script type="text/javascript">
+                  var viewModel = {
+                    showLegend : ko.observable(true), //Sigh. The initial state will always be the opposite of what we set it here.
+                    toggleLegend : function() {
+                      console.log("click");
+                      this.showLegend() ? this.showLegend(false) : this.showLegend(true);
+                    },
+                    siteId : ko.observable(),
+                    siteName : ko.observable(),
+                    siteDescription : ko.observable()
+                  };
+                  ko.applyBindings(viewModel);
+                  var data = [];
+                  viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
+                  getUSGS("01580000");
+                </script>
   </body>
 </html>
