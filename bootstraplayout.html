@@ -190,7 +190,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li data-target="#carousel-example-generic" data-slide-to="0">
-              <a href="#">Map</a>
+              <a href="#" data-bind="click: map">Map</a>
             </li>
             <li class="dropdown" data-target="#carousel-example-generic" data-slide-to="1">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"></b></a>
@@ -251,9 +251,12 @@
           ViewModel information:
         </p>
         <p>
-          graph: <span data-bind="text: graph"></span><br>
-          width: <span data-bind="text: width"></span><br>
-          height: <span data-bind="text: height"></span><br>
+          graph: <span data-bind="text: graph"></span>
+          <br>
+          width: <span data-bind="text: width"></span>
+          <br>
+          height: <span data-bind="text: height"></span>
+          <br>
         </p>
       </div>
     </div>
@@ -263,7 +266,7 @@
 
       <!-- Indicators This is a built-in set of js and css that goes with the Bootstrap Carousel. Can't mess with it too much. -->
       <ol class="carousel-indicators" id="bottom-nav">
-        <li data-target="#carousel-example-generic" data-slide-to="0" class="active">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active" data-bind="click: map">
           <span class="glyphicon glyphicon-globe"> </span>
         </li>
         <li data-target="#carousel-example-generic" data-slide-to="1">
@@ -359,6 +362,10 @@
           this.graph("histo");
           this.plotGraph();
         },
+        map : function() {
+          google.maps.event.trigger(map, 'resize');
+          //almost works! the transition is messing this up.
+        },
         plotGraph : function() {
           console.log(this.graph());
           if (this.graph() == "hydro") {
@@ -378,17 +385,17 @@
       };
       ko.applyBindings(viewModel);
       var data = [];
-      
+
       //var $window = $(window);
-      $(window).resize(function(){
+      $(window).resize(function() {
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
         //var center = map.getCenter();
-        google.maps.event.trigger(map, 'resize');//Not eliminating the problem with missing tiles on resize.
+        google.maps.event.trigger(map, 'resize');
+        //Not eliminating the problem with missing tiles on resize.
         //map.setCenter(center);
         console.log("resize");
       });
-      
 
       viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS("01580000");

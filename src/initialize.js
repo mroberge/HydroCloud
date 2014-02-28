@@ -56,9 +56,9 @@ function initialize() {
   //create empty overlay entry
   //map.overlayMapTypes.setAt("0",goes);
   map.overlayMapTypes.setAt("1", tileNEX);
-google.maps.event.addListener(map, 'bounds_changed', function() {
+  google.maps.event.addListener(map, 'bounds_changed', function() {
     console.log(map.getBounds());
-});
+  });
 
 }
 

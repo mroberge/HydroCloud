@@ -1,7 +1,6 @@
-function map(){
+function map() {
   //this will create a mapping closure.
 }
-
 
 function scatterChart() {
   /*
