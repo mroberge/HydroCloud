@@ -1,7 +1,7 @@
 describe("The HydroCloud project", function() {
-  it("contains a map-drawing function named map()", function() {
-    expect(map).toBeDefined();
-    expect(map).toEqual(jasmine.any(Function));
+  it("contains a map-drawing function named drawMap()", function() {
+    expect(drawMap).toBeDefined();
+    expect(drawMap).toEqual(jasmine.any(Function));
   });
   it("contains a graph-drawing function named scatterChart()", function() {
     expect(scatterChart).toBeDefined();

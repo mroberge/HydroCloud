@@ -39,10 +39,10 @@ function scatterChart() {
     selection.each(function(dataArray) {
       // Convert data to standard representation greedily;
       // this is needed for nondeterministic accessors.
-      //But once you convert it, you don't need to convert it anymore. This is a problem with setting xValue.
 
+      //console.log("unconditioned array");
+      //console.log(dataArray);
 
-      //perhaps this needs to be moved out of chart so that it only gets called during set up.
       for ( i = 0; i < dataArray.length; i++) {
         dataArray[i] = dataArray[i].map(function(d, i) {
           return [xValue.call(dataArray[i], d, i), yValue.call(dataArray[i], d, i)];
@@ -82,6 +82,11 @@ function scatterChart() {
       // Otherwise, create the skeletal chart.
       var gEnter = svg.enter().append("svg").append("g");
       //took out when I took out .data() above.
+
+//special viewbox attributes
+svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none");
+//svg.attr("viewBox", "0 0 1 1");//won't work. D3 scales everything to the height and width of the svg element. This will make all sizes too big.
+
 
       var lineGroup = gEnter.append("g").attr("class", "lineGroup");
       var lineEnter = lineGroup.selectAll("path").data(dataArray).enter().append("path").attr("class", "line");

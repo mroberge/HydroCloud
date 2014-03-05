@@ -1,6 +1,6 @@
 var map;
 
-function initialize() {
+function drawMap() {
   //document.getElementById('map_div').style.display = "none";
   var mapOptions = {
     zoom : 8,
@@ -62,5 +62,5 @@ function initialize() {
 
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+google.maps.event.addDomListener(window, 'load', drawMap);
 

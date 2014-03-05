@@ -1,9 +1,9 @@
 //Spec sheet for index-drawMap.js
 
 describe("The drawMap.js file", function() {
-  it("contains a map-drawing function named initialize()", function() {
-    expect(initialize).toBeDefined();
-    expect(initialize).toEqual(jasmine.any(Function));
+  it("contains a map-drawing function named drawMap()", function() {
+    expect(drawMap).toBeDefined();
+    expect(drawMap).toEqual(jasmine.any(Function));
   });
   describe("The initialize function", function() {
     it("requires a div called #map_div", function(){
