@@ -1,7 +1,3 @@
-function map() {
-  //this will create a mapping closure.
-}
-
 function scatterChart() {
   /*
    * Based on Mike Bostock's system for creating reusable charts, described
@@ -17,25 +13,44 @@ function scatterChart() {
     right : 60,
     bottom : 20,
     left : 40
-  }, width = 760, height = 120, xValue = function(d) {
+  };
+  var width = 760;
+  var height = 120;
+  var xValue = function(d) {
     return +d[0];
-  }, yValue = function(d) {
+  };
+  var yValue = function(d) {
     return +d[1];
-  }, xScale = d3.scale.linear(), yScale = d3.scale.linear(), xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0), yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5), //NEW
-  area = d3.svg.area().x(X).y1(Y), line = d3.svg.line().x(X).y(Y), xDomain = [];
+  };
+  //var xScale = d3.scale.linear();
+  var xScale = d3.time.scale();
+  var yScale = d3.scale.linear();
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0);
+  var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5);
+  //NEW
+  var area = d3.svg.area().x(X).y1(Y);
+  var line = d3.svg.line().x(X).y(Y);
+  var xDomain = [];
   //leave empty. First time data are loaded, it will calculate the full x domain.
-  var fullxDomain = [], fullyDomain = [];
+  var fullxDomain = [];
+  var fullyDomain = [];
 
   function chart(selection) {
     selection.each(function(dataArray) {
       // Convert data to standard representation greedily;
       // this is needed for nondeterministic accessors.
+      //But once you convert it, you don't need to convert it anymore. This is a problem with setting xValue.
+
+
+      //perhaps this needs to be moved out of chart so that it only gets called during set up.
       for ( i = 0; i < dataArray.length; i++) {
         dataArray[i] = dataArray[i].map(function(d, i) {
           return [xValue.call(dataArray[i], d, i), yValue.call(dataArray[i], d, i)];
         });
 
       };
+      //console.log("line 42");
+      //console.log(dataArray);
 
       /*   This is the old function that the new function is based upon.
        data = data.map(function(d, i) {
@@ -53,7 +68,7 @@ function scatterChart() {
       fullyDomain = setFullyDomain();
 
       // Update the x-scale.
-      xScale.domain(xDomain)//don't change the xDomain.
+      xScale.domain(xDomain)//don't change the xDomain. Why not fullxDomain????
       .range([0, width - margin.left - margin.right]);
 
       // Update the y-scale.
@@ -72,8 +87,12 @@ function scatterChart() {
       var lineEnter = lineGroup.selectAll("path").data(dataArray).enter().append("path").attr("class", "line");
       //.attr("d", line);//don't draw the line yet. update the size of the svg first.
 
-      gEnter.append("g").attr("class", "x axis");
+      gEnter.append("g").attr("class", "x axis");//is this name okay? It has a space!
       gEnter.append("g").attr("class", "y axis");
+      
+      var titleGroup = gEnter.append("g").attr("class", "titleGroup");
+      titleGroup.append("svg:text").attr("class", "title").text("My New Title");
+      titleGroup.append("svg:text").attr("class", "subtitle").attr("dy", "1em");
 
       // Update the outer dimensions.
       svg.attr("width", width).attr("height", height);
@@ -91,10 +110,10 @@ function scatterChart() {
       g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis).on("click", myRClickFunction);
 
       //title block
-      var title = g.append("g").attr("transform", "translate(10,-10)");
-      title.append("svg:text").attr("class", "Title").text("title");
-      title.append("svg:text").attr("class", "subTitle").attr("dy", "1em").text(dataArray.length + " lines");
-      title.on("click", myRClickFunction);
+      // Update the title.
+      g.select(".titleGroup").attr("transform", "translate(10,-10)");
+      g.select(".subtitle").text(dataArray.length + " lines");
+      //title.on("click", myRClickFunction);
 
       //NEW click function for handling mouseclicks on an object.
       function myClickFunction() {//just a silly function taken from http://bl.ocks.org/mbostock/1166403
@@ -122,46 +141,84 @@ function scatterChart() {
       }
 
       function setFullxDomain() {
-        var max = 0;
-        var min = 0;
-        var localMax = 0;
-        var localMin = 0;
-        domain = [];
+        //console.log("setFullxDomain");
+        //set xmax and xmin to x value in first element in first array.
+        var xmax = dataArray[0][0][0];
+        var xmin = xmax;
+        //console.log("xmax: " + xmax + " xmin: " + xmin);
+        //d3.min(dataArray[0], xValue);
+        var localxMax = xmax;
+        var localxMin = xmax;
+        var domain = [];
+
+        //console.log("domain: " + domain);
+        //console.log(domain);
+        //domain = d3.extent(dataArray[0].map(function(d) {return d.date;}));
+        //console.log("new domain: " );
+        //console.log(domain);
+        //x.domain(d3.extent(data.map(function(d) {return d.date;})));
         for ( i = 0; i < dataArray.length; i++) {
-          localMax = d3.max(dataArray[i], function(d) {
+          //loop through each of the arrays.
+          //console.log("localxMax before search: " + localxMax);
+          localxMax = d3.max(dataArray[i], function(d) {
             return d[0];
           });
-          if (localMax > max)
-            max = localMax;
-          localMin = d3.min(dataArray[i], function(d) {
+          //console.log("localxMax of dataArray[" + i + "] is: " + localxMax);
+          if (localxMax > xmax) {
+            xmax = localxMax;
+          };
+          localxMin = d3.min(dataArray[i], function(d) {
             return d[0];
           });
-          if (localMin < min)
-            min = localMin;
-        }
-        domain = [min, max];
+          if (localxMin < xmin) {
+            xmin = localxMin;
+          };//it will never be smaller than zero.
+
+        };
+
+        domain = [xmin, xmax];
+        //console.log(domain);
         return domain;
       }
 
       function setFullyDomain() {
-        var max = 0;
+        //console.log("setFullyDomain");
+        //set xmax and xmin to x value in first element in first array.
+        var max = dataArray[0][0][1];
         var min = 0;
-        var localMax = 0;
-        var localMin = 0;
-        domain = [];
+        //console.log("max: " + max + " min: " + min);
+        //d3.min(dataArray[0], xValue);
+        var localMax = max;
+        var localMin = max;
+        var domain = [];
+
+        //console.log("y domain: " + domain);
+        //console.log(domain);
+        //domain = d3.extent(dataArray[0].map(function(d) {return d.date;}));
+        //console.log("new domain: " );
+        //console.log(domain);
+        //x.domain(d3.extent(data.map(function(d) {return d.date;})));
         for ( i = 0; i < dataArray.length; i++) {
+          //loop through each of the arrays.
+          //console.log("localyMax before search: " + localMax);
           localMax = d3.max(dataArray[i], function(d) {
             return d[1];
           });
-          if (localMax > max)
+          //console.log("localyMax of dataArray[" + i + "] is: " + localMax);
+          if (localMax > max) {
             max = localMax;
+          };
           localMin = d3.min(dataArray[i], function(d) {
             return d[1];
           });
-          if (localMin < min)
+          if (localMin < min) {
             min = localMin;
-        }
+          };//it will never be smaller than zero unless it finds a negative value..
+
+        };
+
         domain = [min, max];
+        //console.log(domain);
         return domain;
       }
 
@@ -200,7 +257,7 @@ function scatterChart() {
     return chart;
   };
 
-  chart.x = function(a) {//What is this for? Is it for getting and setting the function that accesses the data??? How would I use it?
+  chart.x = function(a) {//Do we need this?
     if (!arguments.length)
       return xValue;
     xValue = a;
@@ -211,6 +268,24 @@ function scatterChart() {
     if (!arguments.length)
       return yValue;
     yValue = a;
+    return chart;
+  };
+
+  chart.xscale = function(a) {
+    if (!arguments.length){
+      console.log("log");
+      return xScale;
+    };
+    if (a ==="linear"){
+      console.log("log");
+      xScale = d3.scale.linear();
+    } else if (a === "log") {
+      console.log("log");
+      xScale = d3.scale.log();
+    } else if (a === "time") {
+      xScale = d3.time.scale();
+      console.log("time");
+    };
     return chart;
   };
 

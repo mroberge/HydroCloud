@@ -12,21 +12,20 @@
 
     <title>HydroCloud Bootstrap Layout</title>
 
-    <!-- Bootstrap, jQuery, Knockout -->
+    <!-- jQuery, Bootstrap, Knockout, D3 -->
     <script src="lib/jquery/jquery-2.0.2.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <script type='text/javascript' src='lib/knockout-3.0.0.js'></script>
+    <script src='lib/knockout-3.0.0.js'></script>
+    <script src="lib/d3/d3.min.js"></script>
 
     <!--- My mapping files here. --->
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
-    <script src="src/initialize.js"></script>
+    <script src="src/index-drawMap.js"></script>
 
-    <!-- D3 graphing stuff here -->
-    <script src="lib/d3/d3.min.js"></script>
-    <script src="src/datareq.js"></script>
-
-    <script src="src/bootstraplayout.js"></script>
+    <!-- my graphing stuff here -->
+    <script src="src/index-dataReq.js"></script>
+    <script src="src/index-drawGraph.js"></script>
 
     <!-- My styles here -->
     <style>
@@ -257,6 +256,7 @@
           <br>
           height: <span data-bind="text: height"></span>
           <br>
+          number of sites: <span data-bind="text: viewModel.dataArray().length"></span>
         </p>
       </div>
     </div>
@@ -297,6 +297,17 @@
             <li>
               Site Description: <span data-bind="text: siteDescription"></span>
             </li>
+            <li>
+              Number of sites selected: <span data-bind="text: viewModel.dataArray().length"></span>
+            </li>
+            <li>
+              Sites:
+              <ol data-bind="foreach: viewModel.siteIdArray">
+                <li>
+                  <strong><span data-bind="text: $index"></span>: </strong> site #<span data-bind="text: $data"></span>
+                </li>
+              </ol>
+            </li>
           </ul>
         </div>
 
@@ -317,7 +328,7 @@
               The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
             </li>
           </ul>
-          <p></p>
+          <p> </p>
           <p>
             We've made several versions of the layout:
           </p>
@@ -337,14 +348,13 @@
 
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+
     <script type="text/javascript">
       var viewModel = {
         width : ko.observable($(window).width()),
         height : ko.observable($(".carousel-inner").height()),
-        showLegend : ko.observable(true), //Sigh. The initial state will always be the opposite of what we set it here.
+        showLegend : ko.observable(false),
         toggleLegend : function() {
           console.log("click");
           this.showLegend() ? this.showLegend(false) : this.showLegend(true);
@@ -380,8 +390,11 @@
           ;
         },
         siteId : ko.observable(),
+        //I enter site 01580000 as an initial value due to line 404.
+        siteIdArray : ko.observableArray([01580000]),
         siteName : ko.observable(),
-        siteDescription : ko.observable()
+        siteDescription : ko.observable(),
+        dataArray : ko.observableArray()
       };
       ko.applyBindings(viewModel);
       var data = [];
@@ -390,6 +403,7 @@
       $(window).resize(function() {
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
+        viewModel.plotGraph();
         //var center = map.getCenter();
         google.maps.event.trigger(map, 'resize');
         //Not eliminating the problem with missing tiles on resize.
