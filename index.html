@@ -256,6 +256,7 @@
           <br>
           height: <span data-bind="text: height"></span>
           <br>
+          number of sites: <span data-bind="text: viewModel.dataArray().length"></span>
         </p>
       </div>
     </div>
@@ -342,7 +343,7 @@
       var viewModel = {
         width : ko.observable($(window).width()),
         height : ko.observable($(".carousel-inner").height()),
-        showLegend : ko.observable(true), //Sigh. The initial state will always be the opposite of what we set it here.
+        showLegend : ko.observable(false),
         toggleLegend : function() {
           console.log("click");
           this.showLegend() ? this.showLegend(false) : this.showLegend(true);
@@ -379,7 +380,8 @@
         },
         siteId : ko.observable(),
         siteName : ko.observable(),
-        siteDescription : ko.observable()
+        siteDescription : ko.observable(),
+        dataArray : ko.observableArray()
       };
       ko.applyBindings(viewModel);
       var data = [];
@@ -388,6 +390,7 @@
       $(window).resize(function() {
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
+        viewModel.plotGraph();
         //var center = map.getCenter();
         google.maps.event.trigger(map, 'resize');
         //Not eliminating the problem with missing tiles on resize.

@@ -314,6 +314,7 @@ function getUSGS(id) {
     //hydrograph(id);
     //flowduration(id);
     //loghistogram(id);
+    viewModel.dataArray.push(data);
     viewModel.plotGraph();
   });
 
