@@ -297,6 +297,17 @@
             <li>
               Site Description: <span data-bind="text: siteDescription"></span>
             </li>
+            <li>
+              Number of sites selected: <span data-bind="text: viewModel.dataArray().length"></span>
+            </li>
+            <li>
+              Sites:
+              <ol data-bind="foreach: viewModel.siteIdArray">
+                <li>
+                  <strong><span data-bind="text: $index"></span>: </strong> site #<span data-bind="text: $data"></span>
+                </li>
+              </ol>
+            </li>
           </ul>
         </div>
 
@@ -379,6 +390,8 @@
           ;
         },
         siteId : ko.observable(),
+        //I enter site 01580000 as an initial value due to line 404.
+        siteIdArray : ko.observableArray([01580000]),
         siteName : ko.observable(),
         siteDescription : ko.observable(),
         dataArray : ko.observableArray()

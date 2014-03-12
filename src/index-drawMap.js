@@ -23,6 +23,12 @@ function drawMap() {
     viewModel.siteId(sId);
     viewModel.siteName(kmlEvent.featureData.name);
     viewModel.siteDescription(kmlEvent.featureData.description);
+    //This siteIdArray.push won't capture the first data requested.
+    viewModel.siteIdArray.push(+sId);
+    console.log(viewModel.siteId());
+    console.log(viewModel.siteIdArray());
+    //viewModel.siteName.push(kmlEvent.featureData.name);
+    //viewModel.siteDescription.push(kmlEvent.featureData.description);
 
     //console.log(sId);
     //console.log(viewModel.siteId());

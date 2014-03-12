@@ -310,11 +310,12 @@ function getUSGS(id) {
 
     //    target.dispatchEvent(myEvent2);
     console.log(id);
-    console.log(data);
+    //console.log(data);
     //hydrograph(id);
     //flowduration(id);
     //loghistogram(id);
     viewModel.dataArray.push(data);
+    console.log("viewModel.dataArray().length = " + viewModel.dataArray().length);
     viewModel.plotGraph();
   });
 
