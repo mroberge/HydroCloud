@@ -1,17 +1,17 @@
-describe ("analysis.js is a suite of functions that includes:", function(){
-    var series1 = [];
-    var startDate = new Date(2012, 05, 01);
-    //increment by 15 minutes (1000ms/s * 60s/min * 15 min)
-    var increment = 1000 * 60 * 15;
-    for (var i = 0; i < 100; i++){
-      var time = new Date(startDate.getTime() + (i * increment));
-      var value = 40 * Math.sin(i/10) + 100 + i;
-      var obs = [time, value];
-      series1.push(obs);
-    };
-    //console.log(startDate);
-    //console.log(increment);
-    //console.log(series1);
+describe("analysis.js is a suite of functions that includes:", function() {
+  var series1 = [];
+  var startDate = new Date(2012, 05, 01);
+  //increment by 15 minutes (1000ms/s * 60s/min * 15 min)
+  var increment = 1000 * 60 * 15;
+  for (var i = 0; i < 100; i++) {
+    var time = new Date(startDate.getTime() + (i * increment));
+    var value = 40 * Math.sin(i / 10) + 100 + i;
+    var obs = [time, value];
+    series1.push(obs);
+  };
+  //console.log(startDate);
+  //console.log(increment);
+  //console.log(series1);
 
   it("start() returns the first time in a series", function() {
     var startTime = start(series1);
@@ -30,7 +30,7 @@ describe ("analysis.js is a suite of functions that includes:", function(){
     //the elapsed time between 100 times is equal to 99 * 15.
     expect(result).toEqual(1485);
   });
-  it("maxpeak() returns the maximum observed value", function(){
+  it("maxpeak() returns the maximum observed value", function() {
     var result = maxpeak(series1);
     expect(result).toBeCloseTo(219.7956, 4);
   });
@@ -51,5 +51,64 @@ describe ("analysis.js is a suite of functions that includes:", function(){
   it("skipped() returns true when observations are missing from a series", function() {
     var result = skipped(series1);
     expect(result).toBe(false);
+  });
+});
+
+describe("The interpolation functions return a Y value for a given X value.", function() {
+  var series2 = [[new Date(2013, 1, 1), 1], [new Date(2013, 1, 2), 3], [new Date(2013, 1, 3), 3], [new Date(2013, 1, 4), 1], [new Date(2013, 1, 5), 3]];
+  //console.log(series2);
+
+  describe("The interBefore() function", function() {
+    it("will return null if given a time that is out of range.", function(){
+      console.log("test 1");
+      expect(interBefore(series2, new Date(2000, 0))).toBeNull;
+      expect(interBefore(series2, new Date(2014, 0))).toBeNull;
+      //one millisecond before the first measurement.
+      expect(interBefore(series2, new Date(2013, 1, 0, 23, 59, 59, 999))).toBeNull;
+      //One millisecond after the last measurement.
+      expect(interBefore(series2, new Date(2013, 1, 5, 0, 0, 0, 1))).toBeNull;
+    });
+    it("will return the most recent measurement to occur before the given time.", function() {
+      console.log("test 2");
+      expect(interBefore(series2, new Date(2013, 1, 1, 12))).toEqual(1);
+      expect(interBefore(series2, new Date(2013, 1, 1, 23, 59, 59, 998))).toEqual(1);
+      expect(interBefore(series2, new Date(2013, 1, 2, 12))).toEqual(3);
+      expect(interBefore(series2, new Date(2013, 1, 3, 12))).toEqual(3);
+    });
+    it("will return the measurement from a matching time.", function() {
+      console.log("test 3");
+      //The first time in the series.
+      expect(interBefore(series2, new Date(2013, 1, 1))).toEqual(1);
+      expect(interBefore(series2, new Date(2013, 1, 2))).toEqual(3);
+      //The last time in the series.
+      expect(interBefore(series2, new Date(2013, 1, 5))).toEqual(3);
+    });
+  });
+  describe("The interLinear() function", function() {
+    it("will return null if given a time that is out of range.", function(){
+      console.log("test 1");
+      expect(interLinear(series2, new Date(2000, 0))).toBeNull;
+      expect(interLinear(series2, new Date(2014, 0))).toBeNull;
+      //one millisecond before the first measurement.
+      expect(interLinear(series2, new Date(2013, 1, 0, 23, 59, 59, 999))).toBeNull;
+      //One millisecond after the last measurement.
+      expect(interLinear(series2, new Date(2013, 1, 5, 0, 0, 0, 1))).toBeNull;
+    });
+    it("will return a linear interpolation for a given time.", function() {
+      console.log("test 2");
+      expect(interLinear(series2, new Date(2013, 1, 1, 12))).toEqual(2);
+      expect(interLinear(series2, new Date(2013, 1, 1, 23, 59, 59, 998))).toBeCloseTo(3, 2);
+      expect(interLinear(series2, new Date(2013, 1, 2, 12))).toEqual(3);
+      expect(interLinear(series2, new Date(2013, 1, 3, 12))).toEqual(2);
+    });
+    it("will return the measurement from a matching time.", function() {
+      console.log("test 3");
+      //The first time in the series.
+      expect(interLinear(series2, new Date(2013, 1, 1))).toEqual(1);
+      //A time in the middle of the series.
+      expect(interLinear(series2, new Date(2013, 1, 2))).toEqual(3);
+      //The last time in the series.
+      expect(interLinear(series2, new Date(2013, 1, 5))).toEqual(3);
+    });
   });
 });

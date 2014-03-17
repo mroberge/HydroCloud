@@ -56,6 +56,56 @@ function minMaxTimeUnit(series) {
 function skipped(series) {
   var minMax = minMaxTimeUnit(series);
   var cond1 = (minMax.min === minMax.max ? true : false);
-  console.log(cond1);
+  //console.log(cond1);
   return (cond1 ? false : true);
+}
+
+//Interpolation function
+//These return a Y value from a time series for a given time.
+
+function interBefore(series, time) {
+  //console.log("interBefore()");
+  //console.log(series);
+  //console.log(time);
+  if(time < start(series) || time > end(series)) {
+    console.log("time not in series");
+    return null;
+  }
+  //return the value that occurs before the selected time.
+  //.left and .right only matter if time matches a value in series.
+  var bisect = d3.bisector(function(d) {return d[0]; }).right;
+  //console.log(bisect);
+  var i = bisect(series, time);
+  //console.log(i);
+  var result = series[i-1][1];
+  //console.log(result);
+  return result;
+}
+
+function interLinear(series, time) {
+  //console.log("interLinear()");
+  //console.log(series);
+  //console.log(time);
+  if(time < start(series) || time > end(series)) {
+    console.log("time not in series");
+    return null;
+  }
+  if(Math.abs(time - end(series)) < 1 ) {
+    console.log("time at end of series.");
+    //return last value.
+    return series[series.length-1][1];
+  }
+  //return the value that occurs before the selected time.
+  //.left and .right only matter if time matches a value in series.
+  var bisect = d3.bisector(function(d) {return d[0]; }).right;
+  //console.log(bisect);
+  var i = bisect(series, time);
+  var x0 = series[i-1][0];
+  var x1 = series[i][0];
+  var y0 = series[i-1][1];
+  var y1 = series[i][1];
+  var x = time;
+
+  var result = y0 + ((x-x0)*(y0-y1))/(x0-x1);
+  return result;
 }
