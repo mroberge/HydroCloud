@@ -112,3 +112,51 @@ describe("The interpolation functions return a Y value for a given X value.", fu
     });
   });
 });
+
+describe("The tableJoin() function", function() {
+  var data1 = {
+    id: "123456",
+    data: [[new Date(2012, 0, 1, 0), 100],[new Date(2012, 0, 1, 1), 100],[new Date(2012, 0, 1, 2), 100],[new Date(2012, 0, 1, 3), 100],[new Date(2012, 0, 1, 4), 100]]
+  };
+  console.log(data1);
+  var data2 = {
+    id: "987654",
+    data: [[new Date(2012, 0, 1, 3, 0), 200],[new Date(2012, 0, 1, 3, 15), 200],[new Date(2012, 0, 1, 3, 30), 200],[new Date(2012, 0, 1, 3, 45), 200],[new Date(2012, 0, 1, 4, 0), 200],[new Date(2012, 0, 1, 4, 15), 200]]
+  };
+  console.log(data2);
+  
+  it("will return undefined if called with no parameters", function() {
+    expect(tableJoin()).toBeUndefined;
+  });
+  it("will return an object with two properties: data and id", function() {
+    var joined = tableJoin(data1, data2);
+    expect(joined.data).toBeDefined();
+    expect(joined.id).toBeDefined();
+  });
+  
+  describe("contains a validate() function that", function() {
+    xit("returns 'invalid' if a data object is invalid", function() {
+      expect(dataJoin.validate()).toEqual("invalid");
+    });
+    xit("validates input objects to determine if they have id and data", function() {
+      var result = tableJoin(data1);
+      expect(result).toBeDefined();
+    });
+  });
+  
+
+  xit("accepts multiple data objects as input", function() {
+    var result = tableJoin(data1,data2,data1);
+    expect(result).toBeDefined();
+  });
+  it("returns an object unchanged if it is the only input", function() {
+    var result = tableJoin(data1);
+    expect(result).toEqual(data1);
+  });
+  xit("will return data: null and id: null if input an empty series", function() {
+    var result = tableJoin([]);
+    expect(result.data).toBeNull();
+    expect(result.id).toBeNull();
+  });
+  
+});
