@@ -13,8 +13,8 @@
     <title>HydroCloud</title>
 
     <!-- jQuery, Bootstrap, Knockout, D3 -->
-    <script src="lib/jquery/jquery-2.0.2.js"></script>
     <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <script src='lib/knockout-3.0.0.js'></script>
     <script src="lib/d3/d3.min.js"></script>
@@ -404,10 +404,7 @@
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
         viewModel.plotGraph();
-        //var center = map.getCenter();
         google.maps.event.trigger(map, 'resize');
-        //Not eliminating the problem with missing tiles on resize.
-        //map.setCenter(center);
         console.log("resize");
       });
 

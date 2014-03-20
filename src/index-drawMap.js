@@ -1,4 +1,5 @@
 var map;
+var center = new google.maps.LatLng(39.395, -76.609);
 
 function drawMap() {
   //document.getElementById('map_div').style.display = "none";
