@@ -12,18 +12,25 @@ function drawMap() {
   //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
-  var points = new google.maps.KmlLayer("http://waterwatch.usgs.gov/kmls/real.kmz", {
-    suppressInfoWindows : true,
-    preserveViewport : true,
-    map : map
-  });
+  //Fusion table load so much faster than KML layers! (perhaps because the USGS kml loads more slowly than the fusion table.)
+  //fusion table ID: 11Ujto70g1r7bWNSax5X84KYYuTpwPGmWeacAhkwP
 
-  google.maps.event.addListener(points, 'click', function(kmlEvent) {
-    var re = /^[0-9]+/;
-    var sId = re.exec(kmlEvent.featureData.name)[0];
+  var fusionLayer = new google.maps.FusionTablesLayer({
+    query : {
+      select : 'location',
+      from : '1Rt_U4LqeNPi6Tk1-kq8ta-6OP748nJJJTqdwlC0Q'
+    },
+  });
+  fusionLayer.setMap(map);
+  
+  google.maps.event.addListener(fusionLayer, 'click', function(event) {
+    console.log(event);
+    var re = /[0-9]+/;
+    var sId = re.exec(event.row.site_no.value)[0];
+    console.log(sId);
     viewModel.siteId(sId);
-    viewModel.siteName(kmlEvent.featureData.name);
-    viewModel.siteDescription(kmlEvent.featureData.description);
+    viewModel.siteName(event.row.station_nm.value);
+    //viewModel.siteDescription(event.featureData.description);
     //This siteIdArray.push won't capture the first data requested.
     viewModel.siteIdArray.push(+sId);
     console.log(viewModel.siteId());
@@ -38,6 +45,38 @@ function drawMap() {
 
     getUSGS(sId);
   });
+  
+/*
+  //KML layers can use real-time updates from USGS, and will plot 5,000 points quickly... compared to plotting 5,000 points using other methods.
+  //The KML layer still loads too slowly, or not at all.
+  var points = new google.maps.KmlLayer("http://waterwatch.usgs.gov/kmls/real.kmz", {
+    suppressInfoWindows : true,
+    preserveViewport : true,
+    map : map
+  });
+
+  google.maps.event.addListener(fusionLayer, 'click', function(event) {
+    console.log(event);
+    var re = /^[0-9]+/;
+    var sId = re.exec(event.featureData.name)[0];
+    viewModel.siteId(sId);
+    viewModel.siteName(event.featureData.name);
+    viewModel.siteDescription(event.featureData.description);
+    //This siteIdArray.push won't capture the first data requested.
+    viewModel.siteIdArray.push(+sId);
+    console.log(viewModel.siteId());
+    console.log(viewModel.siteIdArray());
+    //viewModel.siteName.push(kmlEvent.featureData.name);
+    //viewModel.siteDescription.push(kmlEvent.featureData.description);
+
+    //console.log(sId);
+    //console.log(viewModel.siteId());
+    //console.log(viewModel.siteName());
+    //console.log(viewModel.siteDescription());
+
+    getUSGS(sId);
+  });
+*/
 
   tileNEX = new google.maps.ImageMapType({
     getTileUrl : function(tile, zoom) {
