@@ -94,9 +94,6 @@ function hydrograph(id) {
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
 };
 
-
-
-
 function loghistogram(id) {
   console.log("loghistogram");
   var myScreen = {
@@ -173,7 +170,6 @@ function loghistogram(id) {
   var xAxis = d3.svg.axis().scale(x).orient("bottom");
   var yAxis = d3.svg.axis().scale(y).orient("left");
 
-
   d3.select("#graph_div svg").remove();
   //var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
   var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -207,7 +203,6 @@ function flowduration(id) {
     height : viewModel.height()
   };
 
-
   var sitename = id;
   //future versions of the data object may store the name and site ID. For now, we'll just fake it.
   //var sorted = [];
@@ -238,8 +233,7 @@ function flowduration(id) {
   //console.log(sorted.length)
   //var testarray = [];
 
-  var area = d3.svg.line().interpolate("step-before")
-  .x(function(d) {
+  var area = d3.svg.line().interpolate("step-before").x(function(d) {
     rank = rank + 1;
     return xScale(rank);
   }).y(function(d) {
@@ -275,6 +269,17 @@ function flowduration(id) {
 
 
 
+function hyetograph(id) {
+  var margin = {//margin is for the larger focus graph.
+    top : 10,
+    right : 10,
+    bottom : 100,
+    left : 40
+  };
+  d3.select("#graph_div svg").remove();
+  var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
+};
+
 
 
 
@@ -296,7 +301,7 @@ function getUSGS(id) {
     //I need to check if this even has a value!!
     //MR Create a new array of objects from the JSON.
     data = [];
-    
+
     var data2 = {
       id : id,
       data : []
@@ -311,15 +316,14 @@ function getUSGS(id) {
         date : d.date,
         value : d.value
       };
-     // console.log("index = " + index);
+      // console.log("index = " + index);
       data2.data[index] = [];
       data2.data[index][0] = d.date;
       data2.data[index][1] = d.value;
-      data3[index]=[];
-      data3[index][0]=d.date;
-      data3[index][1]=d.value;
+      data3[index] = [];
+      data3[index][0] = d.date;
+      data3[index][1] = d.value;
     });
-
 
     //data.forEach(function(d, index, array) {
     //  data2.data[index][0] = d.date;
@@ -339,3 +343,53 @@ function getUSGS(id) {
   });
 
 };
+
+function dateStr(d) {
+  var month = +d.getMonth() + 1;
+  month = new String("00" + month).slice(-2);
+  var date = +d.getDate();
+  date = new String("00" + date).slice(-2);
+
+  var now = {
+    time : d,
+    year : d.getFullYear(),
+    month : month,
+    date : date
+  };
+  //console.log(now);
+  var dstr = "" + now.year + "-" + now.month + "-" + now.date;
+  //console.log(dstr);
+  return dstr;
+}
+
+function processN(array) {
+  var myArray = [];
+  array.forEach(function (d, index, array) {
+    myArray[index] = {};
+    myArray[index].date = new Date(d.dateTime);
+    myArray[index].value = +d.precipitation;
+  });
+  //console.log(myArray);
+  return myArray;
+}
+
+function getTuNexrad(id) {
+  //add some error functions.
+  console.log("requesting data from TU NEXRAD service");
+  var now = new Date();
+  var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
+  var start = new Date(end - (30 * 24 * 60 * 60 * 1000));
+  var endstr = "/enddate=" + dateStr(end);
+  var startstr = "/startdate=" + dateStr(start);
+  //console.log(endstr);
+  result = $.ajax({
+    url : "http://10.55.17.48:5000/nexradTS/id=" + id + startstr + endstr,
+    dataType : "json",
+    complete : function() {
+      console.log("request complete");
+      console.log(result);
+      viewModel.TuNexrad = processN(result.responseJSON);
+      viewModel.plotGraph();
+    }
+  });
+}

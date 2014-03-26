@@ -44,6 +44,7 @@ function drawMap() {
     //console.log(viewModel.siteDescription());
 
     getUSGS(sId);
+    getTuNexrad(sId);
   });
   
 /*

@@ -96,7 +96,7 @@ describe("The TU NEXRAD service", function() {
     console.log("start TU NEXRAD request");
     result = 6;
     result = $.ajax({
-      url : "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02",
+      url : "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2014-03-22/enddate=2014-03-25",
       dataType : "json",
       complete : function() {
         console.log("request complete");
@@ -124,7 +124,7 @@ describe("The TU NEXRAD service", function() {
   });
   it("should return data that is less than 12 hours old.", function() {
     //console.log(Date.parse(result.responseJSON.value.timeSeries[0].sourceInfo.siteCode[0].dateTime));
-    console.log("Time of last measurement: " + result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime);
-    expect(Date.parse(result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime)).toBeGreaterThan(Date.now() - (12 * 60 * 60 * 1000));
+    console.log("Time of last measurement: " + result.responseJSON[result.responseJSON.length-1].dateTime);
+    expect(Date.parse(result.responseJSON[result.responseJSON.length-1].dateTime)).toBeGreaterThan(Date.now() - (24 * 60 * 60 * 1000));
   });
 });
