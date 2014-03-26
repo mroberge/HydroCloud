@@ -224,28 +224,26 @@ function flowduration(id) {
     left : 70
   }, width = myScreen.width - margin.left - margin.right, height = myScreen.height - margin.top - margin.bottom;
 
-  var x = d3.scale.linear().range([0, width]);
+  var xScale = d3.scale.linear().range([0, width]);
   //This will plot from high values to low.
   //var x = d3.scale.linear().range([width, 0]); //This will plot from low values to high.
   //var y = d3.scale.linear().range([height, 0]); //Use this for a linear scale on the Y axis.
-  var y = d3.scale.log().range([height, 0]);
+  var yScale = d3.scale.log().range([height, 0]);
   //Dealt with trouble switching to log by changing y.domain to have a min of 1, not zero.
 
-  var xAxis = d3.svg.axis().scale(x).orient("bottom");
-  var yAxis = d3.svg.axis().scale(y).orient("left");
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+  var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
   var rank = 0;
   //console.log(sorted.length)
   //var testarray = [];
 
-  var area = d3.svg.line().interpolate("step-before")//If you use the "monotone" interpolate, it will be smooth. "step-before" will give a better idea of the data granularity.
+  var area = d3.svg.line().interpolate("step-before")
   .x(function(d) {
     rank = rank + 1;
-    //console.log(myIndex);
-    return x(rank);
+    return xScale(rank);
   }).y(function(d) {
-    //console.log(d.value);
-    return y(d.value);
+    return yScale(d.value);
   });
 
   d3.select("#graph_div svg").remove();
@@ -253,8 +251,8 @@ function flowduration(id) {
   svg.append("defs").append("clipPath").attr("id", "clip").append("rect").attr("width", width).attr("height", height);
   var focus = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  x.domain(d3.extent([0, data.length]));
-  y.domain([1, d3.max(data.map(function(d) {
+  xScale.domain(d3.extent([0, data.length]));
+  yScale.domain([1, d3.max(data.map(function(d) {
     return d.value;
   }))]);
   //If y.domain has a min value of 0, then you can't plot in a log scale.'
@@ -298,6 +296,13 @@ function getUSGS(id) {
     //I need to check if this even has a value!!
     //MR Create a new array of objects from the JSON.
     data = [];
+    
+    var data2 = {
+      id : id,
+      data : []
+    };
+    var data3 = [];
+    //console.log(data2.data[0][0]);
     //Clear out the array.
     temp.forEach(function(d, index, array) {
       d.date = new Date(d.dateTime);
@@ -306,15 +311,29 @@ function getUSGS(id) {
         date : d.date,
         value : d.value
       };
+     // console.log("index = " + index);
+      data2.data[index] = [];
+      data2.data[index][0] = d.date;
+      data2.data[index][1] = d.value;
+      data3[index]=[];
+      data3[index][0]=d.date;
+      data3[index][1]=d.value;
     });
 
+
+    //data.forEach(function(d, index, array) {
+    //  data2.data[index][0] = d.date;
+    //  data2.data[index][1] = d.value;
+    //});
+    //console.log("data3 = ");
+    //console.log(data3);
     //    target.dispatchEvent(myEvent2);
-    console.log(id);
+    //console.log(id);
     //console.log(data);
     //hydrograph(id);
     //flowduration(id);
     //loghistogram(id);
-    viewModel.dataArray.push(data);
+    viewModel.dataArray.push(data3);
     console.log("viewModel.dataArray().length = " + viewModel.dataArray().length);
     viewModel.plotGraph();
   });

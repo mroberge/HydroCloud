@@ -10,9 +10,9 @@ function scatterChart() {
    */
   var margin = {
     top : 20,
-    right : 60,
-    bottom : 20,
-    left : 40
+    right : 20,
+    bottom : 30,
+    left : 50
   };
   var width = 760;
   var height = 120;
@@ -24,9 +24,12 @@ function scatterChart() {
   };
   //var xScale = d3.scale.linear();
   var xScale = d3.time.scale();
-  var yScale = d3.scale.linear();
+  //var yScale = d3.scale.linear();
+  var yScale = d3.scale.log();
   var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0);
-  var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5);
+  var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5).tickFormat(function (d) {
+    return yScale.tickFormat(10, d3.format(",d"))(d);
+  });
   //NEW
   var area = d3.svg.area().x(X).y1(Y);
   var line = d3.svg.line().x(X).y(Y);
@@ -37,26 +40,6 @@ function scatterChart() {
 
   function chart(selection) {
     selection.each(function(dataArray) {
-      // Convert data to standard representation greedily;
-      // this is needed for nondeterministic accessors.
-      //But once you convert it, you don't need to convert it anymore. This is a problem with setting xValue.
-
-
-      //perhaps this needs to be moved out of chart so that it only gets called during set up.
-      for ( i = 0; i < dataArray.length; i++) {
-        dataArray[i] = dataArray[i].map(function(d, i) {
-          return [xValue.call(dataArray[i], d, i), yValue.call(dataArray[i], d, i)];
-        });
-
-      };
-      //console.log("line 42");
-      //console.log(dataArray);
-
-      /*   This is the old function that the new function is based upon.
-       data = data.map(function(d, i) {
-       return [xValue.call(data, d, i), yValue.call(data, d, i)];
-       });
-       */
 
       if (!xDomain.length) {//if xDomain hasn't been set yet, set it to the full domain.
         //xDomain = d3.extent(dataArray[0], function(d) { return d[0]; });
@@ -91,7 +74,7 @@ function scatterChart() {
       gEnter.append("g").attr("class", "y axis");
       
       var titleGroup = gEnter.append("g").attr("class", "titleGroup");
-      titleGroup.append("svg:text").attr("class", "title").text("My New Title");
+      titleGroup.append("svg:text").attr("class", "title").text("Stream Hydrograph");
       titleGroup.append("svg:text").attr("class", "subtitle").attr("dy", "1em");
 
       // Update the outer dimensions.
@@ -185,7 +168,7 @@ function scatterChart() {
         //console.log("setFullyDomain");
         //set xmax and xmin to x value in first element in first array.
         var max = dataArray[0][0][1];
-        var min = 0;
+        var min = max;
         //console.log("max: " + max + " min: " + min);
         //d3.min(dataArray[0], xValue);
         var localMax = max;
@@ -218,7 +201,7 @@ function scatterChart() {
         };
 
         domain = [min, max];
-        //console.log(domain);
+        console.log("domain min: " + domain[0] + ",  max: " + domain[1]);
         return domain;
       }
 
@@ -273,21 +256,40 @@ function scatterChart() {
 
   chart.xscale = function(a) {
     if (!arguments.length){
-      console.log("log");
+      console.log(xScale);
       return xScale;
     };
     if (a ==="linear"){
-      console.log("log");
+      console.log("x:linear");
       xScale = d3.scale.linear();
     } else if (a === "log") {
-      console.log("log");
+      console.log("x:log");
       xScale = d3.scale.log();
     } else if (a === "time") {
       xScale = d3.time.scale();
-      console.log("time");
+      console.log("x:time");
     };
     return chart;
   };
 
+  chart.yscale = function(a) {
+    if (!arguments.length){
+      console.log(yScale);
+      return yScale;
+    };
+    if (a ==="linear"){
+      console.log("y:linear");
+      yScale = d3.scale.linear();
+      yAxis.scale(yScale).orient("left").tickSize(6, 0).ticks(5);
+    } else if (a === "log") {
+      console.log("y:log");
+      yScale = d3.scale.log();
+      yAxis.tickFormat(function (d) {return yScale.tickFormat(10, d3.format(",d"))(d);});
+    } else if (a === "time") {
+      yScale = d3.time.scale();
+      console.log("y:time");
+    };
+    return chart;
+  };
   return chart;
 }
