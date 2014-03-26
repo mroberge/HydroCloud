@@ -5,14 +5,13 @@
 
     <title>ReusableChart</title>
     <style>
-    
       .chart-div {
-        
+
         width: 100%;
         height: 120px;
       }
       svg {
-      /*Use this for viewbox scaling method.*/
+        /*Use this for viewbox scaling method.*/
         position: absolute;
         width: 100%;
         height: 120px;
@@ -67,18 +66,57 @@
     </script>
     <script type="text/javascript">
       function resized() {
-        d3.select("#chart_div2").call(secondChart.width(window.innerWidth - 10));
-        thirdChart.width(window.innerWidth - 10);
+        d3.select("#chart_div2").call(secondChart.width(window.innerWidth - 40));
+        thirdChart.width(window.innerWidth - 40);
         thirdDiv.call(thirdChart);
-        fourthDiv.call(fourthChart.width(window.innerWidth - 10));
-        
-        //the .x and .y accessors need to be reset to read from an array, not an object. Something is screwed up!
-        fifthChart.x(function(d) {return d[0];}).y(function(d) { return +d[1];});
+        fourthDiv.call(fourthChart.width(window.innerWidth - 40));
 
-         fifthDiv.call( fifthChart.width(window.innerWidth - 10));
+        //the .x and .y accessors need to be reset to read from an array, not an object. Something is screwed up!
+        fifthChart.x(function(d) {
+          return d[0];
+        }).y(function(d) {
+          return +d[1];
+        });
+
+        fifthDiv.call(fifthChart.width(window.innerWidth - 40));
       }
+
+
       window.onresize = resized;
-      
+
+    </script>
+    <script src="src/scatterChart.js"></script>
+    <script>
+      //Based on Mike Bostock's 'Towards Reusable Charts' http://bost.ocks.org/mike/chart/
+
+      var elevData = [[1, 118], [10, 114], [20, 120], [30, 102], [40, 124], [50, 100], [60, 85], [70, 131], [80, 122], [90, 150], [100, 109], [130, 121]];
+      var elevData2 = [[2, 128], [15, 154], [25, 140], [33, 282], [48, 134], [52, 140], [61, 115], [75, 131], [87, 102], [93, 110], [109, 149], [110, 131]];
+      var elevData3 = [[3, 56], [15, 54], [25, 40], [33, 62], [48, 34], [52, 40], [61, 15], [75, 31], [87, 10], [93, 11], [109, 49], [150, 0]];
+      var bigData = [elevData, elevData2, elevData3];
+
+      //Chart One
+      d3.select("#chart_div1").datum([elevData]).call(scatterChart());
+
+      //Chart Two
+      var secondChart = scatterChart().width(window.innerWidth - 40);
+      d3.select("#chart_div2").datum([elevData, elevData3]).call(secondChart);
+
+      //Chart Three
+      var thirdChart = scatterChart().width(window.innerWidth - 40);
+      var thirdDiv = d3.select("#chart_div3");
+      thirdDiv.datum(bigData).call(thirdChart);
+
+      //Chart Four
+      var fourthChart = scatterChart().width(window.innerWidth - 40);
+      var fourthDiv = d3.select("#chart_div4");
+      var newData = [];
+      newData.push(elevData);
+      fourthDiv.datum(newData).call(fourthChart);
+      newData.push(elevData2);
+      //This doesn't work to replot the graph or add another line.
+      //You should add the data instead using enter() or data().
+      fourthDiv.datum(newData).call(fourthChart);
+
       function getUSGS(id) {
         if (id == "local") {
           var filename = "resources/USGSshort.txt";
@@ -97,88 +135,54 @@
           //I need to check if this even has a value!!
           //MR Create a new array of objects from the JSON.
           var data = [];
-          //Clear out the array.
           temp.forEach(function(d, index, array) {
             d.date = new Date(d.dateTime);
             d.value = +d.value;
-            data[index] = {
-              date : d.date,
-              value : d.value
-            };
+            data[index] = [];
+            data[index][0] = d.date;
+            data[index][1] = d.value;
           });
-
-          //target.dispatchEvent(myEvent2);
-          //console.log(id);
-          //console.log(data);
-          //hydrograph(id);
-          //flowduration(id);
-          //loghistogram(id);
-          //viewModel.plotGraph();
-          ready = true;
-          Data4 = data;
-          return;
+          ready = ready + 1;
+          console.log("ready = " + ready);
+          Data4.push(data);
         });
-
       };
 
-    </script>
-    <script src="src/scatterChart.js"></script>
-    <script>
-      //Based on Mike Bostock's 'Towards Reusable Charts' http://bost.ocks.org/mike/chart/
+      function plot5() {
+        d3.select("#chart_div5 svg").remove();
+        fifthDiv.datum(Data4).call(fifthChart);
+      }
 
-      var elevData = [[1, 118], [10, 114], [20, 120], [30, 102], [40, 124], [50, 100], [60, 85], [70, 131], [80, 122], [90, 150], [100, 109], [130, 121]];
-      var elevData2 = [[2, 128], [15, 154], [25, 140], [33, 282], [48, 134], [52, 140], [61, 115], [75, 131], [87, 102], [93, 110], [109, 149], [110, 131]];
-      var elevData3 = [[3, 56], [15, 54], [25, 40], [33, 62], [48, 34], [52, 40], [61, 15], [75, 31], [87, 10], [93, 11], [109, 49], [150, 0]];
-      var bigData = [elevData, elevData2, elevData3];
+      function wait(number) {
+        function readyYet() {
+          if (ready < number) {
+            console.log(".");
+            window.setTimeout(readyYet, 100);
+          } else {
+            console.log("data loaded");
+            console.log(Data4);
+            plot5();
+          }
+        }
 
-//Chart One
-      d3.select("#chart_div1").datum([elevData]).call(scatterChart());
+        readyYet();
+      }
 
-//Chart Two
-      var secondChart = scatterChart().width(window.innerWidth - 10);
-      d3.select("#chart_div2").datum([elevData, elevData3]).call(secondChart);
-
-//Chart Three
-      var thirdChart = scatterChart().width(window.innerWidth - 20);
-      var thirdDiv = d3.select("#chart_div3");
-      thirdDiv.datum(bigData).call(thirdChart);
-
-//Chart Four
-      var fourthChart = scatterChart().width(window.innerWidth - 20);
-      var fourthDiv = d3.select("#chart_div4");
-      var newData = [];
-      newData.push(elevData);
-      fourthDiv.datum(newData).call(fourthChart);
-      newData.push(elevData2);
-      //This doesn't work to replot the graph or add another line.
-      //You should add the data instead using enter() or data().
-      fourthDiv.datum(newData).call(fourthChart);
-
-//Chart Five
-      var fifthChart = scatterChart().width(window.innerWidth - 20);
-      //fifthChart needs this to read the stuff from getUSGS, which returns an array of objects.
-      //but maybe these are messing up the resizing somehow?
-      fifthChart.x(function(d) {return d.date;}).y(function(d) { return +d.value;});
+      //Chart Five
+      var fifthChart = scatterChart().width(window.innerWidth - 40);
       fifthDiv = d3.select("#chart_div5");
       var Data4 = [];
-      var ready = false;
-      getUSGS("local");
+      var ready = 0;
 
-      function plot5() {
-        fifthDiv.datum([Data4]).call(fifthChart);
-        //fifthDiv;
-      }
+      //getUSGS("local");
+      //getUSGS("01585500");
+      getUSGS("01564500");
+      wait(1);
+      setTimeout(getUSGS("01580000"), 1000);
+      wait(2);
+      setTimeout(getUSGS("01614500"), 1000);
+      wait(3);
 
-      function wait() {
-        if (!ready) {
-          setTimeout(wait, 100);
-        } else {
-          console.log("data loaded");
-          console.log(Data4);
-          plot5();
-        }
-      }
-      wait();
     </script>
   </body>
 </html>

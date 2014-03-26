@@ -149,7 +149,7 @@ describe("The tableJoin() function", function() {
     var result = tableJoin(data1,data2,data1);
     expect(result).toBeDefined();
   });
-  it("returns an object unchanged if it is the only input", function() {
+  xit("returns an object unchanged if it is the only input", function() {
     var result = tableJoin(data1);
     expect(result).toEqual(data1);
   });

@@ -27,7 +27,7 @@ function drawMap() {
     console.log(event);
     var re = /[0-9]+/;
     var sId = re.exec(event.row.site_no.value)[0];
-    console.log(sId);
+    //console.log(sId);
     viewModel.siteId(sId);
     viewModel.siteName(event.row.station_nm.value);
     //viewModel.siteDescription(event.featureData.description);
@@ -103,7 +103,7 @@ function drawMap() {
   //map.overlayMapTypes.setAt("0",goes);
   map.overlayMapTypes.setAt("1", tileNEX);
   google.maps.event.addListener(map, 'bounds_changed', function() {
-    console.log(map.getBounds());
+    //console.log(map.getBounds());
   });
 
 }

@@ -26,7 +26,6 @@
     <!-- my graphing stuff here -->
     <script src="src/index-dataReq.js"></script>
     <script src="src/index-drawGraph.js"></script>
-    <script src="src/scatterChart.js"></script>
 
     <!-- My styles here -->
     <style>
@@ -329,7 +328,7 @@
               The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
             </li>
           </ul>
-          <p></p>
+          <p> </p>
           <p>
             We've made several versions of the layout:
           </p>
@@ -349,6 +348,8 @@
 
     </div>
 
+
+
     <script type="text/javascript">
       var viewModel = {
         width : ko.observable($(window).width()),
@@ -358,31 +359,22 @@
           console.log("click");
           this.showLegend() ? this.showLegend(false) : this.showLegend(true);
         },
-        view : ko.observable("map"),
-        graph : ko.observable("scatter"),
+        graph : ko.observable("hydro"),
         hydro : function() {
-          this.view("scatter");
-          this.graph("scatter");
+          this.graph("hydro");
           this.plotGraph();
         },
         flow : function() {
-          this.view("flow");
           this.graph("flow");
           this.plotGraph();
         },
         histo : function() {
-          this.view("histo");
           this.graph("histo");
           this.plotGraph();
         },
-        scatter : function() {
-          this.view("scatter");
-          this.graph("scatter");
-          this.plotGraph();
-        },
         map : function() {
-          this.view("map");
           google.maps.event.trigger(map, 'resize');
+          //almost works! the transition is messing this up.
         },
         plotGraph : function() {
           console.log(this.graph());
@@ -393,12 +385,7 @@
           } else if (this.graph() === "histo") {
             loghistogram(this.siteId);
           } else if (this.graph() === "scatter") {
-            var graphDiv = d3.select("#graph_div");
-            console.log(this.dataArray());
-            //fourthChart.datum(dataArray());
-            d3.select("#graph_div svg").remove();
-            graphDiv.datum(this.dataArray()).call(fourthChart);
-            //scatterChart();
+            scatterChart();
           } else {
             console.log("no option selected");
           }
@@ -415,23 +402,16 @@
       var data = [];
 
       //var $window = $(window);
-      var fourthChart = scatterChart();
       $(window).resize(function() {
-        //fourthChart.width(window.innerWidth - 10);
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
-        fourthChart.width(viewModel.width()).height(viewModel.height());
-        if (viewModel.dataArray().length) {
-          viewModel.plotGraph();
-        };
-
+        viewModel.plotGraph();
         google.maps.event.trigger(map, 'resize');
         console.log("resize");
       });
 
       viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS("01580000");
-      $(window).resize();
     </script>
   </body>
 </html>
