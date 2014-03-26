@@ -100,15 +100,11 @@ function scatterChart() {
 
       //NEW click function for handling mouseclicks on an object.
       function myClickFunction() {//just a silly function taken from http://bl.ocks.org/mbostock/1166403
-        //Problem: when you resize the window, it loses the new domain when it redraws the graph.
-        //solution 1: when you change domain, set the new domain just like you set width.
-        //solution 2: when you redraw the graph, it recalculates the domain. Maybe don't do that anymore.
         console.log("click");
 
         var n = dataArray[0].length - 1, i = Math.floor(Math.random() * n / 2), j = i + Math.floor(Math.random() * n / 2) + 1;
         xDomain = [xValue(dataArray[0][i]), xValue(dataArray[0][j])];
         xScale.domain(xDomain);
-        //It would be nice if you could set this and then call a redraw function.
         var t = g.transition().duration(750);
         t.select(".x.axis").call(xAxis);
         t.selectAll(".line").attr("d", line);

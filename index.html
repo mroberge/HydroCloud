@@ -204,6 +204,9 @@
                 <li>
                   <a href="#" data-bind="click: histo">Histogram</a>
                 </li>
+                <li>
+                  <a href="#" data-bind="click: hyeto">Hyetograph</a>
+                </li>
                 <li class="divider"></li>
                 <li>
                   <a href="#" data-bind="click: toggleLegend">Show Legend</a>
@@ -380,6 +383,11 @@
           this.graph("scatter");
           this.plotGraph();
         },
+        hyeto : function() {
+          this.view("hyeto");
+          this.graph("hyeto");
+          this.plotGraph();
+        },
         map : function() {
           this.view("map");
           google.maps.event.trigger(map, 'resize');
@@ -392,6 +400,8 @@
             flowduration(this.siteId);
           } else if (this.graph() === "histo") {
             loghistogram(this.siteId);
+          } else if (this.graph() === "hyeto") {
+            hydrograph(this.siteId);
           } else if (this.graph() === "scatter") {
             var graphDiv = d3.select("#graph_div");
             console.log(this.dataArray());
@@ -416,7 +426,7 @@
 
       //var $window = $(window);
       var fourthChart = scatterChart();
-      $(window).resize(function() {
+      function redraw() {
         //fourthChart.width(window.innerWidth - 10);
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
@@ -424,14 +434,15 @@
         if (viewModel.dataArray().length) {
           viewModel.plotGraph();
         };
-
-        google.maps.event.trigger(map, 'resize');
         console.log("resize");
-      });
+        google.maps.event.trigger(map, 'resize');
+      }
 
       viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS("01580000");
-      $(window).resize();
+      //$(window).resize();
+      google.maps.event.addDomListener(window, 'load', redraw);
+      $(window).resize(redraw);
     </script>
   </body>
 </html>

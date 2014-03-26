@@ -12,7 +12,7 @@ function drawMap() {
   //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
-  //Fusion table load so much faster than KML layers! (perhaps because the USGS kml loads more slowly than the fusion table.)
+  //Fusion table load much faster than KML layers! (perhaps because the USGS kml loads more slowly than the fusion table.)
   //fusion table ID: 11Ujto70g1r7bWNSax5X84KYYuTpwPGmWeacAhkwP
 
   var fusionLayer = new google.maps.FusionTablesLayer({
