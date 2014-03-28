@@ -93,10 +93,12 @@ describe("The TU NEXRAD service", function() {
 
   //I would like to request the data once and then test it, but this done() system doesn't seem to be up to it.
   beforeEach(function(done) {
+    var urlDates = "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2014-03-22/enddate=2014-03-25";
+    var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=01646500/recent=2";
     console.log("start TU NEXRAD request");
     result = 6;
     result = $.ajax({
-      url : "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02",
+      url : urlRecent,
       dataType : "json",
       complete : function() {
         console.log("request complete");
@@ -122,9 +124,9 @@ describe("The TU NEXRAD service", function() {
   it("should return numeric precipitation data", function() {
     expect(+result.responseJSON[0].precipitation).toEqual(jasmine.any(Number));
   });
-  it("should return data that is less than 12 hours old.", function() {
+  it("should return data that is less than 36 hours old.", function() {
     //console.log(Date.parse(result.responseJSON.value.timeSeries[0].sourceInfo.siteCode[0].dateTime));
-    console.log("Time of last measurement: " + result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime);
-    expect(Date.parse(result.responseJSON.value.timeSeries[0].values[0].value[0].dateTime)).toBeGreaterThan(Date.now() - (12 * 60 * 60 * 1000));
+    console.log("Time of last measurement: " + result.responseJSON[result.responseJSON.length-1].dateTime);
+    expect(Date.parse(result.responseJSON[result.responseJSON.length-1].dateTime)).toBeGreaterThan(Date.now() - (48 * 60 * 60 * 1000));
   });
 });

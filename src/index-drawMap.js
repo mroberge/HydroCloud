@@ -12,7 +12,7 @@ function drawMap() {
   //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
-  //Fusion table load so much faster than KML layers! (perhaps because the USGS kml loads more slowly than the fusion table.)
+  //Fusion table load much faster than KML layers! (perhaps because the USGS kml loads more slowly than the fusion table.)
   //fusion table ID: 11Ujto70g1r7bWNSax5X84KYYuTpwPGmWeacAhkwP
 
   var fusionLayer = new google.maps.FusionTablesLayer({
@@ -30,11 +30,13 @@ function drawMap() {
     //console.log(sId);
     viewModel.siteId(sId);
     viewModel.siteName(event.row.station_nm.value);
+    viewModel.siteArea(+event.row.drain_area_va.value);
+    viewModel.siteArray.push({id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value});
     //viewModel.siteDescription(event.featureData.description);
     //This siteIdArray.push won't capture the first data requested.
-    viewModel.siteIdArray.push(+sId);
-    console.log(viewModel.siteId());
-    console.log(viewModel.siteIdArray());
+    viewModel.siteIdArray.push(sId);
+    //console.log(viewModel.siteId());
+    console.log(viewModel.siteArray());
     //viewModel.siteName.push(kmlEvent.featureData.name);
     //viewModel.siteDescription.push(kmlEvent.featureData.description);
 
@@ -44,6 +46,7 @@ function drawMap() {
     //console.log(viewModel.siteDescription());
 
     getUSGS(sId);
+    getTuNexrad(sId);
   });
   
 /*

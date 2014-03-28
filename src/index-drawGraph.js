@@ -54,11 +54,14 @@ function hydrograph(id) {
     return y(d.value);
   });
 
-  var area2 = d3.svg.area().interpolate("linear").x(function(d) {
-    return x2(d.date);
-  }).y0(height2).y1(function(d) {
-    return y2(d.value);
-  });
+  var area2 = d3.svg.area().interpolate("linear")
+    .x(function(d) {
+      return x2(d.date);
+    })
+    .y0(height2)
+    .y1(function(d) {
+      return y2(d.value);
+    });
 
   d3.select("#graph_div svg").remove();
   var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
@@ -93,9 +96,6 @@ function hydrograph(id) {
   focus.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
 };
-
-
-
 
 function loghistogram(id) {
   console.log("loghistogram");
@@ -173,7 +173,6 @@ function loghistogram(id) {
   var xAxis = d3.svg.axis().scale(x).orient("bottom");
   var yAxis = d3.svg.axis().scale(y).orient("left");
 
-
   d3.select("#graph_div svg").remove();
   //var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
   var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -207,7 +206,6 @@ function flowduration(id) {
     height : viewModel.height()
   };
 
-
   var sitename = id;
   //future versions of the data object may store the name and site ID. For now, we'll just fake it.
   //var sorted = [];
@@ -238,8 +236,7 @@ function flowduration(id) {
   //console.log(sorted.length)
   //var testarray = [];
 
-  var area = d3.svg.line().interpolate("step-before")
-  .x(function(d) {
+  var area = d3.svg.line().interpolate("step-before").x(function(d) {
     rank = rank + 1;
     return xScale(rank);
   }).y(function(d) {
@@ -275,6 +272,108 @@ function flowduration(id) {
 
 
 
+function hyetograph(id) {
+  console.log("hyetograph");
+  var myScreen = {
+    width : viewModel.width(),
+    height : viewModel.height()
+  };
+  var margin = {//margin is for the larger stream hydrograph.
+    top : 10,
+    right : 10,
+    bottom : 100,
+    left : 40
+  };
+  var margin2 = {//margin2 is for the smaller hyetograph.
+    top : myScreen.height - 70,
+    right : 10,
+    bottom : 20,
+    left : 40
+  };
+  var width = myScreen.width - margin.left - margin.right;
+  var height = myScreen.height - margin.top - margin.bottom;
+  var height2 = myScreen.height - margin2.top - margin2.bottom;
+  
+  var xScale = d3.time.scale().range([0, width]);
+  var yScale = d3.scale.linear().range([height, 0]);
+  var y2Scale = d3.scale.linear().range([height2, 0]);
+  
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0);
+  //I may not need a second x axis. Just redraw first?
+  var x2Axis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0);
+  var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5);
+  //yAxis.tickFormat(function (d) { return yScale.tickFormat(10, d3.format(",d"))(d);});
+  var y2Axis = d3.svg.axis().scale(y2Scale).orient("left").tickSize(6, 0).ticks(5);
+  //y2Axis.tickFormat(function (d) { return y2Scale.tickFormat(10, d3.format(",d"))(d);});
+  
+  var area = d3.svg.area()
+    .x(function(d) {
+      return xScale(d[0]);
+    })
+    .y0(height) //only if you want to fill the graph.
+    .y1(function(d) {
+      return yScale(d[1]);
+    });
+  var area2 = d3.svg.area().interpolate("step-before")
+    .x(function(d) {
+      return xScale(d.date);
+    })
+    .y0(height2)
+    .y1(function(d) {
+      return y2Scale(d.value);
+    });
+    
+  //The data to plot:
+  //viewModel.dataArray()[viewModel.dataArray().length-1] //this is the last site in the array.
+  //viewModel.tuNexrad()
+  var stream = viewModel.dataArray()[viewModel.dataArray().length-1];
+  //var stream = viewModel.dataArray()[0];
+  var rain = viewModel.tuNexrad();
+  //if graph has been called but we don't have our data yet, plot with no data.
+  if (!rain) rain = [{date: null, value: null}];
+  var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
+  var xMin = d3.min([d3.min(stream.map(function(d) { return d[0];})), d3.min(rain.map(function(d) { return d.date;}))]);
+  xScale.domain([xMin, xMax]);
+  //If yScale.domain has a min value of 0, then you can't plot in a log scale.
+  yScale.domain([0, d3.max(stream.map(function(d) { return d[1];}))]);
+  y2Scale.domain([0, d3.max(rain.map(function(d) { return d.value;}))]);
+  
+  d3.select("#graph_div svg").remove();
+  var svg = d3.select("#graph_div").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom);
+  //svg.append("defs").append("clipPath").attr("id", "clip").append("rect").attr("width", width).attr("height", height);
+  var top = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var bottom = svg.append("g").attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+  top.append("path").attr("class", "filled").datum(stream).attr("clip-path", "url(#clip)").attr("d", area);
+  top.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
+  top.append("g").attr("class", "y axis").call(yAxis);
+  bottom.append("path").attr("class", "filled").datum(rain).attr("clip-path", "url(#clip)").attr("d", area2);
+  bottom.append("g").attr("class", "x2 axis").attr("transform", "translate(0," + height2 + ")").call(xAxis);
+  bottom.append("g").attr("class", "y2 axis").call(y2Axis);
+
+  //data processing notices
+  console.log(rain);
+  if (rain.length === 0) {
+    console.log("no data");
+    bottom.append("text").attr("class", "dataNotice").text("No data for this site").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
+  } else if (rain[0].date === null) {
+    console.log("data loading");
+    bottom.append("text").attr("class", "dataNotice").text("data loading...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
+  };
+
+  //title block
+  var title = top.append("g").attr("transform", "translate(125,20)");
+  //title.append("svg:text").attr("class", "Title").text(sitename);
+  title.append("svg:text").attr("class", "Title").text(viewModel.siteName());
+  title.append("svg:text").attr("class", "subTitle").attr("dy", "1em").text(stream.length + " measurements");
+
+  //axis labels
+  top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
+  top.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
+  bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -10).attr("y", -40).attr("dy", "1em").style("text-anchor", "end").text("mm");
+
+};
+
 
 
 
@@ -296,7 +395,7 @@ function getUSGS(id) {
     //I need to check if this even has a value!!
     //MR Create a new array of objects from the JSON.
     data = [];
-    
+
     var data2 = {
       id : id,
       data : []
@@ -311,15 +410,14 @@ function getUSGS(id) {
         date : d.date,
         value : d.value
       };
-     // console.log("index = " + index);
+      // console.log("index = " + index);
       data2.data[index] = [];
       data2.data[index][0] = d.date;
       data2.data[index][1] = d.value;
-      data3[index]=[];
-      data3[index][0]=d.date;
-      data3[index][1]=d.value;
+      data3[index] = [];
+      data3[index][0] = d.date;
+      data3[index][1] = d.value;
     });
-
 
     //data.forEach(function(d, index, array) {
     //  data2.data[index][0] = d.date;
@@ -334,8 +432,65 @@ function getUSGS(id) {
     //flowduration(id);
     //loghistogram(id);
     viewModel.dataArray.push(data3);
-    console.log("viewModel.dataArray().length = " + viewModel.dataArray().length);
+    console.log(viewModel.dataArray()[0]);
     viewModel.plotGraph();
   });
 
 };
+
+function dateStr(d) {
+  var month = +d.getMonth() + 1;
+  month = new String("00" + month).slice(-2);
+  var date = +d.getDate();
+  date = new String("00" + date).slice(-2);
+
+  var now = {
+    time : d,
+    year : d.getFullYear(),
+    month : month,
+    date : date
+  };
+  //console.log(now);
+  var dstr = "" + now.year + "-" + now.month + "-" + now.date;
+  //console.log(dstr);
+  return dstr;
+}
+
+function processN(array) {
+  var myArray = [];
+  array.forEach(function (d, index, array) {
+    myArray[index] = {};
+    myArray[index].date = new Date(d.dateTime);
+    myArray[index].value = +d.precipitation;
+  });
+  //console.log(myArray);
+  return myArray;
+}
+
+function getTuNexrad(id) {
+  //add some error functions.
+  //if new data is requested, get rid of old data, set one element to null.
+  viewModel.tuNexrad([{date: null, value: null}]);
+  console.log("requesting data from TU NEXRAD service");
+  var now = new Date();
+  var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
+  var start = new Date(end - (30 * 24 * 60 * 60 * 1000));
+  var endstr = "/enddate=" + dateStr(end);
+  var startstr = "/startdate=" + dateStr(start);
+  var urlDates = "http://10.55.17.48:5000/nexradTS/id=" + id + startstr + endstr;
+  var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=" + id + "/recent=30";
+
+  //console.log(endstr);
+  result = $.ajax({
+    url : urlRecent,
+    dataType : "json",
+    complete : function() {
+      console.log("request complete");
+      console.log(result);
+      viewModel.tuNexrad(processN(result.responseJSON));
+      console.log("vM.tuNexrad:");
+      console.log(viewModel.tuNexrad());
+      viewModel.plotGraph();
+    }
+  });
+}
