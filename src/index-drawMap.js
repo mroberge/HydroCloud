@@ -30,20 +30,16 @@ function drawMap() {
     //console.log(sId);
     viewModel.siteId(sId);
     viewModel.siteName(event.row.station_nm.value);
-    viewModel.siteArea(+event.row.drain_area_va.value);
     viewModel.siteArray.push({id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value});
-    //viewModel.siteDescription(event.featureData.description);
     //This siteIdArray.push won't capture the first data requested.
     viewModel.siteIdArray.push(sId);
     //console.log(viewModel.siteId());
     console.log(viewModel.siteArray());
     //viewModel.siteName.push(kmlEvent.featureData.name);
-    //viewModel.siteDescription.push(kmlEvent.featureData.description);
 
     //console.log(sId);
     //console.log(viewModel.siteId());
     //console.log(viewModel.siteName());
-    //console.log(viewModel.siteDescription());
 
     getUSGS(sId);
     getTuNexrad(sId);
@@ -64,18 +60,15 @@ function drawMap() {
     var sId = re.exec(event.featureData.name)[0];
     viewModel.siteId(sId);
     viewModel.siteName(event.featureData.name);
-    viewModel.siteDescription(event.featureData.description);
     //This siteIdArray.push won't capture the first data requested.
     viewModel.siteIdArray.push(+sId);
     console.log(viewModel.siteId());
     console.log(viewModel.siteIdArray());
     //viewModel.siteName.push(kmlEvent.featureData.name);
-    //viewModel.siteDescription.push(kmlEvent.featureData.description);
 
     //console.log(sId);
     //console.log(viewModel.siteId());
     //console.log(viewModel.siteName());
-    //console.log(viewModel.siteDescription());
 
     getUSGS(sId);
   });

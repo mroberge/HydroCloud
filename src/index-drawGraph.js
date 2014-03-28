@@ -378,15 +378,19 @@ function hyetograph(id) {
 
 
 function getUSGS(id) {
+	
+  var recentQuery = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
+  var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
+  var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-10-01&parameterCd=00060";
   if (id == "local") {
     var filename = "resources/USGSshort.txt";
   } else {
-    var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+    var filename = dateQuery;
   }
   d3.json(filename, function(error, json) {
     if (error) {
       if (error.status === 0) {
-        alert("CORS is not enabled.");
+        alert("USGS data request error.");
       };
       return console.warn(error);
     }
@@ -432,7 +436,7 @@ function getUSGS(id) {
     //flowduration(id);
     //loghistogram(id);
     viewModel.dataArray.push(data3);
-    console.log(viewModel.dataArray()[0]);
+    console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
     viewModel.plotGraph();
   });
 
@@ -475,21 +479,31 @@ function getTuNexrad(id) {
   var now = new Date();
   var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
   var start = new Date(end - (30 * 24 * 60 * 60 * 1000));
-  var endstr = "/enddate=" + dateStr(end);
-  var startstr = "/startdate=" + dateStr(start);
+  var endstr = "/enddate=" + dateStr(time.end);
+  var startstr = "/startdate=" + dateStr(time.start);
   var urlDates = "http://10.55.17.48:5000/nexradTS/id=" + id + startstr + endstr;
-  var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=" + id + "/recent=30";
+  var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=" + id + "/recent=3" + time.recent;
 
   //console.log(endstr);
   result = $.ajax({
-    url : urlRecent,
+    url : urlDates,
     dataType : "json",
     complete : function() {
-      console.log("request complete");
+      console.log("NEXRAD request complete");
       console.log(result);
-      viewModel.tuNexrad(processN(result.responseJSON));
+      if (result.responseJSON.length) {
+      	console.log("success: responseJSON");
+      	//viewModel.tuNexrad(processN(result.responseJSON));
+      } else if (!result.responseJSON.length && result.responseText.length) {
+      	console.log("success: responseText");
+      	//viewModel.tuNexrad(processN(result.responseText));
+      } else {
+      	console.log("Error. No responseJSON or responseText in response.");
+      };
+      
       console.log("vM.tuNexrad:");
       console.log(viewModel.tuNexrad());
+      viewModel.tuNexrad(processN(result.responseJSON));
       viewModel.plotGraph();
     }
   });
