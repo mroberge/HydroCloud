@@ -329,6 +329,8 @@ function hyetograph(id) {
   var stream = viewModel.dataArray()[viewModel.dataArray().length-1];
   //var stream = viewModel.dataArray()[0];
   var rain = viewModel.tuNexrad();
+  //if graph has been called but we don't have our data yet, plot with no data.
+  if (!rain) rain = [{date: null, value: null}];
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
   var xMin = d3.min([d3.min(stream.map(function(d) { return d[0];})), d3.min(rain.map(function(d) { return d.date;}))]);
   xScale.domain([xMin, xMax]);
@@ -349,6 +351,16 @@ function hyetograph(id) {
   bottom.append("g").attr("class", "x2 axis").attr("transform", "translate(0," + height2 + ")").call(xAxis);
   bottom.append("g").attr("class", "y2 axis").call(y2Axis);
 
+  //data processing notices
+  console.log(rain);
+  if (rain.length === 0) {
+    console.log("no data");
+    bottom.append("text").attr("class", "dataNotice").text("No data for this site").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
+  } else if (rain[0].date === null) {
+    console.log("data loading");
+    bottom.append("text").attr("class", "dataNotice").text("data loading...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
+  };
+
   //title block
   var title = top.append("g").attr("transform", "translate(125,20)");
   //title.append("svg:text").attr("class", "Title").text(sitename);
@@ -358,6 +370,7 @@ function hyetograph(id) {
   //axis labels
   top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
   top.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
+  bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -10).attr("y", -40).attr("dy", "1em").style("text-anchor", "end").text("mm");
 
 };
 
@@ -456,7 +469,8 @@ function processN(array) {
 
 function getTuNexrad(id) {
   //add some error functions.
-  viewModel.tuNexrad([]);//will this remove old data graphs? no, but redraw will.
+  //if new data is requested, get rid of old data, set one element to null.
+  viewModel.tuNexrad([{date: null, value: null}]);
   console.log("requesting data from TU NEXRAD service");
   var now = new Date();
   var end = new Date(now - (1 * 24 * 60 * 60 * 1000));

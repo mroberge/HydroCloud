@@ -138,7 +138,7 @@
         stroke: blue;
         fill: none;
       }
-      
+
       .filled {
         fill: skyblue;
       }
@@ -166,6 +166,11 @@
         stroke: #fff;
         fill-opacity: .125;
         shape-rendering: crispEdges;
+      }
+      
+      svg .dataNotice {
+        font: 30px sans-serif;
+        fill: gray;
       }
     </style>
 
@@ -448,6 +453,7 @@
 
       viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS("01580000");
+      getTuNexrad("01580000");
       //$(window).resize();
       google.maps.event.addDomListener(window, 'load', redraw);
       $(window).resize(redraw);
