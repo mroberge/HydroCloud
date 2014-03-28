@@ -167,7 +167,7 @@
         fill-opacity: .125;
         shape-rendering: crispEdges;
       }
-      
+
       svg .dataNotice {
         font: 30px sans-serif;
         fill: gray;
@@ -255,22 +255,13 @@
           Click on a point to read its name and load its data.
         </p>
         <p>
-          <b>Site Name:</b>
-          <br>
-          <span data-bind="text: siteName"> </span>
+          <b>Sites:</b>
         </p>
-        <p>
-          ViewModel information:
-        </p>
-        <p>
-          graph: <span data-bind="text: graph"></span>
-          <br>
-          width: <span data-bind="text: width"></span>
-          <br>
-          height: <span data-bind="text: height"></span>
-          <br>
-          number of sites: <span data-bind="text: viewModel.dataArray().length"></span>
-        </p>
+        <ol data-bind="foreach: viewModel.siteArray">
+          <li>
+            <span data-bind="text: $data.name"></span>
+          </li>
+        </ol>
       </div>
     </div>
 
@@ -302,24 +293,20 @@
 
         <div class="item">
           <h3>Site Statistics</h3>
-          <strong>Site name:</strong><span data-bind="text: siteName"></span>
-          <ul>
+          <p>
+            <span data-bind="text: viewModel.dataArray().length"></span> sites selected
+          </p>
+          <ul class="list-unstyled" data-bind="foreach: viewModel.siteArray">
             <li>
-              Site Id#: <span data-bind="text: siteId"></span>
-            </li>
-            <li>
-              Site Description: <span data-bind="text: siteDescription"></span>
-            </li>
-            <li>
-              Number of sites selected: <span data-bind="text: viewModel.dataArray().length"></span>
-            </li>
-            <li>
-              Sites:
-              <ol data-bind="foreach: viewModel.siteIdArray">
+              <strong><span data-bind="text: $index"></span>: <span data-bind="text: $data.name"></span></strong>
+              <ul>
                 <li>
-                  <strong><span data-bind="text: $index"></span>: </strong> site #<span data-bind="text: $data"></span>
+                  site #<span data-bind="text: $data.id"></span>
                 </li>
-              </ol>
+                <li>
+                  area: <span data-bind="text: $data.area"></span> mi<sup>2</sup>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -427,6 +414,12 @@
         //I enter site 01580000 as an initial value due to line 404.
         siteIdArray : ko.observableArray([01580000]),
         siteName : ko.observable(),
+        siteArea : ko.observable(),
+        siteArray : ko.observableArray([{
+          id : "01580000",
+          name : "DEER CREEK AT ROCKS, MD",
+          area : 94.4
+        }]),
         siteDescription : ko.observable(),
         dataArray : ko.observableArray(),
         tuNexrad : ko.observable() //just a single object, which happens to be an array...
@@ -450,6 +443,7 @@
         console.log("resize");
         google.maps.event.trigger(map, 'resize');
       }
+
 
       viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS("01580000");

@@ -30,11 +30,13 @@ function drawMap() {
     //console.log(sId);
     viewModel.siteId(sId);
     viewModel.siteName(event.row.station_nm.value);
+    viewModel.siteArea(+event.row.drain_area_va.value);
+    viewModel.siteArray.push({id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value});
     //viewModel.siteDescription(event.featureData.description);
     //This siteIdArray.push won't capture the first data requested.
-    viewModel.siteIdArray.push(+sId);
-    console.log(viewModel.siteId());
-    console.log(viewModel.siteIdArray());
+    viewModel.siteIdArray.push(sId);
+    //console.log(viewModel.siteId());
+    console.log(viewModel.siteArray());
     //viewModel.siteName.push(kmlEvent.featureData.name);
     //viewModel.siteDescription.push(kmlEvent.featureData.description);
 
