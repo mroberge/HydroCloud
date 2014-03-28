@@ -138,6 +138,10 @@
         stroke: blue;
         fill: none;
       }
+      
+      .filled {
+        fill: skyblue;
+      }
 
       path:hover {
         stroke: red;
@@ -404,7 +408,7 @@
             hyetograph(this.siteId);
           } else if (this.graph() === "scatter") {
             var graphDiv = d3.select("#graph_div");
-            console.log(this.dataArray());
+            //console.log(this.dataArray());
             //fourthChart.datum(dataArray());
             d3.select("#graph_div svg").remove();
             graphDiv.datum(this.dataArray()).call(fourthChart);
@@ -420,7 +424,7 @@
         siteName : ko.observable(),
         siteDescription : ko.observable(),
         dataArray : ko.observableArray(),
-        TuNexrad : ko.observableArray()
+        tuNexrad : ko.observable() //just a single object, which happens to be an array...
       };
       ko.applyBindings(viewModel);
       var data = [];
@@ -429,9 +433,12 @@
       var fourthChart = scatterChart();
       function redraw() {
         //fourthChart.width(window.innerWidth - 10);
+        //Set the new width here, then redraw the graph.
         viewModel.width($(window).width());
         viewModel.height($(".carousel-inner").height());
+        //scatterChart.js requires you to set the new width for the graph.
         fourthChart.width(viewModel.width()).height(viewModel.height());
+        //if there is data, plot the data.
         if (viewModel.dataArray().length) {
           viewModel.plotGraph();
         };

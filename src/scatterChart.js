@@ -31,7 +31,7 @@ function scatterChart() {
     return yScale.tickFormat(10, d3.format(",d"))(d);
   });
   //NEW
-  var area = d3.svg.area().x(X).y1(Y);
+  //var area = d3.svg.area().x(X).y1(Y);
   var line = d3.svg.line().x(X).y(Y);
   var xDomain = [];
   //leave empty. First time data are loaded, it will calculate the full x domain.
@@ -197,7 +197,7 @@ function scatterChart() {
         };
 
         domain = [min, max];
-        console.log("domain min: " + domain[0] + ",  max: " + domain[1]);
+        //console.log("domain min: " + domain[0] + ",  max: " + domain[1]);
         return domain;
       }
 
