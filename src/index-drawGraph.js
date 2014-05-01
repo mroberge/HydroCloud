@@ -385,7 +385,8 @@ function getUSGS(id) {
   if (id == "local") {
     var filename = "resources/USGSshort.txt";
   } else {
-    var filename = dateQuery;
+    //var filename = dateQuery;
+    var filename = recentQuery;
   }
   d3.json(filename, function(error, json) {
     if (error) {
@@ -486,7 +487,8 @@ function getTuNexrad(id) {
 
   //console.log(endstr);
   result = $.ajax({
-    url : urlDates,
+    //url : urlDates,
+    url : urlRecent,
     dataType : "json",
     complete : function() {
       console.log("NEXRAD request complete");
