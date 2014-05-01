@@ -379,7 +379,7 @@ function hyetograph(id) {
 
 function getUSGS(id) {
 	
-  var recentQuery = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
+  var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
   var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
   var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-10-01&parameterCd=00060";
   if (id == "local") {
@@ -483,7 +483,7 @@ function getTuNexrad(id) {
   var endstr = "/enddate=" + dateStr(time.end);
   var startstr = "/startdate=" + dateStr(time.start);
   var urlDates = "http://10.55.17.48:5000/nexradTS/id=" + id + startstr + endstr;
-  var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=" + id + "/recent=3" + time.recent;
+  var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
 
   //console.log(endstr);
   result = $.ajax({
