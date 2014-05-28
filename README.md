@@ -13,7 +13,7 @@ Links:
 
 ###Features
 * Map view shows location of stream gauges & NEXRAD imagery
-* click on a stream gauge to select it for plotting
+* Click on a stream gauge to select it for plotting
 * Plot multiple time series:
   * stream hydrographs
   * hyetographs
