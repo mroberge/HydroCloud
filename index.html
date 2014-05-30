@@ -114,6 +114,10 @@
         z-index: 50;
         /*display: none;*/
       }
+      
+      .v-scroll{
+        overflow-y: auto;
+      }
 
       /*For graphs*/
 
@@ -290,7 +294,7 @@
 
         <div class="item" id="graph_div"></div>
 
-        <div class="item">
+        <div class="item v-scroll">
           <h3>Site Statistics</h3>
           <p>
             <span data-bind="text: viewModel.dataArray().length"> </span> sites selected
@@ -310,7 +314,7 @@
           </ul>
         </div>
 
-        <div class="item">
+        <div class="item v-scroll">
           <h2>Description of the HydroCloud project</h2>
           <p>
             HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
