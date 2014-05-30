@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="author" content="Martin Roberge" />
+    <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
+
+    <link rel="shortcut icon" href="resources/favicon.ico" />
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+    <title>HydroCloud</title>
+
+    <!-- jQuery, Bootstrap, Knockout, D3 -->
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+    <script src='lib/knockout-3.0.0.js'></script>
+    <script src="lib/d3/d3.min.js"></script>
+
+    <!--- My mapping files here. --->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
+    <script src="src/index-drawMap.js"></script>
+
+    <!-- my graphing stuff here -->
+    <script src="src/index-drawGraph.js"></script>
+    <script src="src/scatterChart.js"></script>
+
+    <!-- My styles here -->
+    <style>
+      body {
+        /*bootstrap sets the navbar height at 50px.*/
+        padding-top: 50px;
+        padding-bottom: 50px;
+        background-color: lightgray;
+      }
+      /*for google maps*/
+      html, body, #carousel-example-generic, .carousel-inner, .item {
+        height: 100%
+      }
+
+      #brand {
+        font-family: 'Vollkorn', serif;
+        font-style: italic;
+        font-size: 24pt;
+        color: white;
+        text-shadow: 3px 3px 10px #aaf;
+      }
+
+      /*for carousel indicators */
+      .carousel-indicators {
+        position: absolute;
+        bottom: -50px;
+        color: #666;
+      }
+      .carousel-indicators :hover {
+        color: #bbb;
+      }
+      .carousel-indicators .active {
+        height: 20px;
+        width: 40px;
+        background-color: transparent;
+        color: white;
+      }
+
+      .carousel-indicators li {
+        /*override default behavior*/
+        text-indent: 0px;
+        height: 20px;
+        width: 40px;
+        border-style: none;
+        margin: 0;
+        font-size: 20px;
+      }
+
+      /*for my bottom button bar*/
+      #button-bar {
+        position: absolute;
+        bottom: 0px;
+        height: 50px;
+        width: 100%;
+      }
+
+      #button-bar a {
+        font-size: 30px;
+        color: #bbb;
+        bottom: 0px;
+      }
+
+      #button-bar a span {
+        vertical-align: middle;
+      }
+
+      #legend-btn {
+        color: white;
+        background-color: #444;
+        border-color: #444;
+      }
+
+      #legend-btn.active {
+        color: black;
+        background-color: #aaa;
+      }
+
+      #legend-modal {
+        position: absolute;
+        top: 80px;
+        right: 30px;
+        padding: 5px;
+        background-color: silver;
+        border: solid black;
+        border-width: 1px;
+        z-index: 50;
+        /*display: none;*/
+      }
+
+      /*For graphs*/
+
+      svg {
+        font: 10px sans-serif;
+      }
+
+      .axisTitle {
+        font: 14px serif;
+      }
+
+      .Title {
+        font: 20px serif;
+      }
+
+      .subTitle {
+        font: 12px serif;
+      }
+
+      path {
+        stroke: blue;
+        fill: none;
+      }
+
+      .filled {
+        fill: skyblue;
+      }
+
+      path:hover {
+        stroke: red;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      .bar rect {
+        fill: lightskyblue;
+        shape-rendering: crispEdges;
+      }
+
+      .bar text {
+        fill: black;
+      }
+
+      .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+      }
+
+      svg .dataNotice {
+        font: 30px sans-serif;
+        fill: gray;
+      }
+      
+      .v-scroll {
+        overflow-y: auto;
+      }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"> </span>
+            <span class="icon-bar"> </span>
+            <span class="icon-bar"> </span>
+          </button>
+          <a id="brand" class="navbar-brand" href="#">HydroCloud</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li data-target="#carousel-example-generic" data-slide-to="0">
+              <a href="#" data-bind="click: map">Map</a>
+            </li>
+            <li class="dropdown" data-target="#carousel-example-generic" data-slide-to="1">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"> </b></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#"  data-bind="click: hydro">Hydrograph</a>
+                </li>
+                <li>
+                  <a href="#" data-bind="click: flow">Flow Duration</a>
+                </li>
+                <li>
+                  <a href="#" data-bind="click: histo">Histogram</a>
+                </li>
+                <li>
+                  <a href="#" data-bind="click: hyeto">Hyetograph</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="#" data-bind="click: toggleLegend">Show Legend</a>
+                </li>
+              </ul>
+            </li>
+            <li data-target="#carousel-example-generic" data-slide-to="2">
+              <a href="#">Stats</a>
+            </li>
+            <li data-target="#carousel-example-generic" data-slide-to="3">
+              <a href="#"><strong>?</strong></a>
+            </li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+      <ul class="pager">
+        <li class="previous"><a href="#carousel-example-generic" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"> </span></a></li>
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active" data-bind="click: map">
+          <span class="glyphicon glyphicon-globe"> </span>
+        </li>
+        <li data-target="#carousel-example-generic" data-slide-to="1">
+          <span class="glyphicon glyphicon-stats"> </span>
+        </li>
+        <li data-target="#carousel-example-generic" data-slide-to="2">
+          <span class="glyphicon glyphicon-th-list"> </span>
+        </li>
+        <li data-target="#carousel-example-generic" data-slide-to="3">
+          <span class="glyphicon glyphicon-question-sign"> </span>
+        </li>
+        <li><a href="#" data-bind="click: toggleLegend, css: { active: showLegend}"><span class="glyphicon glyphicon-list-alt"> </span></a></li>
+        <li class="next"><a href="#carousel-example-generic" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+      </ul>
+    </nav>
+
+
+
+    <div id="legend-modal" data-bind="visible: showLegend">
+      <div class="modal-header">
+        <button type="button" class="close" id="legend-modal-dismiss" data-bind="click: toggleLegend" aria-hidden="true">
+          &times;
+        </button>
+        <h3 class="modal-title" id="myModalLabel">Legend</h3>
+      </div>
+      <div>
+        <p>
+          Click on a point to read its name and load its data.
+        </p>
+        <p>
+          <b>Sites:</b>
+        </p>
+        <ol data-bind="foreach: viewModel.siteArray">
+          <li>
+            <span data-bind="text: $data.name"></span>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Main Carousel Content -->
+    <div id="carousel-example-generic" class="carousel slide" data-interval="false">
+
+
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+
+        <div class="item active" id="map_div"></div>
+
+        <div class="item" id="graph_div"></div>
+
+        <div class="item v-scroll">
+          <h3>Site Statistics</h3>
+          <p>
+            <span data-bind="text: viewModel.dataArray().length"> </span> sites selected
+          </p>
+          <ul class="list-unstyled" data-bind="foreach: viewModel.siteArray">
+            <li>
+              <strong><span data-bind="text: $index"></span>: <span data-bind="text: $data.name"> </span></strong>
+              <ul>
+                <li>
+                  site #<span data-bind="text: $data.id"> </span>
+                </li>
+                <li>
+                  area: <span data-bind="text: $data.area"> </span> mi<sup>2</sup>
+                </li>
+              </ul> 
+          </ul>
+        </div>
+
+        <div class="item v-scroll">
+          <h2>Description of the HydroCloud project</h2>
+          <p>
+            HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
+            Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
+          </p>
+          <p>
+            Learn more about the HydroCloud project:
+          </p>
+          <ul>
+            <li>
+              Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
+            </li>
+            <li>
+              The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
+            </li>
+          </ul>
+          <p></p>
+          <p>
+            We've made several versions of the layout:
+          </p>
+          <ul>
+            <li>
+              <a href="http://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
+            </li>
+            <li>
+              <a href="http://mroberge.github.io/HydroCloud/oldindex.html" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="http://d3js.org/">D3 library</a> for graphing.
+            </li>
+            <li>
+              <a href="http://mroberge.github.io/HydroCloud/" >Our latest app</a> This site is set up using <a href="http://getbootstrap.com/">Bootstrap</a> for the styling.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <script type="text/javascript">
+      var viewModel = {
+        width : ko.observable($(window).width()),
+        height : ko.observable($(".carousel-inner").height()),
+        showLegend : ko.observable(false),
+        toggleLegend : function() {
+          console.log("click");
+          this.showLegend() ? this.showLegend(false) : this.showLegend(true);
+        },
+        view : ko.observable("map"),
+        graph : ko.observable("scatter"),
+        hydro : function() {
+          this.view("scatter");
+          this.graph("scatter");
+          this.plotGraph();
+        },
+        flow : function() {
+          this.view("flow");
+          this.graph("flow");
+          this.plotGraph();
+        },
+        histo : function() {
+          this.view("histo");
+          this.graph("histo");
+          this.plotGraph();
+        },
+        scatter : function() {
+          this.view("scatter");
+          this.graph("scatter");
+          this.plotGraph();
+        },
+        hyeto : function() {
+          this.view("hyeto");
+          this.graph("hyeto");
+          this.plotGraph();
+        },
+        map : function() {
+          this.view("map");
+          google.maps.event.trigger(map, 'resize');
+        },
+        plotGraph : function() {
+          console.log(this.graph());
+          if (this.graph() == "hydro") {
+            hydrograph(this.siteId);
+          } else if (this.graph() === "flow") {
+            flowduration(this.siteId);
+          } else if (this.graph() === "histo") {
+            loghistogram(this.siteId);
+          } else if (this.graph() === "hyeto") {
+            hyetograph(this.siteId);
+          } else if (this.graph() === "scatter") {
+            var graphDiv = d3.select("#graph_div");
+            //console.log(this.dataArray());
+            //fourthChart.datum(dataArray());
+            d3.select("#graph_div svg").remove();
+            graphDiv.datum(this.dataArray()).call(fourthChart);
+            //scatterChart();
+          } else {
+            console.log("no option selected");
+          }
+          ;
+        },
+        siteId : ko.observable(),
+        siteIdArray : ko.observableArray([01580000]),
+        siteName : ko.observable(),
+        siteArray : ko.observableArray([{
+          id : "01580000",
+          name : "DEER CREEK AT ROCKS, MD",
+          area : 94.4
+        }]),
+        dataArray : ko.observableArray(),
+        tuNexrad : ko.observable() //just a single object, which happens to be an array...
+      };
+      ko.applyBindings(viewModel);
+
+      var data = [];
+      var fourthChart = scatterChart();
+
+      function redraw() {
+        //fourthChart.width(window.innerWidth - 10);
+        //Set the new width here, then redraw the graph.
+        viewModel.width($(window).width());
+        viewModel.height($(".carousel-inner").height());
+        //scatterChart.js requires you to set the new width for the graph.
+        fourthChart.width(viewModel.width()).height(viewModel.height());
+        //if there is data, plot the data.
+        if (viewModel.dataArray().length) {
+          viewModel.plotGraph();
+        };
+        console.log("resize");
+        google.maps.event.trigger(map, 'resize');
+      }
+
+      var time = {
+        start : new Date(2013, 04),
+        end : new Date(2013, 09),
+        recent : "90"
+      };
+      viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
+      getUSGS(viewModel.siteArray()[0].id);
+      getTuNexrad(viewModel.siteArray()[0].id);
+      //$(window).resize();
+      google.maps.event.addDomListener(window, 'load', redraw);
+      $(window).resize(redraw);
+    </script>
+  </body>
+</html>
