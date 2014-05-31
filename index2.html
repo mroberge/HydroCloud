@@ -36,7 +36,7 @@
         background-color: lightgray;
       }
       /*for google maps*/
-      html, body, #carousel-example-generic, .carousel-inner, .item {
+      html, body, #hc-carousel, .carousel-inner, .item {
         height: 100%
       }
 
@@ -48,32 +48,75 @@
         text-shadow: 3px 3px 10px #aaf;
       }
 
-      /*for carousel indicators */
+      #indicators {
+        font-size: 20pt;
+        width: 100%;
+        position: fixed;
+        bottom: 0px;
+        z-index: 2050;
+        background-color: light-gray;
+        height: 50px;
+      }
+
       .carousel-indicators {
         position: absolute;
-        bottom: -50px;
-        color: #666;
+        bottom: -0.6em;
+        left: 50%;
+        z-index: 15;
+        width: 60%;
+        margin-left: -30%;
+        padding-left: 0;
+        list-style: none;
+        text-align: center;
       }
-      .carousel-indicators :hover {
-        color: #bbb;
+      .carousel-indicators li {
+        display: inline-block;
+        width: 20px;
+        height: 10px;
+        margin: 10px;
+        text-indent: 0px;  /*modified from -999*/
+        border: none; /*modified*/
+   /*     border-radius: 10px;  */
+        cursor: pointer;
+        background-color: #000 \9;
+        background-color: rgba(0, 0, 0, 0);
       }
       .carousel-indicators .active {
-        height: 20px;
-        width: 40px;
-        background-color: transparent;
-        color: white;
+        margin: 10px;
+        width: 20px; /*modified*/
+        height: 10px;
+        background-color: transparent; /*modified*/
+        color: #ffffff;  /*added*/
       }
 
-      .carousel-indicators li {
-        /*override default behavior*/
-        text-indent: 0px;
-        height: 20px;
-        width: 40px;
-        border-style: none;
-        margin: 0;
-        font-size: 20px;
+      /*for carousel indicators */
+      .carousel-indicators {
       }
+      /* position: absolute;
+       bottom: -50px;
+       z-index: 5;
+       color: #666;
+       }
+       .carousel-indicators :hover {
+       color: #bbb;
+       }
+       .carousel-indicators .active {
+       height: 20px;
+       width: 40px;
+       background-color: transparent;
+       color: white;
+       }
 
+       .carousel-indicators li {
+       /*override default behavior*/
+      /*        text-indent: 0px;
+       height: 20px;
+       width: 40px;
+       border-style: none;
+       margin: 0;
+       font-size: 20px;
+       }
+       */
       /*for my bottom button bar*/
       #button-bar {
         position: absolute;
@@ -111,8 +154,62 @@
         background-color: silver;
         border: solid black;
         border-width: 1px;
-        z-index: 50;
+        z-index: 40;
         /*display: none;*/
+      }
+
+
+      .carousel-inner > .item .x{
+        -ms-transform: translateX(-100px);
+        -webkit-transform: translateX(-100px);
+        transform: translateX(-100px);
+        -webkit-transition: all 0.4s ease-in-out;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .carousel-transform .carousel-inner .item {
+        position: absolute;
+        /*left: 0;*/
+        /*opacity: 1;*/
+        
+        -webkit-transition: all 0.4s ease-in-out;
+        -moz-transition: all 0.4s ease-in-out;
+        -o-transition: all 0.4s ease-in-out;
+        transition: all 0.4s ease-in-out;
+      }
+      .carousel-transform .carousel-inner .active {
+        /*opacity: 1;*/
+        -webkit-transform:translateX(0px);
+        -moz-transform:translateX(0px);
+        -o-transform:translateX(0px);
+        transform:translateX(0px);
+      }
+      
+      .carousel-transform .carousel-inner .active.right{
+        -webkit-transform:translateX(800px);
+        -moz-transform:translateX(800px);
+        -o-transform:translateX(800px);
+        transform:translateX(800px);
+      }
+      
+      .carousel-transform .carousel-inner .prev.right{
+        -webkit-transform:translateX(-800px);
+        -moz-transform:translateX(-800px);
+        -o-transform:translateX(-800px);
+        transform:translateX(-800px);
+      }
+      
+      .carousel-transform .carousel-inner .active.left{
+        -webkit-transform:translateX(-800px);
+        -moz-transform:translateX(-800px);
+        -o-transform:translateX(-800px);
+        transform:translateX(-800px);
+      }
+      .carousel-transform .carousel-inner .next.left{
+        -webkit-transform:translateX(800px);
+        -moz-transform:translateX(800px);
+        -o-transform:translateX(800px);
+        transform:translateX(800px);
       }
 
       /*For graphs*/
@@ -171,7 +268,7 @@
         font: 30px sans-serif;
         fill: gray;
       }
-      
+
       .v-scroll {
         overflow-y: auto;
       }
@@ -201,10 +298,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li data-target="#carousel-example-generic" data-slide-to="0">
+            <li data-target="#hc-carousel" data-slide-to="0">
               <a href="#" data-bind="click: map">Map</a>
             </li>
-            <li class="dropdown" data-target="#carousel-example-generic" data-slide-to="1">
+            <li class="dropdown" data-target="#hc-carousel" data-slide-to="1">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"> </b></a>
               <ul class="dropdown-menu">
                 <li>
@@ -225,38 +322,16 @@
                 </li>
               </ul>
             </li>
-            <li data-target="#carousel-example-generic" data-slide-to="2">
+            <li data-target="#hc-carousel" data-slide-to="2">
               <a href="#">Stats</a>
             </li>
-            <li data-target="#carousel-example-generic" data-slide-to="3">
+            <li data-target="#hc-carousel" data-slide-to="3">
               <a href="#"><strong>?</strong></a>
             </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-
-    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-      <ul class="pager">
-        <li class="previous"><a href="#carousel-example-generic" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"> </span></a></li>
-        <li data-target="#carousel-example-generic" data-slide-to="0" class="active" data-bind="click: map">
-          <span class="glyphicon glyphicon-globe"> </span>
-        </li>
-        <li data-target="#carousel-example-generic" data-slide-to="1">
-          <span class="glyphicon glyphicon-stats"> </span>
-        </li>
-        <li data-target="#carousel-example-generic" data-slide-to="2">
-          <span class="glyphicon glyphicon-th-list"> </span>
-        </li>
-        <li data-target="#carousel-example-generic" data-slide-to="3">
-          <span class="glyphicon glyphicon-question-sign"> </span>
-        </li>
-        <li><a href="#" data-bind="click: toggleLegend, css: { active: showLegend}"><span class="glyphicon glyphicon-list-alt"> </span></a></li>
-        <li class="next"><a href="#carousel-example-generic" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-      </ul>
-    </nav>
-
-
 
     <div id="legend-modal" data-bind="visible: showLegend">
       <div class="modal-header">
@@ -280,11 +355,23 @@
       </div>
     </div>
 
+
     <!-- Main Carousel Content -->
-    <div id="carousel-example-generic" class="carousel slide" data-interval="false">
-
-
-
+    <div id="hc-carousel" class="carousel slide carousel-transform" data-interval="false">
+      <!-- original indicators-->
+      <div id="indicators">
+        <a href="#hc-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left pull-left"> </span></a>
+        <ol class="carousel-indicators">
+          <li data-target="#hc-carousel" data-slide-to="0" class="active"><span class="glyphicon glyphicon-globe"> </span></li>
+          <li data-target="#hc-carousel" data-slide-to="1"><span class="glyphicon glyphicon-stats"> </span></li>
+          <li data-target="#hc-carousel" data-slide-to="2"><span class="glyphicon glyphicon-th-list"> </span></li>
+          <li data-target="#hc-carousel" data-slide-to="3"><span class="glyphicon glyphicon-question-sign"> </span></li>
+        </ol>
+        <span class="pull-right">
+        <a href="#" data-bind="click: toggleLegend, css: { active: showLegend}"><span class="glyphicon glyphicon-list-alt"> </span></a>
+        <a href="#hc-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </span>
+      </div>
       <!-- Wrapper for slides -->
       <div class="carousel-inner">
 
@@ -307,7 +394,7 @@
                 <li>
                   area: <span data-bind="text: $data.area"> </span> mi<sup>2</sup>
                 </li>
-              </ul> 
+              </ul>
           </ul>
         </div>
 
