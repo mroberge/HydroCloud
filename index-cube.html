@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="author" content="Martin Roberge" />
+    <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
+
+    <link rel="shortcut icon" href="resources/favicon.ico" />
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+    <title>HydroCloud</title>
+
+    <!-- jQuery, Bootstrap, Knockout, D3 -->
+
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+
+    <!-- My styles here -->
+    <style>
+      body {
+        /*bootstrap sets the navbar height at 50px.*/
+        padding-top: 50px;
+        padding-bottom: 50px;
+        background-color: lightgray;
+      }
+      /*for google maps*/
+      html, body {
+        height: 100%
+      }
+
+      #brand {
+        font-family: 'Vollkorn', serif;
+        font-style: italic;
+        font-size: 24pt;
+        color: white;
+        text-shadow: 3px 3px 10px #aaf;
+      }
+
+      #indicators {
+        font-size: 20pt;
+        width: 100%;
+        position: fixed;
+        bottom: 0px;
+        z-index: 2050;
+        background-color: light-gray;
+        height: 50px;
+      }
+
+
+      #legend-btn {
+        color: white;
+        background-color: #444;
+        border-color: #444;
+      }
+
+      #legend-btn.active {
+        color: black;
+        background-color: #aaa;
+      }
+
+      #legend-modal {
+        position: absolute;
+        top: 80px;
+        right: 30px;
+        padding: 5px;
+        background-color: silver;
+        border: solid black;
+        border-width: 1px;
+        z-index: 40;
+        /*display: none;*/
+      }
+
+
+
+
+      /*For graphs*/
+
+      svg {
+        font: 10px sans-serif;
+      }
+
+      .axisTitle {
+        font: 14px serif;
+      }
+
+      .Title {
+        font: 20px serif;
+      }
+
+      .subTitle {
+        font: 12px serif;
+      }
+
+      path {
+        stroke: blue;
+        fill: none;
+      }
+
+      .filled {
+        fill: skyblue;
+      }
+
+      path:hover {
+        stroke: red;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      .bar rect {
+        fill: lightskyblue;
+        shape-rendering: crispEdges;
+      }
+
+      .bar text {
+        fill: black;
+      }
+
+      .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+      }
+
+      svg .dataNotice {
+        font: 30px sans-serif;
+        fill: gray;
+      }
+
+      .v-scroll {
+        overflow-y: auto;
+      }
+      
+      .selected {
+  font-weight: bold;
+}
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <!-- Main Carousel Content -->
+<script>
+  /* ===================================================
+ * bootstrap-transition.js v2.1.1
+ * http://twitter.github.com/bootstrap/javascript.html#transitions
+ * ===================================================
+ * Copyright 2012 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================== */
+
+
+!function ($) {
+
+  $(function () {
+
+    "use strict"; // jshint ;_;
+
+
+    /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
+     * ======================================================= */
+
+    $.support.transition = (function () {
+
+      var transitionEnd = (function () {
+
+        var el = document.createElement('bootstrap')
+          , transEndEventNames = {
+               'WebkitTransition' : 'webkitTransitionEnd'
+            ,  'MozTransition'    : 'transitionend'
+            ,  'OTransition'      : 'oTransitionEnd otransitionend'
+            ,  'transition'       : 'transitionend'
+            }
+          , name
+
+        for (name in transEndEventNames){
+          if (el.style[name] !== undefined) {
+            return transEndEventNames[name]
+          }
+        }
+
+      }())
+
+      return transitionEnd && {
+        end: transitionEnd
+      }
+
+    })()
+
+  })
+
+}(window.jQuery);
+  
+</script>
+
+
+      <!-- Wrapper for slides -->
+      
+  <style>
+  #controls, #transparency {
+    text-align:center;
+  }
+  #controls span {
+    padding-right:2em;
+    cursor:pointer;
+  }
+
+  #cubeCarousel {
+    -webkit-perspective: 800;
+    -moz-perspective: 800px;
+    -ms-perspective: 800;
+    perspective: 800;
+
+    -webkit-perspective-origin: 50% 100px;
+    -moz-perspective-origin: 50% 100px;
+    -ms-perspective-origin: 50% 100px;
+    perspective-origin: 50% 100px;
+
+    margin:100px auto 20px auto;
+    width:450px;
+    height:400px;
+  }
+
+  #cubeCarousel #cubeSpinner {
+    position: relative;
+    margin: 0 auto;
+    height: 281px;
+    width: 450px;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+
+    -webkit-transform-origin: 50% 100px 0;
+    -moz-transform-origin: 50% 100px 0;
+    -ms-transform-origin: 50% 100px 0;
+    transform-origin: 50% 100px 0;
+
+    -webkit-transition:all 1.0s ease-in-out;
+    -moz-transition:all 1.0s ease-in-out;
+    -ms-transition:all 1.0s ease-in-out;
+    transition:all 1.0s ease-in-out;
+
+  }
+
+  #cubeCarousel #Ycube,#cubeCarousel #Zcube {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+  #cubeCarousel .face {
+    position: absolute;
+    height: 281px;
+    width: 450px;
+    padding: 0px;
+  }
+
+
+  #cubeSpinner .one {
+    -webkit-transform: translateZ(225px);
+    -moz-transform: translateZ(225px);
+    -ms-transform: translateZ(225px);
+    transform: translateZ(225px);
+  }
+
+  #cubeSpinner .two {
+    -webkit-transform: rotateY(90deg) translateZ(225px);
+    -moz-transform: rotateY(90deg) translateZ(225px);
+    -ms-transform: rotateY(90deg) translateZ(225px);
+    transform: rotateY(90deg) translateZ(225px);
+  }
+
+  #cubeSpinner .three {
+    -webkit-transform: rotateY(180deg) translateZ(225px);
+    -moz-transform: rotateY(180deg) translateZ(225px);
+    -ms-transform: rotateY(180deg) translateZ(225px);
+    transform: rotateY(180deg) translateZ(225px);
+  }
+
+  #cubeSpinner .four {
+    -webkit-transform: rotateY(-90deg) translateZ(225px);
+    -moz-transform: rotateY(-90deg) translateZ(225px);
+    -ms-transform: rotateY(-90deg) translateZ(225px);
+    transform: rotateY(-90deg) translateZ(225px);
+  }
+
+  .trans {
+    opacity:0.7;
+  }
+
+  </style>
+  <script>
+    $(document).ready(function() {
+
+      $("#controls").on('click', 'span', function(){
+        $("#cubeSpinner").css("transform","rotateY("+($(this).index() * -90)+"deg)");
+        $("#controls span").removeClass("selected");
+        $(this).addClass("selected");
+      });
+
+      $("#transparency").click(function() {
+        $("#cubeSpinner img").toggleClass("trans");
+        $(this).toggleClass("selected");
+      });
+
+    });
+  </script>
+      <div class="cubeCarousel">
+        <div class="cubeSpinner">
+
+          <div class="face one" >map</div>
+
+          <div class="face two" >graph</div>
+
+          <div class="face three v-scroll">
+            <h3>Site Statistics</h3>
+            <p>
+              <span data-bind="text: viewModel.dataArray().length"> </span> sites selected
+            </p>
+            <ul class="list-unstyled" data-bind="foreach: viewModel.siteArray">
+              <li>
+                <strong><span data-bind="text: $index"></span>: <span data-bind="text: $data.name"> </span></strong>
+                <ul>
+                  <li>
+                    site #<span data-bind="text: $data.id"> </span>
+                  </li>
+                  <li>
+                    area: <span data-bind="text: $data.area"> </span> mi<sup>2</sup>
+                  </li>
+                </ul>
+            </ul>
+          </div>
+
+          <div class="face four v-scroll">
+            <h2>Description of the HydroCloud project</h2>
+            <p>
+              HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
+              Martin Roberge and Michael McGuire are the principle investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
+            </p>
+            <p>
+              Learn more about the HydroCloud project:
+            </p>
+            <ul>
+              <li>
+                Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
+              </li>
+              <li>
+                The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
+              </li>
+            </ul>
+            <p></p>
+            <p>
+              We've made several versions of the layout:
+            </p>
+            <ul>
+              <li>
+                <a href="http://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
+              </li>
+              <li>
+                <a href="http://mroberge.github.io/HydroCloud/oldindex.html" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="http://d3js.org/">D3 library</a> for graphing.
+              </li>
+              <li>
+                <a href="http://mroberge.github.io/HydroCloud/" >Our latest app</a> This site is set up using <a href="http://getbootstrap.com/">Bootstrap</a> for the styling.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    
+  <p id="controls">
+    <span class="selected">Image 1</span>
+    <span>Image 2</span>
+    <span>Image 3</span>
+    <span>Image 4</span>
+  </p>
+
+  </body>
+</html>
