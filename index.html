@@ -361,10 +361,10 @@
           this.showLegend() ? this.showLegend(false) : this.showLegend(true);
         },
         view : ko.observable("map"),
-        graph : ko.observable("scatter"),
+        graph : ko.observable("hyeto"),//temp bugfix. was "scatter"
         hydro : function() {
-          this.view("scatter");
-          this.graph("scatter");
+          this.view("hyeto");//temp bugfix. was "scatter"
+          this.graph("hyeto");//temp bugfix. was "scatter"
           this.plotGraph();
         },
         flow : function() {
@@ -373,13 +373,13 @@
           this.plotGraph();
         },
         histo : function() {
-          this.view("histo");
-          this.graph("histo");
+          this.view("flow");//temp bugfix. was "histo"
+          this.graph("flow");//temp bugfix. was "histo"
           this.plotGraph();
         },
         scatter : function() {
-          this.view("scatter");
-          this.graph("scatter");
+          this.view("hyeto");//temp bugfix. was "scatter"
+          this.graph("hyeto");//temp bugfix. was "scatter"
           this.plotGraph();
         },
         hyeto : function() {

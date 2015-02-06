@@ -136,4 +136,3 @@ function tableJoin(input) {
     return;
   }
 }
-
