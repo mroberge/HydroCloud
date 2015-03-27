@@ -19,7 +19,7 @@ function drawMap() {
     query : {
       select : 'location',
       from : '1Rt_U4LqeNPi6Tk1-kq8ta-6OP748nJJJTqdwlC0Q'
-    },
+    }
   });
   fusionLayer.setMap(map);
   

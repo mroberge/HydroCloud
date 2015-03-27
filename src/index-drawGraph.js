@@ -95,7 +95,7 @@ function hydrograph(id) {
   //axis labels
   focus.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
-};
+}
 
 function loghistogram(id) {
   console.log("loghistogram");
@@ -268,7 +268,7 @@ function flowduration(id) {
   //axis labels
   focus.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("instantaneous stream discharge (cfs)");
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("Number of measurements that exceed this discharge");
-};
+}
 
 
 
@@ -359,7 +359,7 @@ function hyetograph(id) {
   } else if (rain[0].date === null) {
     console.log("data loading");
     bottom.append("text").attr("class", "dataNotice").text("data loading...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
-  };
+  }
 
   //title block
   var title = top.append("g").attr("transform", "translate(125,20)");
@@ -372,7 +372,7 @@ function hyetograph(id) {
   top.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
   bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -10).attr("y", -40).attr("dy", "1em").style("text-anchor", "end").text("mm");
 
-};
+}
 
 
 
@@ -392,7 +392,7 @@ function getUSGS(id) {
     if (error) {
       if (error.status === 0) {
         alert("USGS data request error.");
-      };
+      }
       return console.warn(error);
     }
     //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
@@ -441,7 +441,7 @@ function getUSGS(id) {
     viewModel.plotGraph();
   });
 
-};
+}
 
 function dateStr(d) {
   var month = +d.getMonth() + 1;
@@ -493,7 +493,7 @@ function getTuNexrad(id) {
     complete : function() {
       console.log("NEXRAD request complete");
       console.log(result);
-      if (result.responseJSON.length) {
+      if (result.responseJSON.length) { //TODO: this doesn't catch an 'undefined' that occurs when the server doesn't respond.
       	console.log("success: responseJSON");
       	//viewModel.tuNexrad(processN(result.responseJSON));
       } else if (!result.responseJSON.length && result.responseText.length) {
@@ -501,7 +501,7 @@ function getTuNexrad(id) {
       	//viewModel.tuNexrad(processN(result.responseText));
       } else {
       	console.log("Error. No responseJSON or responseText in response.");
-      };
+      }
       
       console.log("vM.tuNexrad:");
       console.log(viewModel.tuNexrad());
