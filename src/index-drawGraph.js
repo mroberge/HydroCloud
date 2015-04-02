@@ -326,7 +326,7 @@ function hyetograph(id) {
   //The data to plot:
   //viewModel.dataArray()[viewModel.dataArray().length-1] //this is the last site in the array.
   //viewModel.tuNexrad()
-  var stream = viewModel.dataArray()[viewModel.dataArray().length-1];
+  var stream = viewModel.dataArray()[viewModel.dataArray().length-1]; //this is the last site in the array.
   //var stream = viewModel.dataArray()[0];
   var rain = viewModel.tuNexrad();
   //if graph has been called but we don't have our data yet, plot with no data.
