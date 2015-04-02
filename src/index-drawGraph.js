@@ -281,14 +281,14 @@ function hyetograph(id) {
   var margin = {//margin is for the larger stream hydrograph.
     top : 10,
     right : 10,
-    bottom : 100,
-    left : 40
+    bottom : 100, //needs enough space for the bottom graph.
+    left : 60
   };
   var margin2 = {//margin2 is for the smaller hyetograph.
-    top : myScreen.height - 70,
-    right : 10,
+    top : myScreen.height - 70, //TODO: change this to a variable; get rid of magic number.
+    right : margin.right,
     bottom : 20,
-    left : 40
+    left : margin.left
   };
   var width = myScreen.width - margin.left - margin.right;
   var height = myScreen.height - margin.top - margin.bottom;
@@ -353,24 +353,25 @@ function hyetograph(id) {
 
   //data processing notices
   console.log(rain);
-  if (rain.length === 0) {
+  if (rain.length === 0) {//This doesn't catch anything. When would there be rain of length zero?
     console.log("no data");
     bottom.append("text").attr("class", "dataNotice").text("No data for this site").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
   } else if (rain[0].date === null) {
-    console.log("data loading");
-    bottom.append("text").attr("class", "dataNotice").text("data loading...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
+    console.log("requesting data");
+    bottom.append("text").attr("class", "dataNotice").text("requesting data...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
   }
 
   //title block
-  var title = top.append("g").attr("transform", "translate(125,20)");
+  var title = top.append("g").attr("transform", "translate(5,20)");//This won't wrap at edge of screen.
   //title.append("svg:text").attr("class", "Title").text(sitename);
   title.append("svg:text").attr("class", "Title").text(viewModel.siteName());
   title.append("svg:text").attr("class", "subTitle").attr("dy", "1em").text(stream.length + " measurements");
 
   //axis labels
-  top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
-  top.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
-  bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -10).attr("y", -40).attr("dy", "1em").style("text-anchor", "end").text("mm");
+  top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height/2).attr("y", -margin.left).attr("dy", "1em").style("text-anchor", "middle").text("Stream discharge (cfs)");
+//Do we really need to lable the time axis? Won't the date labels be enough of a clue?
+//  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
+  bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height2/2).attr("y", -margin2.left).attr("dy", "1em").style("text-anchor", "middle").text("mm");
 
 }
 
@@ -386,7 +387,7 @@ function getUSGS(id) {
     var filename = "resources/USGSshort.txt";
   } else {
     //var filename = dateQuery;
-    var filename = recentQuery;
+    var filename = recentQuery; //
   }
   d3.json(filename, function(error, json) {
     if (error) {
