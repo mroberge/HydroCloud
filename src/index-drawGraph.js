@@ -328,7 +328,7 @@ function hyetograph(id) {
   //viewModel.tuNexrad()
   var stream = viewModel.dataArray()[viewModel.dataArray().length-1]; //this is the last site in the array.
   //var stream = viewModel.dataArray()[0];
-  var rain = viewModel.tuNexrad();
+  var rain = viewModel.tuNexrad().data;
   //if graph has been called but we don't have our data yet, plot with no data.
   if (!rain) rain = [{date: null, value: null}];
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
@@ -352,14 +352,13 @@ function hyetograph(id) {
   bottom.append("g").attr("class", "y2 axis").call(y2Axis);
 
   //data processing notices
-  console.log(rain);
-  if (rain.length === 0) {//This doesn't catch anything. When would there be rain of length zero?
-    console.log("no data");
-    bottom.append("text").attr("class", "dataNotice").text("No data for this site").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
-  } else if (rain[0].date === null) {
-    console.log("requesting data");
-    bottom.append("text").attr("class", "dataNotice").text("requesting data...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
+  //console.log(rain);
+  console.log(viewModel.tuNexrad());
+  //this only changes the message on a redraw of the graph. and it will write "success" if it gets data.
+  if (viewModel.tuNexrad().status !== "success") {
+    bottom.append("text").attr("class", "dataNotice").text(viewModel.tuNexrad().status).attr("x", width / 2).attr("y", 30).style("text-anchor", "middle");
   }
+
 
   //title block
   var title = top.append("g").attr("transform", "translate(5,20)");//This won't wrap at edge of screen.
@@ -476,7 +475,7 @@ function processN(array) {
 function getTuNexrad(id) {
   //add some error functions.
   //if new data is requested, get rid of old data, set one element to null.
-  viewModel.tuNexrad([{date: null, value: null}]);
+  viewModel.tuNexrad({status: "requesting data...", data: [{date: null, value: null}]});
   console.log("requesting data from TU NEXRAD service");
   var now = new Date();
   var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
@@ -491,23 +490,24 @@ function getTuNexrad(id) {
     //url : urlDates,
     url : urlRecent,
     dataType : "json",
+    error : function (ErrObj, ErrStr) {
+      console.log("AJAX returns an error");
+      console.log(ErrObj);//The header.
+      console.log(ErrStr);//just returns "error". This is ErrObj.statusText
+      viewModel.tuNexrad({status: "data not available"});
+      viewModel.plotGraph();
+    },
+    success : function () {//TODO: test this to make sure it responds properly when data is returned.
+      //Use this if we get some data back.
+      console.log("Success! vM.tuNexrad:");
+      console.log(viewModel.tuNexrad());
+      viewModel.tuNexrad({status: "success", data: processN(result.responseJSON)});
+      viewModel.plotGraph();
+    },
+    //Stop using complete except to catch non-error and non-success.
     complete : function() {
       console.log("NEXRAD request complete");
       console.log(result);
-      if (result.responseJSON.length) { //TODO: this doesn't catch an 'undefined' that occurs when the server doesn't respond.
-      	console.log("success: responseJSON");
-      	//viewModel.tuNexrad(processN(result.responseJSON));
-      } else if (!result.responseJSON.length && result.responseText.length) {
-      	console.log("success: responseText");
-      	//viewModel.tuNexrad(processN(result.responseText));
-      } else {
-      	console.log("Error. No responseJSON or responseText in response.");
-      }
-      
-      console.log("vM.tuNexrad:");
-      console.log(viewModel.tuNexrad());
-      viewModel.tuNexrad(processN(result.responseJSON));
-      viewModel.plotGraph();
     }
   });
 }
