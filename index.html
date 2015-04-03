@@ -13,8 +13,8 @@
     <title>HydroCloud</title>
 
     <!-- jQuery, Bootstrap, Knockout, D3 -->
-    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
     <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <script src='lib/knockout-3.0.0.js'></script>
     <script src="lib/d3/d3.min.js"></script>
@@ -37,7 +37,7 @@
       }
       /*for google maps*/
       html, body, #carousel-example-generic, .carousel-inner, .item {
-        height: 100%
+        height: 100%;
       }
 
       #brand {
@@ -109,9 +109,8 @@
         right: 30px;
         padding: 5px;
         background-color: silver;
-        border: solid black;
-        border-width: 1px;
-        z-index: 50;
+          border: 1px solid black;
+          z-index: 50;
         /*display: none;*/
       }
       
@@ -125,14 +124,15 @@
         font: 10px sans-serif;
       }
 
+      /*TODO: .axisTitle was there a typo? how are the axes titled?*/
       .axisTitle {
         font: 14px serif;
       }
-
+      /*TODO: .Title was there a typo? how are the axes titled?*/
       .Title {
         font: 20px serif;
       }
-
+      /*TODO: .subTitle was there a typo? how are the axes titled?*/
       .subTitle {
         font: 12px serif;
       }
@@ -142,6 +142,7 @@
         fill: none;
       }
 
+      /* keep the .filled selector for filled hydrographs.*/
       .filled {
         fill: skyblue;
       }
@@ -411,10 +412,9 @@
           } else {
             console.log("no option selected");
           }
-          ;
         },
         siteId : ko.observable(),
-        siteIdArray : ko.observableArray([01580000]),
+        siteIdArray : ko.observableArray(["01580000"]),
         siteName : ko.observable(),
         siteArray : ko.observableArray([{
           id : "01580000",
@@ -439,14 +439,14 @@
         //if there is data, plot the data.
         if (viewModel.dataArray().length) {
           viewModel.plotGraph();
-        };
+        }
         console.log("resize");
         google.maps.event.trigger(map, 'resize');
       }
 
       var time = {
-        start : new Date(2013, 04),
-        end : new Date(2013, 09),
+        start : new Date(2013, 4),
+        end : new Date(2013, 9),
         recent : "90"
       };
       viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");

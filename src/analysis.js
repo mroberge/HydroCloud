@@ -23,8 +23,7 @@ function end(series) {
 function elapsed(series) {
   var startTime = start(series);
   var endTime = end(series);
-  var result = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-  return result;
+  return (endTime.getTime() - startTime.getTime()) / (1000 * 60);
 }
 
 function maxpeak(series) {
@@ -52,10 +51,10 @@ function minMaxTimeUnit(series) {
     return d[0];
   });
   var times = [];
-  for ( i = 0; i < (timeOnly.length - 1); i++) {
+  for ( var i = 0; i < (timeOnly.length - 1); i++) {
     //use minutes as the unit.
     times[i] = (timeOnly[i + 1] - timeOnly[i]) / (1000 * 60);
-  };
+  }
   var result = {
     min : d3.min(times),
     max : d3.max(times)
@@ -133,6 +132,6 @@ function tableJoin(input) {
     };
     return result;
   } else {
-    return;
+
   }
 }

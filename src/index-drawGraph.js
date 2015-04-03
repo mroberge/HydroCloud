@@ -95,7 +95,7 @@ function hydrograph(id) {
   //axis labels
   focus.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
-};
+}
 
 function loghistogram(id) {
   console.log("loghistogram");
@@ -268,7 +268,7 @@ function flowduration(id) {
   //axis labels
   focus.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("instantaneous stream discharge (cfs)");
   focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("Number of measurements that exceed this discharge");
-};
+}
 
 
 
@@ -281,14 +281,14 @@ function hyetograph(id) {
   var margin = {//margin is for the larger stream hydrograph.
     top : 10,
     right : 10,
-    bottom : 100,
-    left : 40
+    bottom : 100, //needs enough space for the bottom graph.
+    left : 60
   };
   var margin2 = {//margin2 is for the smaller hyetograph.
-    top : myScreen.height - 70,
-    right : 10,
+    top : myScreen.height - 70, //TODO: change this to a variable; get rid of magic number.
+    right : margin.right,
     bottom : 20,
-    left : 40
+    left : margin.left
   };
   var width = myScreen.width - margin.left - margin.right;
   var height = myScreen.height - margin.top - margin.bottom;
@@ -326,9 +326,9 @@ function hyetograph(id) {
   //The data to plot:
   //viewModel.dataArray()[viewModel.dataArray().length-1] //this is the last site in the array.
   //viewModel.tuNexrad()
-  var stream = viewModel.dataArray()[viewModel.dataArray().length-1];
+  var stream = viewModel.dataArray()[viewModel.dataArray().length-1]; //this is the last site in the array.
   //var stream = viewModel.dataArray()[0];
-  var rain = viewModel.tuNexrad();
+  var rain = viewModel.tuNexrad().data;
   //if graph has been called but we don't have our data yet, plot with no data.
   if (!rain) rain = [{date: null, value: null}];
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
@@ -352,27 +352,27 @@ function hyetograph(id) {
   bottom.append("g").attr("class", "y2 axis").call(y2Axis);
 
   //data processing notices
-  console.log(rain);
-  if (rain.length === 0) {
-    console.log("no data");
-    bottom.append("text").attr("class", "dataNotice").text("No data for this site").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
-  } else if (rain[0].date === null) {
-    console.log("data loading");
-    bottom.append("text").attr("class", "dataNotice").text("data loading...").attr("x", width/2).attr("y", 30).style("text-anchor", "middle");
-  };
+  //console.log(rain);
+  console.log(viewModel.tuNexrad());
+  //this only changes the message on a redraw of the graph. and it will write "success" if it gets data.
+  if (viewModel.tuNexrad().status !== "success") {
+    bottom.append("text").attr("class", "dataNotice").text(viewModel.tuNexrad().status).attr("x", width / 2).attr("y", 30).style("text-anchor", "middle");
+  }
+
 
   //title block
-  var title = top.append("g").attr("transform", "translate(125,20)");
+  var title = top.append("g").attr("transform", "translate(5,20)");//This won't wrap at edge of screen.
   //title.append("svg:text").attr("class", "Title").text(sitename);
   title.append("svg:text").attr("class", "Title").text(viewModel.siteName());
   title.append("svg:text").attr("class", "subTitle").attr("dy", "1em").text(stream.length + " measurements");
 
   //axis labels
-  top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("Stream discharge (cfs)");
-  top.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("time");
-  bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -10).attr("y", -40).attr("dy", "1em").style("text-anchor", "end").text("mm");
+  top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height/2).attr("y", -margin.left).attr("dy", "1em").style("text-anchor", "middle").text("Stream discharge (cfs)");
+//Do we really need to lable the time axis? Won't the date labels be enough of a clue?
+//  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
+  bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height2/2).attr("y", -margin2.left).attr("dy", "1em").style("text-anchor", "middle").text("mm");
 
-};
+}
 
 
 
@@ -386,13 +386,13 @@ function getUSGS(id) {
     var filename = "resources/USGSshort.txt";
   } else {
     //var filename = dateQuery;
-    var filename = recentQuery;
+    var filename = recentQuery; //
   }
   d3.json(filename, function(error, json) {
     if (error) {
       if (error.status === 0) {
         alert("USGS data request error.");
-      };
+      }
       return console.warn(error);
     }
     //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
@@ -441,7 +441,7 @@ function getUSGS(id) {
     viewModel.plotGraph();
   });
 
-};
+}
 
 function dateStr(d) {
   var month = +d.getMonth() + 1;
@@ -475,7 +475,7 @@ function processN(array) {
 function getTuNexrad(id) {
   //add some error functions.
   //if new data is requested, get rid of old data, set one element to null.
-  viewModel.tuNexrad([{date: null, value: null}]);
+  viewModel.tuNexrad({status: "requesting data...", data: [{date: null, value: null}]});
   console.log("requesting data from TU NEXRAD service");
   var now = new Date();
   var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
@@ -490,23 +490,24 @@ function getTuNexrad(id) {
     //url : urlDates,
     url : urlRecent,
     dataType : "json",
+    error : function (ErrObj, ErrStr) {
+      console.log("AJAX returns an error");
+      console.log(ErrObj);//The header.
+      console.log(ErrStr);//just returns "error". This is ErrObj.statusText
+      viewModel.tuNexrad({status: "data not available"});
+      viewModel.plotGraph();
+    },
+    success : function () {//TODO: test this to make sure it responds properly when data is returned.
+      //Use this if we get some data back.
+      console.log("Success! vM.tuNexrad:");
+      console.log(viewModel.tuNexrad());
+      viewModel.tuNexrad({status: "success", data: processN(result.responseJSON)});
+      viewModel.plotGraph();
+    },
+    //Stop using complete except to catch non-error and non-success.
     complete : function() {
       console.log("NEXRAD request complete");
       console.log(result);
-      if (result.responseJSON.length) {
-      	console.log("success: responseJSON");
-      	//viewModel.tuNexrad(processN(result.responseJSON));
-      } else if (!result.responseJSON.length && result.responseText.length) {
-      	console.log("success: responseText");
-      	//viewModel.tuNexrad(processN(result.responseText));
-      } else {
-      	console.log("Error. No responseJSON or responseText in response.");
-      };
-      
-      console.log("vM.tuNexrad:");
-      console.log(viewModel.tuNexrad());
-      viewModel.tuNexrad(processN(result.responseJSON));
-      viewModel.plotGraph();
     }
   });
 }

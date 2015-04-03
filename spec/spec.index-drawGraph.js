@@ -13,6 +13,16 @@ describe("The drawGraph.js file", function() {
     expect(flowduration).toBeDefined();
     expect(flowduration).toEqual(jasmine.any(Function));
   });
+  it("contains a graph-drawing function named hyetograph()", function() {
+    expect(hyetograph).toBeDefined();
+    expect(hyetograph).toEqual(jasmine.any(Function));
+  });
+  describe("The hyetograph() function", function() {
+    it("", function() {//it modifies global variables and adds stuff to the DOM. hard to test.
+
+    });
+
+  });
   it("contains a data-loading and parsing function named getUSGS()", function() {
     expect(getUSGS).toBeDefined();
     expect(getUSGS).toEqual(jasmine.any(Function));
