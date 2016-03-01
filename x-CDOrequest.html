@@ -37,19 +37,19 @@
       var request1 = {
         "limit" : "1000",
         "datasetid" : "PRECIP_15",
-        "stationid" : "COOP:180465", //BWI
+        "stationid" : "COOP:180700",
         "startdate" : "2000-01-01",
         "enddate" : "2000-05-01"
       };
+      
+      // Another working request
+      // http://www.ncdc.noaa.gov/cdo-web/api/v2/data?limit=105&datasetid=GHCND&stationid=GHCND:USW00013872&startdate=2012-05-01&enddate=2012-06-02
       var request2 = {
-        //datasetid: "HPCP",//precip? But it gives a 500 error.
-        //datasetid : "GHCND", //returns {}
-        "datasetid" : "GHCNDMS",//returns {}
-        "stationid" : "COOP:180465", //BWI
-        //locationid: "FIPS:02",//don't request this from /data
-        "startdate" : "2010-05-01",
-        "enddate" : "2010-05-31",
-        "limit" : "50"//default is 25
+        "datasetid" : "GHCND",
+        "stationid" : "GHCND:USW00013872",
+        "startdate" : "2012-05-01",
+        "enddate" : "2012-06-02",
+        "limit" : "105"//default is 25
       };
       function CDOrequest(myData) {
         $("#target").append("<p>starting request using " + JSON.stringify(myData) + "</p>");
