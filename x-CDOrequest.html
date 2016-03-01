@@ -30,22 +30,26 @@
     <div id="target"> </div>
     
     <script>
+    // A working request (must also add header) 
+    //http://www.ncdc.noaa.gov/cdo-web/api/v2/data?limit=1000&datasetid=PRECIP_15&stationid=COOP:180700&startdate=2000-01-01&enddate=2001-01-01
       var url = "http://www.ncdc.noaa.gov/cdo-web/api/v2/data";
       var myToken = "pWmAdZysIShKsPkxbGeKAjeutJYqpOus";
       var request1 = {
-        datasetid: "GHCND",
-        //datasetid : "HPCP",//internal server error. WTF?
-        stationid : "COOP:180465"//BWI
+        "limit" : "1000",
+        "datasetid" : "PRECIP_15",
+        "stationid" : "COOP:180465", //BWI
+        "startdate" : "2000-01-01"
+        "enddate" : "2000-05-01"
       };
       var request2 = {
         //datasetid: "HPCP",//precip? But it gives a 500 error.
         //datasetid : "GHCND", //returns {}
-        datasetid: "GHCNDMS",//returns {}
-        stationid : "COOP:180465", //BWI
+        "datasetid" : "GHCNDMS",//returns {}
+        "stationid" : "COOP:180465", //BWI
         //locationid: "FIPS:02",//don't request this from /data
-        //startdate : "2010-05-01",
-        //enddate : "2010-05-31",
-        limit : "50"//default is 25
+        "startdate" : "2010-05-01",
+        "enddate" : "2010-05-31",
+        "limit" : "50"//default is 25
       };
       function CDOrequest(myData) {
         $("#target").append("<p>starting request using " + JSON.stringify(myData) + "</p>");
@@ -54,7 +58,7 @@
           url : url,
           data : myData,
           headers : {
-            token : myToken
+            "token" : myToken
           }
         }).done(function(data) {
           console.log(data);
