@@ -330,6 +330,9 @@ function hyetograph(id) {
   //var stream = viewModel.dataArray()[0];
   var rain = viewModel.tuNexrad().data;
   //if graph has been called but we don't have our data yet, plot with no data.
+  // XXX
+  // TODO: figure out why this breaks when nexrad data gets in first.
+  if (!stream) stream = [{date: null, value: null}];
   if (!rain) rain = [{date: null, value: null}];
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
   var xMin = d3.min([d3.min(stream.map(function(d) { return d[0];})), d3.min(rain.map(function(d) { return d.date;}))]);
@@ -385,8 +388,8 @@ function getUSGS(id) {
   if (id == "local") {
     var filename = "resources/USGSshort.txt";
   } else {
-    //var filename = dateQuery;
-    var filename = recentQuery; //
+    var filename = dateQuery;
+   //var filename = recentQuery; //
   }
   d3.json(filename, function(error, json) {
     if (error) {
@@ -477,18 +480,20 @@ function getTuNexrad(id) {
   //if new data is requested, get rid of old data, set one element to null.
   viewModel.tuNexrad({status: "requesting data...", data: [{date: null, value: null}]});
   console.log("requesting data from TU NEXRAD service");
-  var now = new Date();
-  var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
-  var start = new Date(end - (30 * 24 * 60 * 60 * 1000));
+  //var now = new Date(); //system stopped collecting data 2015-03-01
+  //var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
+  //var start = new Date(end - (90 * 24 * 60 * 60 * 1000));
   var endstr = "/enddate=" + dateStr(time.end);
   var startstr = "/startdate=" + dateStr(time.start);
-  var urlDates = "http://10.55.17.48:5000/nexradTS/id=" + id + startstr + endstr;
-  var urlRecent = "http://10.55.17.48:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
+  //var endstr = "/enddate=" + dateStr(end);
+  //var startstr = "/startdate=" + dateStr(start);
+  var urlDates = "http://10.55.15.196:5000/nexradTS/id=" + id + startstr + endstr;
+  var urlRecent = "http://10.55.15.196:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
 
   //console.log(endstr);
   result = $.ajax({
-    //url : urlDates,
-    url : urlRecent,
+    url : urlDates,
+    //url : urlRecent,
     dataType : "json",
     error : function (ErrObj, ErrStr) {
       console.log("AJAX returns an error");
