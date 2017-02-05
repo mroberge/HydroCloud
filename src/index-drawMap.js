@@ -1,4 +1,5 @@
 var map;
+var fusionLayerInfoWindow;
 var center = new google.maps.LatLng(39.395, -76.609);
 
 function drawMap() {
@@ -12,6 +13,7 @@ function drawMap() {
   //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
+  fusionLayerInfoWindow = new google.maps.InfoWindow();
 
   //Fusion tables load much faster than KML layers!
   //fusion table ID: 11Ujto70g1r7bWNSax5X84KYYuTpwPGmWeacAhkwP
@@ -28,6 +30,7 @@ function drawMap() {
       //from : '103gQIyU069THrk7KGZYtbC8_My1rW4JwaHhX1ehe'
       //where : 'DRAIN_SQKM < 20'
     },
+    suppressInfoWindows: true
   });
   fusionLayer.setMap(map);
 
@@ -42,6 +45,21 @@ function drawMap() {
     var sId = event.row.STAID.value;
     var siteName = event.row.STANAME.value;
     var siteArray = {id: sId, name: siteName, area: +event.row.DRAIN_SQKM.value, impervious: +event.row.IMPNLCD06.value};
+
+    //update our InfoWindow, then open it.
+    fusionLayerInfoWindow.setOptions(
+        {
+          //content: event.infoWindowHtml, //You can also use the default html as set by the fusion table.
+          content: "<div class='googft-info-window'>" +
+                    "<b>" + siteName + "</b><br>" +
+                    "<b>site ID: </b>" + sId + "<br>" +
+                    "</div>",
+          position: event.latLng,
+          pixelOffset: event.pixelOffset
+        });
+    fusionLayerInfoWindow.open(map);
+
+    //Update the viewModel with new site info.
     viewModel.siteId(sId);
     viewModel.siteName(siteName);
     viewModel.siteArray.push(siteArray);
