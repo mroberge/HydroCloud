@@ -238,12 +238,12 @@
     </nav>
 
     <div id="button-bar" class="navbar-inverse">
-      <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"> </span> </a>
+      <a href="#carousel-example-generic" data-slide="prev" data-bind="click: slide" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"> </span> </a>
       <div class="pull-right">
         <button id="legend-btn" class="btn"  data-bind="click: toggleLegend, css: { active: showLegend}">
           <span class="glyphicon glyphicon-list-alt"> </span>
         </button>
-        <a  href="#carousel-example-generic" data-slide="next" class=""> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+        <a  href="#carousel-example-generic" data-slide="next" data-bind="click: slide" class=""> <span class="glyphicon glyphicon-chevron-right"></span> </a>
       </div>
     </div>
 
@@ -392,8 +392,11 @@
           this.plotGraph();
         },
         map : function() {
+          //this is only called when map button is pressed, not next and prev arrows.
           this.view("map");
           google.maps.event.trigger(map, 'resize');
+        },
+        slide : function() {
         },
         plotGraph : function() {
           console.log(this.graph());
