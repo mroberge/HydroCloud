@@ -398,7 +398,13 @@ function getUSGS(id) {
       }
       return console.warn(error);
     }
-    //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
+    //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")}
+    if (!json.value.timeSeries[0]){
+      console.warn("there is no data for this site");
+      //Select the info window and add a message that there is no data.
+      $(".googft-info-window").append("<br>No data for this site.");
+      return;
+    }
     temp = json.value.timeSeries[0].values[0].value;
     //I need to check if this even has a value!!
     //MR Create a new array of objects from the JSON.
