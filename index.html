@@ -393,10 +393,12 @@
         },
         map : function() {
           //this is only called when map button is pressed, not next and prev arrows.
+          fusionLayerInfoWindow.close();
           this.view("map");
           google.maps.event.trigger(map, 'resize');
         },
         slide : function() {
+          fusionLayerInfoWindow.close();
         },
         plotGraph : function() {
           console.log(this.graph());
