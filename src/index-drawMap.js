@@ -24,10 +24,10 @@ function drawMap() {
       //from : '1Rt_U4LqeNPi6Tk1-kq8ta-6OP748nJJJTqdwlC0Q'
 
       //from Gages II merge, too large, takes too long to load
-      from : '1wtRBQVozXdLsn5t0PL8egL5wL7tUzFQvw6NYQizn'
+      //from : '1wtRBQVozXdLsn5t0PL8egL5wL7tUzFQvw6NYQizn'
 
       //from Gages II merge- small
-      //from : '103gQIyU069THrk7KGZYtbC8_My1rW4JwaHhX1ehe'
+      from : '103gQIyU069THrk7KGZYtbC8_My1rW4JwaHhX1ehe'
       //where : 'DRAIN_SQKM < 20'
     },
     suppressInfoWindows: true
@@ -44,7 +44,11 @@ function drawMap() {
     //Parsing Gages II merge
     var sId = event.row.STAID.value;
     var siteName = event.row.STANAME.value;
-    var siteArray = {id: sId, name: siteName, area: +event.row.DRAIN_SQKM.value, impervious: +event.row.IMPNLCD06.value};
+    var siteArray = {id: sId,
+                     name: siteName,
+                     area: +event.row.DRAIN_SQKM.value,
+                     impervious: +event.row.IMPNLCD06.value
+    };
 
     //update our InfoWindow, then open it.
     fusionLayerInfoWindow.setOptions(
