@@ -12,10 +12,20 @@ function storageAvailable(type) {
     }
 }
 
-function checkStorage(){
+function checkStorage(site){
     if (storageAvailable('localStorage')) {
-        // Yippee! We can use localStorage awesomeness
-        console.log("localStorage is available!")
+        // localStorage is available
+        console.log("localStorage is available!");
+        try {
+            var storage = window['localStorage'];
+            return JSON.parse(storage.getItem(site));
+        }
+        catch(e) {
+            return false;
+        }
+
+            
+        
     }
     else {
         // Too bad, no localStorage for us
