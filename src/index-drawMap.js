@@ -2,7 +2,6 @@ var map;
 var center = new google.maps.LatLng(39.395, -76.609);
 
 function drawMap() {
-  checkStorage();
   //document.getElementById('map_div').style.display = "none";
   var mapOptions = {
     zoom : 8,
@@ -25,7 +24,7 @@ function drawMap() {
   fusionLayer.setMap(map);
   
   google.maps.event.addListener(fusionLayer, 'click', function(event) {
-    console.log(event);
+    //console.log(event);
     var re = /[0-9]+/;
     var sId = re.exec(event.row.site_no.value)[0];
     //console.log(sId);
