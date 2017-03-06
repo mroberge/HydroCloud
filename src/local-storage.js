@@ -23,3 +23,20 @@ function checkStorage(){
     }
 }
 
+function saveData(key, data) {
+    if (storageAvailable('localStorage')) {
+        // localStorage is available
+        console.log("attempting to save");
+        try {
+            var storage = window['localStorage'];
+            storage.setItem(key, JSON.stringify(data));
+            return true;
+        }
+        catch(e) {
+            console.log("Unable to save data");
+            console.log(e);
+            console.log("Key: " + key);
+            console.log(data);
+        }
+    }
+}
