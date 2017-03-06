@@ -15,21 +15,37 @@ function storageAvailable(type) {
 function checkStorage(site){
     if (storageAvailable('localStorage')) {
         // localStorage is available
-        console.log("localStorage is available!");
+        console.log("localStorage is available. site:" + site);
         try {
             var storage = window['localStorage'];
-            return JSON.parse(storage.getItem(site));
+            var data = JSON.parse(storage.getItem(site));
+            //Need to check that the data are working; if not, return false and system will request data.
+            //Also, the data might look fine to whatever data-checking function I write, but the user might not like it.
+            //In this case, I may want to have a refresh button near the graph to ask for more data.
+            if (Array.isArray(data) && data.length > 20) {
+                console.log("Retrieved data from site " + site + ". Length is:" + data.length);
+                //convert string to Date
+                data.forEach(function(d, index, array){
+                    d[0] = new Date(d[0]);
+                });
+                return data;
+                //console.log(data);
+                //return false;
+            } else {
+                console.log("Problem with retrieved data for site " + site);
+                console.log(data);
+                return false;
+            }
         }
         catch(e) {
+            console.log("error");
+            console.log(e);
             return false;
         }
-
-            
-        
     }
     else {
-        // Too bad, no localStorage for us
         console.log("localStorage is not available.")
+        return false;
     }
 }
 
