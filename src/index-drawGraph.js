@@ -332,8 +332,17 @@ function hyetograph(id) {
   //if graph has been called but we don't have our data yet, plot with no data.
   // XXX
   // TODO: figure out why this breaks when nexrad data gets in first.
-  if (!stream) stream = [{date: null, value: null}];
-  if (!rain) rain = [{date: null, value: null}];
+  if (!stream) {
+    stream = [null, null];
+    console.log("!stream");
+  }
+  if (!rain) {
+    rain = [{date: null, value: null}];
+    console.log("!rain");
+  }
+  console.log("stream & rain");
+  console.log(stream);
+  console.log(rain);
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
   var xMin = d3.min([d3.min(stream.map(function(d) { return d[0];})), d3.min(rain.map(function(d) { return d.date;}))]);
   xScale.domain([xMin, xMax]);
