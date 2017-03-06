@@ -424,8 +424,8 @@
           name : "DEER CREEK AT ROCKS, MD",
           area : 94.4
         }]),
-        dataArray : ko.observableArray(),
-        tuNexrad : ko.observable() //just a single object, which happens to be an array...
+        dataArray : ko.observableArray([]),//Initial value set to empty.
+        tuNexrad : ko.observable({status: "requesting data"}) //just a single object, which happens to be an array...
       };
       ko.applyBindings(viewModel);
 
