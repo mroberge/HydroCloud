@@ -564,46 +564,6 @@ function getUSGS(id) {
   var testDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
   var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
 
-    result = $.ajax({
-      url: url,
-      //headers: {"Accept-Encoding": "gzip, compress"},
-      dataType: "json",
-      error: function (ErrObj, ErrStr) {
-        console.log("USGS returns an error");
-        console.log(ErrObj);//The header.
-        console.log(ErrStr);//This is ErrObj.statusText
-        viewModel.plotGraph();
-      },
-      success: function () {//TODO: test this to make sure it responds properly when data is returned.
-        //Use this if we get some data back.
-        console.log("Successful data request from USGS!");
-        //process data
-        //    check for no data or empty set; timeSeries[0] is empty
-        if (!json.value.timeSeries[0].values[0].value) {
-          console.warn("there is no data for this site");
-          //Do something!
-          return; //triggers "complete".
-        }
-        temp = json.value.timeSeries[0].values[0].value;
-        temp.forEach(function (d, index, array) {
-          //    convert values to dates and numbers
-          //    screen out -999 values; replace with null? or 0.
-          data[index] = [];
-          data[index][0] = new Date(d.dateTime);
-          var value = +d.value;
-          if (value < 0) value = null;
-          data[index][1] = +d.value;
-        });
-        //add data to viewModel.dataArray
-        viewModel.dataArray(temp);
-        viewModel.plotGraph();
-      },
-      //Stop using complete except to catch non-error and non-success.
-      complete: function () {
-        console.log("USGS request complete");
-        console.log(result);
-      }
-    });
   if (id == "local") {
     var url = localQuery;
   } else {
@@ -611,4 +571,55 @@ function getUSGS(id) {
     // recentDaily will minimize the impact the program has on the USGS servers.
     var url = localQuery;
   }
+  result = $.ajax({
+    url: url,
+    //headers: {"Accept-Encoding": "gzip, compress"},
+    dataType: "json",
+    error: function (ErrObj, ErrStr) {
+      console.log("USGS returns an error");
+      console.log(ErrObj);//The header.
+      console.log(ErrStr);//This is ErrObj.statusText
+      //Display a message, don't plot the graph?
+      //viewModel.plotGraph();
+    },
+    success: function (returnedData, statusMsg, returnedjqXHR) {//TODO: test this to make sure it responds properly when data is returned.
+      //Use this if we get some data back.
+      console.log("Successful data request from USGS!");
+      console.log(statusMsg); // StatusMsg should be "success"
+      console.log(returnedjqXHR);
+      console.log(returnedData); // localQuery looks great.
+      //process data
+      //    check for no data or empty set; timeSeries[0] is empty
+      if (!returnedData.value.timeSeries[0].values[0].value) {
+        console.warn("there is no data for this site");
+        //Do something!
+        return; //should trigger "complete".
+      }
+      var temp = returnedData.value.timeSeries[0].values[0].value;
+      console.log(temp);
+      temp.forEach(function (d, index, array) {
+        //    convert values to dates and numbers
+        data[index] = [];
+        data[index][0] = new Date(d.dateTime);
+        data[index][1] = +d.value;
+        //    screen out -999 values; replace with null? or 0.
+        //    a more precise way would be to obtain the actual 'noDataValue'
+        //    located at: returnedData.value.timeSeries[0].variable.noDataValue
+        if (data[index][1] < 0) data[index][1] = null;
+      });
+      console.log("post-processing");
+      console.log(data);
+      //save the data to localStorage
+      saveData(id, data);
+      //add data to viewModel.dataArray
+      viewModel.dataArray.push(data);
+      viewModel.plotGraph();
+    },
+    //Stop using complete except to catch non-error and non-success.
+    complete: function () {
+      console.log("USGS request complete");
+      console.log(result);
+    }
+  });
+
 }
