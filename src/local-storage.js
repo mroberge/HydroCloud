@@ -22,6 +22,7 @@ function checkStorage(site){
             //Need to check that the data are working; if not, return false and system will request data.
             //Also, the data might look fine to whatever data-checking function I write, but the user might not like it.
             //In this case, I may want to have a refresh button near the graph to ask for more data.
+            //If there is no data stored for this site, return false
             if (Array.isArray(data) && data.length > 20) {
                 console.log("Retrieved data from site " + site + ". Length is:" + data.length);
                 //convert string to Date
