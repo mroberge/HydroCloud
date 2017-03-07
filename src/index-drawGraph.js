@@ -553,8 +553,9 @@ function getUSGS(id) {
     viewModel.dataArray.push(data);
     //console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
     viewModel.plotGraph();
-  } else {
-    // Nothing stored locally, so make data request.
+    return;
+  }
+  // Nothing stored locally, so make data request.
 
     var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
     var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
