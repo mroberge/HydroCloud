@@ -361,7 +361,7 @@
         height : ko.observable($(".carousel-inner").height()),
         showLegend : ko.observable(false),
         toggleLegend : function() {
-          console.log("click");
+          console.log("toggleLegend click");
           this.showLegend() ? this.showLegend(false) : this.showLegend(true);
         },
         view : ko.observable("map"),
