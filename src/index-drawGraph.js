@@ -559,13 +559,13 @@ function getUSGS(id) {
     var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
     var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
     var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
-    var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&parameterCd=00060";
     var testDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
+    var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
 
     if (id == "local") {
       var url = "resources/USGSshort.txt";
     } else {
-      var url = testDaily;
+      var url = recentDaily;
     }
     result = $.ajax({
       url: url,
