@@ -1,14 +1,14 @@
-function storageAvailable(type) {
-    //type can be 'localStorage' or 'sessionStorage'
+function storageAvailable(storageType) {
+    //storageType can be 'localStorage' or 'sessionStorage'
     try {
-        var storage = window[type],
+        var storage = window[storageType],
             x = '__storage_test__';
         storage.setItem(x, x);
         storage.removeItem(x);
         return true;
     }
     catch(e) {
-        console.log("localStorage not available.")
+        console.log(storageType + " not available.")
         console.dir(e);
         return false;
     }
