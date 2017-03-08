@@ -416,11 +416,11 @@
             console.log("no option selected");
           }
         },
-        siteId : ko.observable(),
-        siteIdArray : ko.observableArray(["01580000"]),
-        siteName : ko.observable(),
+        siteId : ko.observable("dv01580000"),
+        siteIdArray : ko.observableArray(["dv01580000"]),
+        siteName : ko.observable("01580000 DEER CREEK AT ROCKS, MD"),
         siteArray : ko.observableArray([{
-          id : "01580000",
+          id : "dv01580000",
           name : "DEER CREEK AT ROCKS, MD",
           area : 94.4
         }]),
@@ -452,7 +452,6 @@
         end : new Date(2015,01,01),
         recent : "90"
       };
-      viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS(viewModel.siteArray()[0].id);
       getTuNexrad(viewModel.siteArray()[0].id);
       //$(window).resize();
