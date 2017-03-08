@@ -323,17 +323,32 @@ function hyetograph(id) {
       return y2Scale(d.value);
     });
     
-  //The data to plot:
-  //viewModel.dataArray()[viewModel.dataArray().length-1] //this is the last site in the array.
-  //viewModel.tuNexrad()
-  var stream = viewModel.dataArray()[viewModel.dataArray().length-1]; //this is the last site in the array.
-  //var stream = viewModel.dataArray()[0];
-  var rain = viewModel.tuNexrad().data;
-  //if graph has been called but we don't have our data yet, plot with no data.
-  // XXX
-  // TODO: figure out why this breaks when nexrad data gets in first.
-  if (!stream) stream = [{date: null, value: null}];
-  if (!rain) rain = [{date: null, value: null}];
+  //Plot the data from the viewModel.dataArray() that matches the sID.
+  var siteIndex = viewModel.siteIdArray().indexOf(id);
+  if (siteIndex === -1) {
+    //The id should be in the siteIdArray already; this should have been tested for already. If it isn't, it returns -1.
+    console.log("Hyetograph() was called with an id that is not in the siteIdArray.")
+    console.log("id: " + id + "; the siteIndex is: " + siteIndex + "; and the siteIdArray:")
+    console.dir(viewModel.siteIdArray());
+    return;
+  }
+
+  var stream = viewModel.dataArray()[siteIndex]; //this is the last site in the array.
+  //var rain = viewModel.tuNexrad().data;
+  var rain = null;
+  if (!stream) {
+    //No data!
+    console.log("!stream");
+    //no data, so we can't plot, so return?
+    return;
+  }
+  if (!rain) {
+    rain = [{date: null, value: null}];
+    console.log("!rain");
+  }
+  //console.log("stream & rain");
+  //console.log(stream);
+  //console.log(rain);
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
   var xMin = d3.min([d3.min(stream.map(function(d) { return d[0];})), d3.min(rain.map(function(d) { return d.date;}))]);
   xScale.domain([xMin, xMax]);
@@ -356,7 +371,7 @@ function hyetograph(id) {
 
   //data processing notices
   //console.log(rain);
-  console.log(viewModel.tuNexrad());
+  //console.log(viewModel.tuNexrad());
   //this only changes the message on a redraw of the graph. and it will write "success" if it gets data.
   if (viewModel.tuNexrad().status !== "success") {
     bottom.append("text").attr("class", "dataNotice").text(viewModel.tuNexrad().status).attr("x", width / 2).attr("y", 30).style("text-anchor", "middle");
@@ -371,84 +386,9 @@ function hyetograph(id) {
 
   //axis labels
   top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height/2).attr("y", -margin.left).attr("dy", "1em").style("text-anchor", "middle").text("Stream discharge (cfs)");
-//Do we really need to lable the time axis? Won't the date labels be enough of a clue?
-//  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
+  //Do we really need to lable the time axis? Won't the date labels be enough of a clue?
+  //  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
   bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height2/2).attr("y", -margin2.left).attr("dy", "1em").style("text-anchor", "middle").text("mm");
-
-}
-
-
-
-
-function getUSGS(id) {
-	
-  var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
-  var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
-  var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-10-01&parameterCd=00060";
-  if (id == "local") {
-    var filename = "resources/USGSshort.txt";
-  } else {
-    var filename = dateQuery;
-   //var filename = recentQuery; //
-  }
-  d3.json(filename, function(error, json) {
-    if (error) {
-      if (error.status === 0) {
-        alert("USGS data request error.");
-      }
-      return console.warn(error);
-    }
-    //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")}
-    if (!json.value.timeSeries[0]){
-      console.warn("there is no data for this site");
-      //Select the info window and add a message that there is no data.
-      $(".googft-info-window").append("<br>No data for this site.");
-      return;
-    }
-    temp = json.value.timeSeries[0].values[0].value;
-    //I need to check if this even has a value!!
-    //MR Create a new array of objects from the JSON.
-    data = [];
-
-    var data2 = {
-      id : id,
-      data : []
-    };
-    var data3 = [];
-    //console.log(data2.data[0][0]);
-    //Clear out the array.
-    temp.forEach(function(d, index, array) {
-      d.date = new Date(d.dateTime);
-      d.value = +d.value;
-      data[index] = {
-        date : d.date,
-        value : d.value
-      };
-      // console.log("index = " + index);
-      data2.data[index] = [];
-      data2.data[index][0] = d.date;
-      data2.data[index][1] = d.value;
-      data3[index] = [];
-      data3[index][0] = d.date;
-      data3[index][1] = d.value;
-    });
-
-    //data.forEach(function(d, index, array) {
-    //  data2.data[index][0] = d.date;
-    //  data2.data[index][1] = d.value;
-    //});
-    //console.log("data3 = ");
-    //console.log(data3);
-    //    target.dispatchEvent(myEvent2);
-    //console.log(id);
-    //console.log(data);
-    //hydrograph(id);
-    //flowduration(id);
-    //loghistogram(id);
-    viewModel.dataArray.push(data3);
-    console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
-    viewModel.plotGraph();
-  });
 
 }
 
@@ -470,9 +410,9 @@ function dateStr(d) {
   return dstr;
 }
 
-function processN(array) {
+function processN(inputArray) {
   var myArray = [];
-  array.forEach(function (d, index, array) {
+  InputArray.forEach(function (d, index, array) {
     myArray[index] = {};
     myArray[index].date = new Date(d.dateTime);
     myArray[index].value = +d.precipitation;
@@ -502,17 +442,18 @@ function getTuNexrad(id) {
     //url : urlRecent,
     dataType : "json",
     error : function (ErrObj, ErrStr) {
-      console.log("AJAX returns an error");
+      console.log("TUnexrad returns an error");
       console.log(ErrObj);//The header.
       console.log(ErrStr);//just returns "error". This is ErrObj.statusText
       viewModel.tuNexrad({status: "data not available"});
       viewModel.plotGraph();
     },
-    success : function () {//TODO: test this to make sure it responds properly when data is returned.
+    success : function (returnedJSON, statusMsg, returnedjqXHR) {
+      //TODO: test this to make sure it responds properly when data is returned.
       //Use this if we get some data back.
       console.log("Success! vM.tuNexrad:");
       console.log(viewModel.tuNexrad());
-      viewModel.tuNexrad({status: "success", data: processN(result.responseJSON)});
+      viewModel.tuNexrad({status: "success", data: processN(result.returnedJSON)});
       viewModel.plotGraph();
     },
     //Stop using complete except to catch non-error and non-success.
@@ -521,4 +462,93 @@ function getTuNexrad(id) {
       console.log(result);
     }
   });
+}
+
+function getUSGS(id) {
+  //add some error functions.
+  //if new data is requested, get rid of old data, set one element to null.
+  //viewModel.dataArray([null,null]);
+  var data = [];
+  var stored = checkStorage(id);
+  if (stored) {
+    console.log("data for site " + id + " retrieved from localStorage; length: " + stored.length);
+    //console.log(stored);
+    data = stored;
+    viewModel.dataArray.push(data);
+    //console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
+    viewModel.plotGraph();
+    return;
+  }
+  // Nothing stored locally, so make data request.
+  // strip the id of the leading characters before requesting from USGS.
+  var re = /[0-9]+/;
+  var usgsId = re.exec(id)[0];
+  console.log("id: " + id + ", usgsId: " + usgsId);
+  var localQuery = "resources/USGSshort.txt";
+  var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
+  var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
+  var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
+  var testDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
+  var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
+
+  if (id == "local") {
+    var url = localQuery;
+  } else {
+    // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
+    // recentDaily will minimize the impact the program has on the USGS servers.
+    var url = recentDaily;
+  }
+  result = $.ajax({
+    url: url,
+    //headers: {"Accept-Encoding": "gzip, compress"},
+    dataType: "json",
+    error: function (ErrObj, ErrStr) {
+      console.log("USGS returns an error");
+      console.dir(ErrObj);//The header.
+      console.log(ErrStr);//This is ErrObj.statusText; it is only 'error'
+      //Display a message, don't plot the graph?
+      //TODO: add an error message to the pop-up box;
+      //TODO: maybe create a status attribute for USGS data.
+    },
+    success: function (returnedData, statusMsg, returnedjqXHR) {//TODO: test this to make sure it responds properly when data is returned.
+      //Use this if we get some data back.
+      console.log("Successful data request from USGS!");
+      console.log(statusMsg); // StatusMsg should be "success"
+      console.log(returnedjqXHR);
+      console.log(returnedData); // localQuery looks great.
+      //process data
+      //    check for no data or empty set; timeSeries[0] is empty
+      if (!returnedData.value.timeSeries[0].values[0].value) {
+        //TODO: test if this is able to handle sites with no data; usgs returns [].
+        console.warn("there is no data for this site");
+        //Do something!
+        return; //should trigger "complete".
+      }
+      var temp = returnedData.value.timeSeries[0].values[0].value;
+      //console.log(temp);
+      temp.forEach(function (d, index, array) {
+        //    convert values to dates and numbers
+        data[index] = [];
+        data[index][0] = new Date(d.dateTime);
+        data[index][1] = +d.value;
+        //    screen out -999 values; replace with null? or 0.
+        //    a more precise way would be to obtain the actual 'noDataValue'
+        //    located at: returnedData.value.timeSeries[0].variable.noDataValue
+        if (data[index][1] < 0) data[index][1] = null;
+      });
+      //console.log("post-processing");
+      //console.log(data);
+      //save the data to localStorage
+      saveData(id, data);
+      //add data to viewModel.dataArray
+      viewModel.dataArray.push(data);
+      viewModel.plotGraph();
+    },
+    //Stop using complete except to catch non-error and non-success.
+    complete: function () {
+      console.log("USGS request for site " + id + "complete.");
+      //console.log(result); //just returns 'success'
+    }
+  });
+
 }

@@ -37,44 +37,63 @@ function drawMap() {
   google.maps.event.addListener(fusionLayer, 'click', function(event) {
     //Parse real.kmz
     //var re = /[0-9]+/;
-    //var sId = re.exec(event.row.site_no.value)[0];
+    //var sId = "dv" + re.exec(event.row.site_no.value)[0];
     //var siteName = event.row.station_nm.value;
     //var siteArray = {id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value};
 
     //Parsing Gages II merge
-    var sId = event.row.STAID.value;
+    var siteId = event.row.STAID.value;
     var siteName = event.row.STANAME.value;
-    var siteArray = {id: sId,
+    var siteArray = {id: siteId,
                      name: siteName,
                      area: +event.row.DRAIN_SQKM.value,
                      impervious: +event.row.IMPNLCD06.value
     };
-
+   
     //update our InfoWindow, then open it.
     fusionLayerInfoWindow.setOptions(
         {
           //content: event.infoWindowHtml, //You can also use the default html as set by the fusion table.
           content: "<div class='googft-info-window'>" +
                     "<b>" + siteName + "</b><br>" +
-                    "<b>site ID: </b>" + sId + "<br>" +
+                    "<b>site ID: </b>" + siteId + "<br>" +
                     "</div>",
           position: event.latLng,
           pixelOffset: event.pixelOffset
         });
     fusionLayerInfoWindow.open(map);
-
-    //Update the viewModel with new site info.
+    
+    //Update our viewModel with the current site information.
+    //For now, we will only work with daily value sites. add "dv" to site id.
+    var sId = "dv" + siteId;
     viewModel.siteId(sId);
     viewModel.siteName(siteName);
-    viewModel.siteArray.push(siteArray);
-    //This siteIdArray.push won't capture the first data requested.
-    viewModel.siteIdArray.push(sId);
-    //console.log(viewModel.siteId());
-    console.log(viewModel.siteArray());
-    //viewModel.siteName.push(kmlEvent.featureData.name);
+    //viewModel.siteArray(siteArray);
+    
+    //Check if this site is already in our siteIdArray.
+    // This will not match strings and integers. Be careful that both are integers or strings...
+    var siteIndex = viewModel.siteIdArray.indexOf(sId);
+    //console.log("The siteIndex is: " + siteIndex);
+    if (siteIndex === -1) {
+      //If the sId is not in the siteIdArray, this will return -1.
+      //Now we must add the site to the siteIdArray and request data.
+    
+      //Update the viewModel with new site info.
+      //console.log("site index -1");
+      //console.log("sId: " + sId + " siteIndex: " + siteIndex);
+      //console.dir(viewModel.siteIdArray());
+      viewModel.siteIdArray.push(sId);
+      viewModel.siteArray.push(siteArray);
+      //console.dir(viewModel.siteIdArray());
+      //Get the new data.
+      getUSGS(sId);
+      //getTuNexrad(sId);
+    } else {
+      //If we already have this site in the list, we don't need to request it again.
+      //We still need to plot the data.
+      viewModel.plotGraph();
+    }
 
-    getUSGS(sId);
-    getTuNexrad(sId);
   });
   
 /*
