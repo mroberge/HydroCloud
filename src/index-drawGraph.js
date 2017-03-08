@@ -491,11 +491,11 @@ function getUSGS(id) {
   var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
 
   if (id == "local") {
-    var url = recentDaily;
+    var url = localQuery;
   } else {
     // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
     // recentDaily will minimize the impact the program has on the USGS servers.
-    var url = localQuery;
+    var url = recentDaily;
   }
   result = $.ajax({
     url: url,
@@ -503,10 +503,11 @@ function getUSGS(id) {
     dataType: "json",
     error: function (ErrObj, ErrStr) {
       console.log("USGS returns an error");
-      console.log(ErrObj);//The header.
-      console.log(ErrStr);//This is ErrObj.statusText
+      console.dir(ErrObj);//The header.
+      console.log(ErrStr);//This is ErrObj.statusText; it is only 'error'
       //Display a message, don't plot the graph?
-      //viewModel.plotGraph();
+      //TODO: add an error message to the pop-up box;
+      //TODO: maybe create a status attribute for USGS data.
     },
     success: function (returnedData, statusMsg, returnedjqXHR) {//TODO: test this to make sure it responds properly when data is returned.
       //Use this if we get some data back.
