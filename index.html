@@ -19,13 +19,16 @@
     <script src='lib/knockout-3.0.0.js'></script>
     <script src="lib/d3/d3.min.js"></script>
 
-    <!--- My mapping files here. --->
+    <!-- My mapping files here. -->
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY"></script>
     <script src="src/index-drawMap.js"></script>
 
     <!-- my graphing stuff here -->
     <script src="src/index-drawGraph.js"></script>
     <script src="src/scatterChart.js"></script>
+
+    <!-- Local Storage functions -->
+    <script src="src/local-storage.js"></script>
 
     <!-- My styles here -->
     <style>
@@ -361,7 +364,7 @@
         height : ko.observable($(".carousel-inner").height()),
         showLegend : ko.observable(false),
         toggleLegend : function() {
-          console.log("click");
+          console.log("toggleLegend click");
           this.showLegend() ? this.showLegend(false) : this.showLegend(true);
         },
         view : ko.observable("map"),
@@ -403,13 +406,13 @@
         plotGraph : function() {
           console.log(this.graph());
           if (this.graph() == "hydro") {
-            hydrograph(this.siteId);
+            hydrograph(this.siteId());
           } else if (this.graph() === "flow") {
-            flowduration(this.siteId);
+            flowduration(this.siteId());
           } else if (this.graph() === "histo") {
-            loghistogram(this.siteId);
+            loghistogram(this.siteId());
           } else if (this.graph() === "hyeto") {
-            hyetograph(this.siteId);
+            hyetograph(this.siteId());
           } else if (this.graph() === "scatter") {
             var graphDiv = d3.select("#graph_div");
             //console.log(this.dataArray());
@@ -421,17 +424,17 @@
             console.log("no option selected");
           }
         },
-        siteId : ko.observable(),
-        siteIdArray : ko.observableArray(["01580000"]),
-        siteName : ko.observable(),
+        siteId : ko.observable("dv01580000"),
+        siteIdArray : ko.observableArray(["dv01580000"]),
+        siteName : ko.observable("01580000 DEER CREEK AT ROCKS, MD"),
         siteArray : ko.observableArray([{
-          id : "01580000",
+          id : "dv01580000",
           name : "DEER CREEK AT ROCKS, MD",
           area : 94.4,
           impervious : 1.26
         }]),
-        dataArray : ko.observableArray(),
-        tuNexrad : ko.observable() //just a single object, which happens to be an array...
+        dataArray : ko.observableArray([]),//Initial value set to empty.
+        tuNexrad : ko.observable({status: "requesting data"}) //just a single object, which happens to be an array...
       };
       ko.applyBindings(viewModel);
 
@@ -458,11 +461,14 @@
         end : new Date(2015,01,01),
         recent : "90"
       };
-      viewModel.siteName("01580000 DEER CREEK AT ROCKS, MD");
       getUSGS(viewModel.siteArray()[0].id);
-      getTuNexrad(viewModel.siteArray()[0].id);
+
+      //getTuNexrad(viewModel.siteArray()[0].id);
+      //$(window).resize();
+
       google.maps.event.addDomListener(window, 'load', redraw);
       $(window).resize(redraw);
+
     </script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
