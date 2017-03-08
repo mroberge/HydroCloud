@@ -323,18 +323,26 @@ function hyetograph(id) {
       return y2Scale(d.value);
     });
     
-  //The data to plot:
-  //viewModel.dataArray()[viewModel.dataArray().length-1] //this is the last site in the array.
-  //viewModel.tuNexrad()
-  var stream = viewModel.dataArray()[viewModel.dataArray().length-1]; //this is the last site in the array.
-  //var stream = viewModel.dataArray()[0];
+  //Plot the data from the viewModel.dataArray() that matches the sID.
+  var siteIndex = viewModel.siteIdArray().indexOf(id);
+  if (siteIndex === -1) {
+    //The id should be in the siteIdArray already; this should have been tested for already. If it isn't, it returns -1.
+    console.log("Hyetograph() was called with an id that is not in the siteIdArray.")
+    console.log("id: " + id + "; the siteIndex is: " + siteIndex + "; and the siteIdArray:")
+    console.dir(viewModel.siteIdArray());
+    return;
+  }
+
+  var stream = viewModel.dataArray()[siteIndex]; //this is the last site in the array.
   var rain = viewModel.tuNexrad().data;
   //if graph has been called but we don't have our data yet, plot with no data.
   // XXX
   // TODO: figure out why this breaks when nexrad data gets in first.
   if (!stream) {
-    stream = [null, null];
+    //No data!
     console.log("!stream");
+    //no data, so we can't plot, so return?
+    return;
   }
   if (!rain) {
     rain = [{date: null, value: null}];
@@ -556,13 +564,16 @@ function getUSGS(id) {
     return;
   }
   // Nothing stored locally, so make data request.
-
+  // strip the id of the leading characters before requesting from USGS.
+  var re = /[0-9]+/;
+  var usgsId = re.exec(id)[0];
+  console.log("id: " + id + ", usgsId: " + usgsId);
   var localQuery = "resources/USGSshort.txt";
-  var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
-  var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
+  var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
+  var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
   var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
   var testDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
-  var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
+  var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
 
   if (id == "local") {
     var url = localQuery;

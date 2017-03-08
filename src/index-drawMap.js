@@ -26,23 +26,39 @@ function drawMap() {
   google.maps.event.addListener(fusionLayer, 'click', function(event) {
     //console.log(event);
     var re = /[0-9]+/;
-    var sId = re.exec(event.row.site_no.value)[0];
-    //console.log(sId);
+    //TODO: for now, we will only work with daily value sites.
+    var sId = "dv" + re.exec(event.row.site_no.value)[0];
+
+    console.log("The map event listener has determined that the sID is: " + sId);
     viewModel.siteId(sId);
+    console.log("viewModel.siteID() is " + viewModel.siteId());
     viewModel.siteName(event.row.station_nm.value);
-    viewModel.siteArray.push({id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value});
-    //This siteIdArray.push won't capture the first data requested.
-    viewModel.siteIdArray.push(sId);
-    //console.log(viewModel.siteId());
-    console.log(viewModel.siteArray());
-    //viewModel.siteName.push(kmlEvent.featureData.name);
 
-    //console.log(sId);
-    //console.log(viewModel.siteId());
-    //console.log(viewModel.siteName());
+    //TODO: Check to see if this site is already in the array.
 
-    getUSGS(sId);
-    getTuNexrad(sId);
+    // This will not match strings and integers. Be careful that both are integers or strings...
+    var siteIndex = viewModel.siteIdArray.indexOf(sId);
+    console.log("The siteIndex is: " + siteIndex);
+
+    if (siteIndex === -1) {
+
+      viewModel.siteArray.push({id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value});
+      //This siteIdArray.push won't capture the first data requested.
+      viewModel.siteIdArray.push(sId);
+      //console.log(viewModel.siteId());
+      console.log(viewModel.siteArray());
+      //viewModel.siteName.push(kmlEvent.featureData.name);
+
+      //console.log(sId);
+      //console.log(viewModel.siteId());
+      //console.log(viewModel.siteName());
+
+      getUSGS(sId);
+      getTuNexrad(sId);
+    }
+    //TODO: if we already have this site in the list, we don't need to request it again.
+    //TODO: We still need to plot the data.
+    viewModel.plotGraph(); //Unfortunately, this will only plot the most recently added sId.
   });
   
 /*
