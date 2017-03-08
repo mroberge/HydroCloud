@@ -334,7 +334,8 @@ function hyetograph(id) {
   }
 
   var stream = viewModel.dataArray()[siteIndex]; //this is the last site in the array.
-  var rain = viewModel.tuNexrad().data;
+  //var rain = viewModel.tuNexrad().data;
+  var rain = null;
   if (!stream) {
     //No data!
     console.log("!stream");
@@ -370,7 +371,7 @@ function hyetograph(id) {
 
   //data processing notices
   //console.log(rain);
-  console.log(viewModel.tuNexrad());
+  //console.log(viewModel.tuNexrad());
   //this only changes the message on a redraw of the graph. and it will write "success" if it gets data.
   if (viewModel.tuNexrad().status !== "success") {
     bottom.append("text").attr("class", "dataNotice").text(viewModel.tuNexrad().status).attr("x", width / 2).attr("y", 30).style("text-anchor", "middle");

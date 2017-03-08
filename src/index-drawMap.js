@@ -53,7 +53,7 @@ function drawMap() {
       //console.log(viewModel.siteName());
 
       getUSGS(sId);
-      getTuNexrad(sId);
+      //getTuNexrad(sId);
     }
     //If we already have this site in the list, we don't need to request it again.
     //We still need to plot the data.
