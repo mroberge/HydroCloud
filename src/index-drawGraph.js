@@ -335,9 +335,6 @@ function hyetograph(id) {
 
   var stream = viewModel.dataArray()[siteIndex]; //this is the last site in the array.
   var rain = viewModel.tuNexrad().data;
-  //if graph has been called but we don't have our data yet, plot with no data.
-  // XXX
-  // TODO: figure out why this breaks when nexrad data gets in first.
   if (!stream) {
     //No data!
     console.log("!stream");
@@ -602,6 +599,7 @@ function getUSGS(id) {
       //process data
       //    check for no data or empty set; timeSeries[0] is empty
       if (!returnedData.value.timeSeries[0].values[0].value) {
+        //TODO: test if this is able to handle sites with no data; usgs returns [].
         console.warn("there is no data for this site");
         //Do something!
         return; //should trigger "complete".
@@ -628,8 +626,8 @@ function getUSGS(id) {
     },
     //Stop using complete except to catch non-error and non-success.
     complete: function () {
-      console.log("USGS request complete");
-      console.log(result);
+      console.log("USGS request for site " + id + "complete.");
+      //console.log(result); //just returns 'success'
     }
   });
 
