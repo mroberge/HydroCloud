@@ -241,12 +241,12 @@
     </nav>
 
     <div id="button-bar" class="navbar-inverse">
-      <a href="#carousel-example-generic" data-slide="prev" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"> </span> </a>
+      <a href="#carousel-example-generic" data-slide="prev" data-bind="click: slide" class="pull-left"> <span class="glyphicon glyphicon-chevron-left"> </span> </a>
       <div class="pull-right">
         <button id="legend-btn" class="btn"  data-bind="click: toggleLegend, css: { active: showLegend}">
           <span class="glyphicon glyphicon-list-alt"> </span>
         </button>
-        <a  href="#carousel-example-generic" data-slide="next" class=""> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+        <a  href="#carousel-example-generic" data-slide="next" data-bind="click: slide" class=""> <span class="glyphicon glyphicon-chevron-right"></span> </a>
       </div>
     </div>
 
@@ -311,7 +311,10 @@
                   site #<span data-bind="text: $data.id"> </span>
                 </li>
                 <li>
-                  area: <span data-bind="text: $data.area"> </span> mi<sup>2</sup>
+                  area: <span data-bind="text: $data.area"> </span> km<sup>2</sup>
+                </li>
+                <li>
+                  imperviousness: <span data-bind="text: $data.impervious"> </span>%
                 </li>
               </ul>
             </li>
@@ -392,8 +395,13 @@
           this.plotGraph();
         },
         map : function() {
+          //this is only called when map button is pressed, not next and prev arrows.
+          fusionLayerInfoWindow.close();
           this.view("map");
           google.maps.event.trigger(map, 'resize');
+        },
+        slide : function() {
+          fusionLayerInfoWindow.close();
         },
         plotGraph : function() {
           console.log(this.graph());
@@ -422,7 +430,8 @@
         siteArray : ko.observableArray([{
           id : "dv01580000",
           name : "DEER CREEK AT ROCKS, MD",
-          area : 94.4
+          area : 94.4,
+          impervious : 1.26
         }]),
         dataArray : ko.observableArray([]),//Initial value set to empty.
         tuNexrad : ko.observable({status: "requesting data"}) //just a single object, which happens to be an array...
@@ -453,8 +462,10 @@
         recent : "90"
       };
       getUSGS(viewModel.siteArray()[0].id);
+
       //getTuNexrad(viewModel.siteArray()[0].id);
       //$(window).resize();
+
       google.maps.event.addDomListener(window, 'load', redraw);
       $(window).resize(redraw);
 

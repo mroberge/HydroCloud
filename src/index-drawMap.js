@@ -1,4 +1,5 @@
 var map;
+var fusionLayerInfoWindow;
 var center = new google.maps.LatLng(39.395, -76.609);
 
 function drawMap() {
@@ -12,52 +13,80 @@ function drawMap() {
   //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
-  //Fusion table load much faster than KML layers! (perhaps because the USGS kml loads more slowly than the fusion table.)
-  //fusion table ID: 11Ujto70g1r7bWNSax5X84KYYuTpwPGmWeacAhkwP
+  fusionLayerInfoWindow = new google.maps.InfoWindow();
 
+  //Fusion tables load much faster than KML layers!
+  //fusion table ID: 11Ujto70g1r7bWNSax5X84KYYuTpwPGmWeacAhkwP
   var fusionLayer = new google.maps.FusionTablesLayer({
     query : {
       select : 'location',
-      from : '1Rt_U4LqeNPi6Tk1-kq8ta-6OP748nJJJTqdwlC0Q'
-    }
+      //real.kmz, has more sites than Gages II, but less info.
+      //from : '1Rt_U4LqeNPi6Tk1-kq8ta-6OP748nJJJTqdwlC0Q'
+
+      //from Gages II merge, too large, takes too long to load
+      //from : '1wtRBQVozXdLsn5t0PL8egL5wL7tUzFQvw6NYQizn'
+
+      //from Gages II merge- small
+      from : '103gQIyU069THrk7KGZYtbC8_My1rW4JwaHhX1ehe'
+      //where : 'DRAIN_SQKM < 20'
+    },
+    suppressInfoWindows: true
   });
   fusionLayer.setMap(map);
-  
+
   google.maps.event.addListener(fusionLayer, 'click', function(event) {
-    //console.log(event);
-    var re = /[0-9]+/;
-    //TODO: for now, we will only work with daily value sites.
-    var sId = "dv" + re.exec(event.row.site_no.value)[0];
+    //Parse real.kmz
+    //var re = /[0-9]+/;
+    //var sId = "dv" + re.exec(event.row.site_no.value)[0];
+    //var siteName = event.row.station_nm.value;
+    //var siteArray = {id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value};
 
-    console.log("The map event listener has determined that the sID is: " + sId);
+    //Parsing Gages II merge
+    var siteId = event.row.STAID.value;
+    var siteName = event.row.STANAME.value;
+    var siteArray = {id: siteId,
+                     name: siteName,
+                     area: +event.row.DRAIN_SQKM.value,
+                     impervious: +event.row.IMPNLCD06.value
+    };
+   
+    //update our InfoWindow, then open it.
+    fusionLayerInfoWindow.setOptions(
+        {
+          //content: event.infoWindowHtml, //You can also use the default html as set by the fusion table.
+          content: "<div class='googft-info-window'>" +
+                    "<b>" + siteName + "</b><br>" +
+                    "<b>site ID: </b>" + siteId + "<br>" +
+                    "</div>",
+          position: event.latLng,
+          pixelOffset: event.pixelOffset
+        });
+    fusionLayerInfoWindow.open(map);
+    
+    //Update our viewModel with the current site information.
+    //For now, we will only work with daily value sites. add "dv" to site id.
+    var sId = "dv" + siteId;
     viewModel.siteId(sId);
-    console.log("viewModel.siteID() is " + viewModel.siteId());
-    viewModel.siteName(event.row.station_nm.value);
-
-
+    viewModel.siteName(siteName);
+    viewModel.siteArray(siteArray);
+    
+    //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(sId);
-    console.log("The siteIndex is: " + siteIndex);
-
+    //console.log("The siteIndex is: " + siteIndex);
     if (siteIndex === -1) {
-
-      viewModel.siteArray.push({id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value});
-      //This siteIdArray.push won't capture the first data requested.
+      //If the sId is not in the siteIdArray, this will return -1.
+      //Now we must add the site to the siteIdArray and request data.
+    
+      //Update the viewModel with new site info.
       viewModel.siteIdArray.push(sId);
-      //console.log(viewModel.siteId());
-      console.log(viewModel.siteArray());
-      //viewModel.siteName.push(kmlEvent.featureData.name);
-
-      //console.log(sId);
-      //console.log(viewModel.siteId());
-      //console.log(viewModel.siteName());
-
+      //Get the new data.
       getUSGS(sId);
       //getTuNexrad(sId);
     }
     //If we already have this site in the list, we don't need to request it again.
     //We still need to plot the data.
-    viewModel.plotGraph(); //Unfortunately, this will only plot the most recently added sId.
+    viewModel.plotGraph();  
   });
   
 /*
@@ -116,8 +145,5 @@ function drawMap() {
   google.maps.event.addListener(map, 'bounds_changed', function() {
     //console.log(map.getBounds());
   });
-
 }
-
 google.maps.event.addDomListener(window, 'load', drawMap);
-

@@ -389,6 +389,7 @@ function hyetograph(id) {
   //Do we really need to lable the time axis? Won't the date labels be enough of a clue?
   //  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
   bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height2/2).attr("y", -margin2.left).attr("dy", "1em").style("text-anchor", "middle").text("mm");
+
 }
 
 function dateStr(d) {
