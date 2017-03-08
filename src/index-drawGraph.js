@@ -492,9 +492,9 @@ function dateStr(d) {
   return dstr;
 }
 
-function processN(array) {
+function processN(inputArray) {
   var myArray = [];
-  array.forEach(function (d, index, array) {
+  InputArray.forEach(function (d, index, array) {
     myArray[index] = {};
     myArray[index].date = new Date(d.dateTime);
     myArray[index].value = +d.precipitation;
@@ -530,11 +530,12 @@ function getTuNexrad(id) {
       viewModel.tuNexrad({status: "data not available"});
       viewModel.plotGraph();
     },
-    success : function () {//TODO: test this to make sure it responds properly when data is returned.
+    success : function (returnedJSON, statusMsg, returnedjqXHR) {
+      //TODO: test this to make sure it responds properly when data is returned.
       //Use this if we get some data back.
       console.log("Success! vM.tuNexrad:");
       console.log(viewModel.tuNexrad());
-      viewModel.tuNexrad({status: "success", data: processN(result.responseJSON)});
+      viewModel.tuNexrad({status: "success", data: processN(result.returnedJSON)});
       viewModel.plotGraph();
     },
     //Stop using complete except to catch non-error and non-success.
