@@ -8,6 +8,8 @@ function storageAvailable(type) {
         return true;
     }
     catch(e) {
+        console.log("localStorage not available.")
+        console.dir(e);
         return false;
     }
 }
