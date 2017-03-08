@@ -491,7 +491,7 @@ function getUSGS(id) {
   var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
 
   if (id == "local") {
-    var url = localQuery;
+    var url = recentDaily;
   } else {
     // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
     // recentDaily will minimize the impact the program has on the USGS servers.
