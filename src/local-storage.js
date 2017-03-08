@@ -63,10 +63,37 @@ function saveData(key, data) {
             return true;
         }
         catch(e) {
-            console.log("Unable to save data; Likely due to quota exceeded.");
+            console.log("Unable to save data.");
+            if (isQuotaExceeded(e)) {
+                console.log("localStorage quota has been exceeded.");
+                //TODO: create an alert box that tells users to delete some sites?
+            }
             console.dir(e);
-            //console.log("Key: " + key);
-            //console.log(data);
         }
     }
+}
+
+function isQuotaExceeded(e) {
+    // This function thanks to: Dillon de Voor
+    // http://crocodillon.com/blog/always-catch-localstorage-security-and-quota-exceeded-errors
+    var quotaExceeded = false;
+    if (e) {
+        if (e.code) {
+            switch (e.code) {
+                case 22:
+                    quotaExceeded = true;
+                    break;
+                case 1014:
+                    // Firefox
+                    if (e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                        quotaExceeded = true;
+                    }
+                    break;
+            }
+        } else if (e.number === -2147024882) {
+            // Internet Explorer 8
+            quotaExceeded = true;
+        }
+    }
+    return quotaExceeded;
 }
