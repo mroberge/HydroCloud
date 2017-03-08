@@ -34,7 +34,6 @@ function drawMap() {
     console.log("viewModel.siteID() is " + viewModel.siteId());
     viewModel.siteName(event.row.station_nm.value);
 
-    //TODO: Check to see if this site is already in the array.
 
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(sId);
@@ -56,8 +55,8 @@ function drawMap() {
       getUSGS(sId);
       getTuNexrad(sId);
     }
-    //TODO: if we already have this site in the list, we don't need to request it again.
-    //TODO: We still need to plot the data.
+    //If we already have this site in the list, we don't need to request it again.
+    //We still need to plot the data.
     viewModel.plotGraph(); //Unfortunately, this will only plot the most recently added sId.
   });
   
