@@ -385,93 +385,9 @@ function hyetograph(id) {
 
   //axis labels
   top.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height/2).attr("y", -margin.left).attr("dy", "1em").style("text-anchor", "middle").text("Stream discharge (cfs)");
-//Do we really need to lable the time axis? Won't the date labels be enough of a clue?
-//  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
+  //Do we really need to lable the time axis? Won't the date labels be enough of a clue?
+  //  top.append("text").attr("class", "axisTitle").attr("x", width/2).attr("y", height+30 ).style("text-anchor", "middle").text("time");
   bottom.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", -height2/2).attr("y", -margin2.left).attr("dy", "1em").style("text-anchor", "middle").text("mm");
-
-}
-
-
-
-
-function getUSGSold(id) {
-  var data3 = [];
-  var stored = checkStorage(id);
-  if (stored) {
-    console.log("data retrieved from localStorage");
-    console.log(stored);
-    data3 = stored;
-    viewModel.dataArray.push(data3);
-    console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
-    viewModel.plotGraph();
-  } else {
-    // Nothing stored locally, so make data request.
-
-    var recentQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P" + time.recent + "D&parameterCd=00060";
-    var dateQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
-    var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-10-01&parameterCd=00060";
-    if (id == "local") {
-      var filename = "resources/USGSshort.txt";
-    } else {
-      var filename = dateQuery;
-      //var filename = recentQuery; //
-    }
-    d3.json(filename, function (error, json) {
-      if (error) {
-        if (error.status === 0) {
-          alert("USGS data request error.");
-        }
-        return console.warn(error);
-      }
-      if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
-      temp = json.value.timeSeries[0].values[0].value;
-      //I need to check if this even has a value!!
-      //MR Create a new array of objects from the JSON.
-      data = [];
-
-      var data2 = {
-        id: id,
-        data: []
-      };
-
-      //console.log(data2.data[0][0]);
-      //Clear out the array.
-      temp.forEach(function (d, index, array) {
-        d.date = new Date(d.dateTime);
-        d.value = +d.value;
-        data[index] = {
-          date: d.date,
-          value: d.value
-        };
-        // console.log("index = " + index);
-        data2.data[index] = [];
-        data2.data[index][0] = d.date;
-        data2.data[index][1] = d.value;
-        data3[index] = [];
-        data3[index][0] = d.date;
-        data3[index][1] = d.value;
-      });
-
-      //data.forEach(function(d, index, array) {
-      //  data2.data[index][0] = d.date;
-      //  data2.data[index][1] = d.value;
-      //});
-      //console.log("data3 = ");
-      //console.log(data3);
-      //    target.dispatchEvent(myEvent2);
-      //console.log(id);
-      //console.log(data);
-      //hydrograph(id);
-      //flowduration(id);
-      //loghistogram(id);
-
-      saveData(id, data3);
-      viewModel.dataArray.push(data3);
-      console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
-      viewModel.plotGraph();
-    });
-
-  }
 }
 
 function dateStr(d) {
