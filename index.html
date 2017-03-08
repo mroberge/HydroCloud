@@ -398,13 +398,13 @@
         plotGraph : function() {
           console.log(this.graph());
           if (this.graph() == "hydro") {
-            hydrograph(this.siteId);
+            hydrograph(this.siteId());
           } else if (this.graph() === "flow") {
-            flowduration(this.siteId);
+            flowduration(this.siteId());
           } else if (this.graph() === "histo") {
-            loghistogram(this.siteId);
+            loghistogram(this.siteId());
           } else if (this.graph() === "hyeto") {
-            hyetograph(this.siteId);
+            hyetograph(this.siteId());
           } else if (this.graph() === "scatter") {
             var graphDiv = d3.select("#graph_div");
             //console.log(this.dataArray());
