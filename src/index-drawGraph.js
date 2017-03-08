@@ -490,13 +490,14 @@ function getUSGS(id) {
   var staticQuery = "http://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
   var testDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
   var recentDaily = "http://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
-
+  var staticDateDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
+  
   if (id == "local") {
     var url = localQuery;
   } else {
     // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
     // recentDaily will minimize the impact the program has on the USGS servers.
-    var url = dateQuery;
+    var url = staticDateDaily;
   }
   result = $.ajax({
     url: url,
