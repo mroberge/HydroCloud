@@ -15,14 +15,14 @@ function storageAvailable(type) {
 function checkStorage(site){
     if (storageAvailable('localStorage')) {
         // localStorage is available
-        console.log("localStorage is available. site:" + site);
+        console.log("localStorage is available. site: " + site);
         try {
             var storage = window['localStorage'];
             var data = JSON.parse(storage.getItem(site));
             //Need to check that the data are working; if not, return false and system will request data.
             //Also, the data might look fine to whatever data-checking function I write, but the user might not like it.
             //In this case, I may want to have a refresh button near the graph to ask for more data.
-            //If there is no data stored for this site, return false
+            //
             if (Array.isArray(data) && data.length > 20) {
                 console.log("Retrieved data from site " + site + ". Length is:" + data.length);
                 //convert string to Date
@@ -35,17 +35,18 @@ function checkStorage(site){
             } else {
                 console.log("Problem with retrieved data for site " + site);
                 console.log(data);
+                if (data === null) console.log("No data stored for this site.");
                 return false;
             }
         }
         catch(e) {
-            console.log("error");
-            console.log(e);
+            console.log("localStorage is not enabled on this browser.");
+            console.dir(e);
             return false;
         }
     }
     else {
-        console.log("localStorage is not available.")
+        console.log("localStorage is not available.");
         return false;
     }
 }
@@ -60,10 +61,10 @@ function saveData(key, data) {
             return true;
         }
         catch(e) {
-            console.log("Unable to save data");
-            console.log(e);
-            console.log("Key: " + key);
-            console.log(data);
+            console.log("Unable to save data; Likely due to quota exceeded.");
+            console.dir(e);
+            //console.log("Key: " + key);
+            //console.log(data);
         }
     }
 }

@@ -340,9 +340,9 @@ function hyetograph(id) {
     rain = [{date: null, value: null}];
     console.log("!rain");
   }
-  console.log("stream & rain");
-  console.log(stream);
-  console.log(rain);
+  //console.log("stream & rain");
+  //console.log(stream);
+  //console.log(rain);
   var xMax = d3.max([d3.max(stream.map(function(d) { return d[0];})), d3.max(rain.map(function(d) { return d.date;}))]);
   var xMin = d3.min([d3.min(stream.map(function(d) { return d[0];})), d3.min(rain.map(function(d) { return d.date;}))]);
   xScale.domain([xMin, xMax]);
@@ -543,7 +543,7 @@ function getTuNexrad(id) {
 function getUSGS(id) {
   //add some error functions.
   //if new data is requested, get rid of old data, set one element to null.
-  viewModel.dataArray([null,null]);
+  //viewModel.dataArray([null,null]);
   var data = [];
   var stored = checkStorage(id);
   if (stored) {
@@ -596,7 +596,7 @@ function getUSGS(id) {
         return; //should trigger "complete".
       }
       var temp = returnedData.value.timeSeries[0].values[0].value;
-      console.log(temp);
+      //console.log(temp);
       temp.forEach(function (d, index, array) {
         //    convert values to dates and numbers
         data[index] = [];
@@ -607,8 +607,8 @@ function getUSGS(id) {
         //    located at: returnedData.value.timeSeries[0].variable.noDataValue
         if (data[index][1] < 0) data[index][1] = null;
       });
-      console.log("post-processing");
-      console.log(data);
+      //console.log("post-processing");
+      //console.log(data);
       //save the data to localStorage
       saveData(id, data);
       //add data to viewModel.dataArray
