@@ -201,19 +201,21 @@ function loghistogram(id) {
 
 function flowduration(id) {
   console.log("flowduration");
+  var data = chooseData(id);
+  //If there is no data for a site, keep the previous graph alive & do nothing.
+  if(!data) return;
+
   var myScreen = {
     width : viewModel.width(),
     height : viewModel.height()
   };
 
   var sitename = id;
-  //future versions of the data object may store the name and site ID. For now, we'll just fake it.
-  //var sorted = [];
-  //sorted = data;//this just passes a reference, so data will get sorted too.
+
   data.sort(function(a, b) {
-    return a.value < b.value ? 1 : a.value > b.value ? -1 : 0;
+    return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0;
   });
-  //console.log(sorted);
+  //console.log(data);
 
   var margin = {
     top : 10,
@@ -240,7 +242,7 @@ function flowduration(id) {
     rank = rank + 1;
     return xScale(rank);
   }).y(function(d) {
-    return yScale(d.value);
+    return yScale(d[1]);
   });
 
   d3.select("#graph_div svg").remove();
@@ -250,7 +252,7 @@ function flowduration(id) {
 
   xScale.domain(d3.extent([0, data.length]));
   yScale.domain([1, d3.max(data.map(function(d) {
-    return d.value;
+    return d[1];
   }))]);
   //If y.domain has a min value of 0, then you can't plot in a log scale.'
 
