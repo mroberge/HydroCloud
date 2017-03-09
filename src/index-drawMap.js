@@ -68,7 +68,6 @@ function drawMap() {
     var sId = "dv" + siteId;
     viewModel.siteId(sId);
     viewModel.siteName(siteName);
-    //viewModel.siteArray(siteArray);
     
     //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
@@ -78,22 +77,29 @@ function drawMap() {
       //If the sId is not in the siteIdArray, this will return -1.
       //Now we must add the site to the siteIdArray and request data.
     
-      //Update the viewModel with new site info.
-      //console.log("site index -1");
-      //console.log("sId: " + sId + " siteIndex: " + siteIndex);
-      //console.dir(viewModel.siteIdArray());
+      //Update the viewModel with the new site id and site info.
       viewModel.siteIdArray.push(sId);
       viewModel.siteArray.push(siteArray);
-      //console.dir(viewModel.siteIdArray());
-      //Get the new data.
-      getUSGS(sId);
-      //getTuNexrad(sId);
+      //Now collect the Stream Gage data and put in the dataArray
+      //First check storage. We might have collected this data earlier, but not in this session.
+      var stored = checkStorage(id);
+      if (stored) {
+        console.log("Old data for site " + id + " retrieved from localStorage; length: " + stored.length);
+        viewModel.dataArray.push(stored);
+        viewModel.plotGraph();
+        //console.dir(viewModel.siteIdArray());
+      } else {
+        //The site is not in our siteIdArray and gage data is not in localStorage.
+        //This is the first time we've ever selected this site!
+        getUSGS(id);
+      }
     } else {
-      //If we already have this site in the list, we don't need to request it again.
-      //We still need to plot the data.
-      viewModel.plotGraph();
+        //If we matched the site to our siteIdArray, then we should already have gage data. Plot.
+        viewModel.plotGraph();
     }
 
+    //Retrieve the stream gage data.
+    //getUSGS(sId);
   });
   
 /*
