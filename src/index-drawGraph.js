@@ -516,12 +516,13 @@ function getUSGS(id) {
       console.log("Successful data request from USGS!");
       console.log(statusMsg); // StatusMsg should be "success"
       console.log(returnedjqXHR);
-      console.log(returnedData); // localQuery looks great.
+      console.log(returnedData);
       //process data
       //    check for no data or empty set; timeSeries[0] is empty
-      if (!returnedData.value.timeSeries[0].values[0].value) {
+      if (returnedData.value.timeSeries[0].values[0].value < 1) {
         //TODO: test if this is able to handle sites with no data; usgs returns [].
         console.warn("there is no data for this site");
+        $('.googft-info-window').append( "<p class='bg-warning'>There is no stream data for this site.</p>" );
         //Do something!
         return; //should trigger "complete".
       }
