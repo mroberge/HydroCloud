@@ -497,7 +497,7 @@ function getUSGS(id) {
   } else {
     // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
     // recentDaily will minimize the impact the program has on the USGS servers.
-    var url = staticDateDaily;
+    var url = recentDaily;
   }
   result = $.ajax({
     url: url,
