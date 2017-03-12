@@ -474,6 +474,7 @@ function getUSGS(id) {
     // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
     // recentDaily will minimize the impact the program has on the USGS servers.
     var url = recentDaily;
+    console.log("Requesting data from: " + url);
   }
   result = $.ajax({
     url: url,
@@ -524,10 +525,10 @@ function getUSGS(id) {
     complete: function () {
       console.log("USGS request for site " + id + "complete.");
       //save the data to localStorage
+      //If error, then data = []
       saveData(id, data);
       //add data to viewModel.dataArray
       viewModel.dataArray.push(data);
-      viewModel.plotGraph();
     }
   });
 
@@ -536,6 +537,7 @@ function getUSGS(id) {
 function chooseData(id) {
   //Plot the data from the viewModel.dataArray() that matches the id.
   var siteIndex = viewModel.siteIdArray().indexOf(id);
+  console.log("inside chooseData(" + id + "); siteIndex: " + siteIndex);
   if (siteIndex === -1) {
     //The id should be in the siteIdArray already; this should have been tested for already. If it isn't, it returns -1.
     console.log("chooseData() was called with an id that is not in the siteIdArray.");
