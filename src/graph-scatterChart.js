@@ -44,7 +44,7 @@ function scatterChart() {
       if (!xDomain.length) {//if xDomain hasn't been set yet, set it to the full domain.
         //xDomain = d3.extent(dataArray[0], function(d) { return d[0]; });
         xDomain = setFullxDomain();
-      };
+      }
 
       // Update the full x & y domain.
       fullxDomain = setFullxDomain();
@@ -145,15 +145,15 @@ function scatterChart() {
           //console.log("localxMax of dataArray[" + i + "] is: " + localxMax);
           if (localxMax > xmax) {
             xmax = localxMax;
-          };
+          }
           localxMin = d3.min(dataArray[i], function(d) {
             return d[0];
           });
           if (localxMin < xmin) {
             xmin = localxMin;
-          };//it will never be smaller than zero.
+          }//it will never be smaller than zero.
 
-        };
+        }
 
         domain = [xmin, xmax];
         //console.log(domain);
@@ -186,15 +186,15 @@ function scatterChart() {
           //console.log("localyMax of dataArray[" + i + "] is: " + localMax);
           if (localMax > max) {
             max = localMax;
-          };
+          }
           localMin = d3.min(dataArray[i], function(d) {
             return d[1];
           });
           if (localMin < min) {
             min = localMin;
-          };//it will never be smaller than zero unless it finds a negative value..
+          }//it will never be smaller than zero unless it finds a negative value..
 
-        };
+        }
 
         domain = [min, max];
         //console.log("domain min: " + domain[0] + ",  max: " + domain[1]);
@@ -254,7 +254,7 @@ function scatterChart() {
     if (!arguments.length){
       console.log(xScale);
       return xScale;
-    };
+    }
     if (a ==="linear"){
       console.log("x:linear");
       xScale = d3.scale.linear();
@@ -264,7 +264,7 @@ function scatterChart() {
     } else if (a === "time") {
       xScale = d3.time.scale();
       console.log("x:time");
-    };
+    }
     return chart;
   };
 
@@ -272,7 +272,7 @@ function scatterChart() {
     if (!arguments.length){
       console.log(yScale);
       return yScale;
-    };
+    }
     if (a ==="linear"){
       console.log("y:linear");
       yScale = d3.scale.linear();
@@ -284,7 +284,7 @@ function scatterChart() {
     } else if (a === "time") {
       yScale = d3.time.scale();
       console.log("y:time");
-    };
+    }
     return chart;
   };
   return chart;
