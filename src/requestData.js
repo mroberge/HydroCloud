@@ -129,11 +129,11 @@ function getUSGS(id) {
     var usgsId = re.exec(id)[0];
     console.log("id: " + id + ", usgsId: " + usgsId);
     var localQuery = "resources/USGSshort.txt";
-    var recentQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
-    var dateQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&startDT=" + dateStr(time.start) + "&endDT=" + dateStr(time.end) + "&parameterCd=00060";
+    var recentQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&period=P" + viewModel.time.recent() + "D&parameterCd=00060";
+    var dateQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&startDT=" + dateStr(viewModel.time.start()) + "&endDT=" + dateStr(viewModel.time.end()) + "&parameterCd=00060";
     var staticQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
     var testDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
-    var recentDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + time.recent + "D&parameterCd=00060";
+    var recentDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + viewModel.time.recent() + "D&parameterCd=00060";
     var staticDateDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
 
     if (id == "local") {

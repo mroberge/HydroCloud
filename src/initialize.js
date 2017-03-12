@@ -10,11 +10,11 @@ function initialize() {
 
     
     
-    var time = {
-        start : new Date(2014,01,01),
-        end : new Date(2015,01,01),
-        recent : "90"
-    };
+
+    viewModel.time.start(new Date(2014,01,01));
+    viewModel.time.end(new Date(2015,01,01));
+    viewModel.time.recent("90");
+    
     viewModel.dataArray.subscribe(function(newValue) {
         //alert("dataArray was just updated. " + newValue[0]);
         console.log("plotGraph() called from index.html");

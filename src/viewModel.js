@@ -4,6 +4,11 @@ var viewModel = {
     width : ko.observable($(window).width()),
     height : ko.observable($(".carousel-inner").height()),
     showLegend : ko.observable(false),
+    time : {
+      start : ko.observable(),
+      end : ko.observable(),
+      recent : ko.observable()
+    },
     toggleLegend : function() {
         console.log("toggleLegend click");
         this.showLegend() ? this.showLegend(false) : this.showLegend(true);
