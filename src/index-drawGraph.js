@@ -201,19 +201,21 @@ function loghistogram(id) {
 
 function flowduration(id) {
   console.log("flowduration");
+  var data = chooseData(id);
+  //If there is no data for a site, keep the previous graph alive & do nothing.
+  if(!data) return;
+
   var myScreen = {
     width : viewModel.width(),
     height : viewModel.height()
   };
 
   var sitename = id;
-  //future versions of the data object may store the name and site ID. For now, we'll just fake it.
-  //var sorted = [];
-  //sorted = data;//this just passes a reference, so data will get sorted too.
+
   data.sort(function(a, b) {
-    return a.value < b.value ? 1 : a.value > b.value ? -1 : 0;
+    return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0;
   });
-  //console.log(sorted);
+  //console.log(data);
 
   var margin = {
     top : 10,
@@ -240,7 +242,7 @@ function flowduration(id) {
     rank = rank + 1;
     return xScale(rank);
   }).y(function(d) {
-    return yScale(d.value);
+    return yScale(d[1]);
   });
 
   d3.select("#graph_div svg").remove();
@@ -250,7 +252,7 @@ function flowduration(id) {
 
   xScale.domain(d3.extent([0, data.length]));
   yScale.domain([1, d3.max(data.map(function(d) {
-    return d.value;
+    return d[1];
   }))]);
   //If y.domain has a min value of 0, then you can't plot in a log scale.'
 
@@ -322,26 +324,12 @@ function hyetograph(id) {
     .y1(function(d) {
       return y2Scale(d.value);
     });
-    
-  //Plot the data from the viewModel.dataArray() that matches the sID.
-  var siteIndex = viewModel.siteIdArray().indexOf(id);
-  if (siteIndex === -1) {
-    //The id should be in the siteIdArray already; this should have been tested for already. If it isn't, it returns -1.
-    console.log("Hyetograph() was called with an id that is not in the siteIdArray.")
-    console.log("id: " + id + "; the siteIndex is: " + siteIndex + "; and the siteIdArray:")
-    console.dir(viewModel.siteIdArray());
-    return;
-  }
 
-  var stream = viewModel.dataArray()[siteIndex]; //this is the last site in the array.
-  //var rain = viewModel.tuNexrad().data;
+  var stream = chooseData(id);
+  //If there is no data for a site, keep the previous graph alive & do nothing.
+  if(!stream) return;
+
   var rain = null;
-  if (!stream) {
-    //No data!
-    console.log("!stream");
-    //no data, so we can't plot, so return?
-    return;
-  }
   if (!rain) {
     rain = [{date: null, value: null}];
     console.log("!rain");
@@ -465,20 +453,8 @@ function getTuNexrad(id) {
 }
 
 function getUSGS(id) {
-  //add some error functions.
-  //if new data is requested, get rid of old data, set one element to null.
-  //viewModel.dataArray([null,null]);
   var data = [];
-  var stored = checkStorage(id);
-  if (stored) {
-    console.log("data for site " + id + " retrieved from localStorage; length: " + stored.length);
-    //console.log(stored);
-    data = stored;
-    viewModel.dataArray.push(data);
-    //console.log(viewModel.dataArray()[viewModel.dataArray().length - 1]);
-    viewModel.plotGraph();
-    return;
-  }
+
   // Nothing stored locally, so make data request.
   // strip the id of the leading characters before requesting from USGS.
   var re = /[0-9]+/;
@@ -498,58 +474,87 @@ function getUSGS(id) {
     // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
     // recentDaily will minimize the impact the program has on the USGS servers.
     var url = recentDaily;
+    console.log("Requesting data from: " + url);
   }
   result = $.ajax({
     url: url,
-    //headers: {"Accept-Encoding": "gzip, compress"},
+    //headers: {"Accept-Encoding": "gzip, compress"},//These are sent automatically by the browser. No need for this here.
     dataType: "json",
     error: function (ErrObj, ErrStr) {
-      console.log("USGS returns an error");
+      console.warn("USGS returned an error for site " + id);
       console.dir(ErrObj);//The header.
-      console.log(ErrStr);//This is ErrObj.statusText; it is only 'error'
+      //console.log(ErrStr);//This is ErrObj.statusText; it is only 'error'
       //Display a message, don't plot the graph?
       //TODO: add an error message to the pop-up box;
-      //TODO: maybe create a status attribute for USGS data.
+      $('.googft-info-window').append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
+      //We've got nothing, so save [] to localStorage. This happens when complete.
+      //TODO: maybe create a status attribute for USGS data? This would let us try again.
     },
     success: function (returnedData, statusMsg, returnedjqXHR) {//TODO: test this to make sure it responds properly when data is returned.
       //Use this if we get some data back.
       console.log("Successful data request from USGS!");
       console.log(statusMsg); // StatusMsg should be "success"
       console.log(returnedjqXHR);
-      console.log(returnedData); // localQuery looks great.
+      console.log(returnedData);
       //process data
-      //    check for no data or empty set; timeSeries[0] is empty
-      if (!returnedData.value.timeSeries[0].values[0].value) {
-        //TODO: test if this is able to handle sites with no data; usgs returns [].
-        console.warn("there is no data for this site");
-        //Do something!
-        return; //should trigger "complete".
+      //    check for no data or empty set;
+      if (returnedData.value.timeSeries[0] < 1) {
+        //This site does not exist. Somehow the FusionTable had a site that doesn't exist.
+        // Leave data = [] for storage.
+      } else {
+        var temp = returnedData.value.timeSeries[0].values[0].value;
+        if (temp < 1) {
+          // [] < 1  is true.
+          // The USGS returned [] for this site's data.
+          // Leave data = [] for storage.
+        }
+        //If we don't have data, the following won't change the [].
+        //If we do have data, the following will clean it up.
+        temp.forEach(function (d, index, array) {
+          //    convert values to dates and numbers
+          data[index] = [];
+          data[index][0] = new Date(d.dateTime);
+          data[index][1] = +d.value;
+          //    screen out -999 values; replace with null? or 0.
+          //    a more precise way would be to obtain the actual 'noDataValue'
+          //    located at: returnedData.value.timeSeries[0].variable.noDataValue
+          if (data[index][1] < 0) data[index][1] = null;
+        });
       }
-      var temp = returnedData.value.timeSeries[0].values[0].value;
-      //console.log(temp);
-      temp.forEach(function (d, index, array) {
-        //    convert values to dates and numbers
-        data[index] = [];
-        data[index][0] = new Date(d.dateTime);
-        data[index][1] = +d.value;
-        //    screen out -999 values; replace with null? or 0.
-        //    a more precise way would be to obtain the actual 'noDataValue'
-        //    located at: returnedData.value.timeSeries[0].variable.noDataValue
-        if (data[index][1] < 0) data[index][1] = null;
-      });
-      //console.log("post-processing");
-      //console.log(data);
+    },
+    complete: function () {
+      console.log("USGS request for site " + id + "complete.");
       //save the data to localStorage
+      //If error, then data = []
       saveData(id, data);
       //add data to viewModel.dataArray
       viewModel.dataArray.push(data);
-      viewModel.plotGraph();
-    },
-    //Stop using complete except to catch non-error and non-success.
-    complete: function () {
-      console.log("USGS request for site " + id + "complete.");
-      //console.log(result); //just returns 'success'
     }
   });
 
+}
+
+function chooseData(id) {
+  //Plot the data from the viewModel.dataArray() that matches the id.
+  var siteIndex = viewModel.siteIdArray().indexOf(id);
+  console.log("inside chooseData(" + id + "); siteIndex: " + siteIndex);
+  if (siteIndex === -1) {
+    //The id should be in the siteIdArray already; this should have been tested for already. If it isn't, it returns -1.
+    console.log("chooseData() was called with an id that is not in the siteIdArray.");
+    console.log("id: " + id + "; the siteIndex is: " + siteIndex + "; and the siteIdArray:");
+    console.dir(viewModel.siteIdArray());
+    return;
+  }
+  var data = viewModel.dataArray()[siteIndex].slice(0);
+  //Remove elements from data that contain null, undefined, or empty values at [1].
+  //D3js might not need this. Check to see if preserving nulls is useful to show empty spots.
+  data = data.filter(function(n){ return n[1] != undefined });
+  if (data.length < 1) {
+    //No data!
+    console.log("No data for site" + id);
+    $('.googft-info-window').append( "<p class='bg-warning'>There is no stream data for this site.</p>" );
+    //no data, so we can't plot, so return?
+    return false;
+  }
+  return data;
 }
