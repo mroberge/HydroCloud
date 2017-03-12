@@ -130,4 +130,4 @@ function drawMap() {
     //console.log(map.getBounds());
   });
 }
-google.maps.event.addDomListener(window, 'load', drawMap);
+
