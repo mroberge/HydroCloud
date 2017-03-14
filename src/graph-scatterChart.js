@@ -114,6 +114,7 @@ function scatterChart() {
       //***************Tooltip Code ***************
 
 // append a g for all the mouse over nonsense
+      //TODO: mouse has trouble when a site has no data and part of the dataArray is null.
       var mouseG = g.append("g")
           .attr("class", "mouse-over-effects");
 
@@ -184,10 +185,12 @@ function scatterChart() {
             // position the circle and text
             d3.selectAll(".mouse-per-line")
                 .attr("transform", function(d, i) {
-                  console.log(width/mouse[0]);
+                  //console.log(width/mouse[0]);
+                  //console.log(d);
+                  if(d.length < 1) { return; } //return if empty set.
                   var xDate = xScale.invert(mouse[0]),
                       bisect = d3.bisector(function(d) { return d[0]; }).right;
-                  idx = bisect(d[1], xDate);
+                  idx = bisect(d[1], xDate); //Sometimes an empty set is in viewModel.dataArray and an error occurs.
 
                   // since we are use curve fitting we can't relay on finding the points like I had done in my last answer
                   // this conducts a search using some SVG path functions
