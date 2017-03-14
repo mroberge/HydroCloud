@@ -42,7 +42,8 @@ function hyetograph(id) {
         .y0(height) //only if you want to fill the graph.
         .y1(function(d) {
             return yScale(d[1]);
-        });
+        })
+        .defined(function (d) { return d[1] !== null; });
     var area2 = d3.svg.area().interpolate("step-before")
         .x(function(d) {
             return xScale(d.date);
@@ -50,7 +51,8 @@ function hyetograph(id) {
         .y0(height2)
         .y1(function(d) {
             return y2Scale(d.value);
-        });
+        })
+        .defined(function (d) { return d[1] !== null; });
 
     var stream = chooseData(id);
     //If there is no data for a site, keep the previous graph alive & do nothing.
