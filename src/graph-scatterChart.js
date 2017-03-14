@@ -7,6 +7,8 @@ function scatterChart() {
    * located here: http://bost.ocks.org/mike/chart/time-series-chart.js
    *
    * I added a Y axis, multiple lines.
+   *
+   * Tooltip found here: http://stackoverflow.com/questions/34886070/multiseries-line-chart-with-mouseover-tooltip
    */
   var margin = {
     top : 20,
@@ -108,6 +110,116 @@ function scatterChart() {
       g.select(".subtitle").text(dataArray.length + " lines");
       g.select(".subtitle2").text(dataArray[0].length + " measurements per line")
       //title.on("click", myRClickFunction);
+
+      //***************Tooltip Code ***************
+
+// append a g for all the mouse over nonsense
+      var mouseG = svg.append("g")
+          .attr("class", "mouse-over-effects");
+
+// this is the vertical line
+      mouseG.append("path")
+          .attr("class", "mouse-line")
+          .style("stroke", "black")
+          .style("stroke-width", "1px")
+          .style("opacity", "0");
+
+// keep a reference to all our lines
+      var lines = document.getElementsByClassName('line');
+
+// here's a g for each circle and text on the line
+      var mousePerLine = mouseG.selectAll('.mouse-per-line')
+          .data(dataArray)
+          .enter()
+          .append("g")
+          .attr("class", "mouse-per-line");
+
+// the circle
+      mousePerLine.append("circle")
+          .attr("r", 7)
+          .style("stroke", function(d) {
+            return color(d.name);
+          })
+          .style("fill", "none")
+          .style("stroke-width", "1px")
+          .style("opacity", "0");
+
+// the text
+      mousePerLine.append("text")
+          .attr("transform", "translate(10,3)");
+
+// rect to capture mouse movements
+      mouseG.append('svg:rect')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('fill', 'none')
+          .attr('pointer-events', 'all')
+          .on('mouseout', function() { // on mouse out hide line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "0");
+            d3.selectAll(".mouse-per-line circle")
+                .style("opacity", "0");
+            d3.selectAll(".mouse-per-line text")
+                .style("opacity", "0");
+          })
+          .on('mouseover', function() { // on mouse in show line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "1");
+            d3.selectAll(".mouse-per-line circle")
+                .style("opacity", "1");
+            d3.selectAll(".mouse-per-line text")
+                .style("opacity", "1");
+          })
+          .on('mousemove', function() { // mouse moving over canvas
+            var mouse = d3.mouse(this);
+
+            // move the vertical line
+            d3.select(".mouse-line")
+                .attr("d", function() {
+                  var d = "M" + mouse[0] + "," + height;
+                  d += " " + mouse[0] + "," + 0;
+                  return d;
+                });
+
+            // position the circle and text
+            d3.selectAll(".mouse-per-line")
+                .attr("transform", function(d, i) {
+                  console.log(width/mouse[0]);
+                  var xDate = xScale.invert(mouse[0]),
+                      bisect = d3.bisector(function(d) { return d[0]; }).right;
+                  idx = bisect(d[1], xDate);
+
+                  // since we are use curve fitting we can't relay on finding the points like I had done in my last answer
+                  // this conducts a search using some SVG path functions
+                  // to find the correct position on the line
+                  // from http://bl.ocks.org/duopixel/3824661
+                  var beginning = 0,
+                      end = lines[i].getTotalLength(),
+                      target = null;
+
+                  while (true){
+                    target = Math.floor((beginning + end) / 2);
+                    pos = lines[i].getPointAtLength(target);
+                    if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                      break;
+                    }
+                    if (pos.x > mouse[0])      end = target;
+                    else if (pos.x < mouse[0]) beginning = target;
+                    else break; //position found
+                  }
+
+                  // update the text with y value
+                  d3.select(this).select('text')
+                      .text(yScale.invert(pos.y).toFixed(2));
+
+                  // return position
+                  return "translate(" + mouse[0] + "," + pos.y +")";
+                });
+          });
+
+
+
+      //***************Tooltip Code ***************
 
       //NEW click function for handling mouseclicks on an object.
       function myClickFunction() {//just a silly function taken from http://bl.ocks.org/mbostock/1166403
