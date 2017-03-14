@@ -32,7 +32,8 @@ function scatterChart() {
   });
   //NEW
   //var area = d3.svg.area().x(X).y1(Y);
-  var line = d3.svg.line().x(X).y(Y);
+  var line = d3.svg.line().x(X).y(Y)
+      .defined(function (d) { return d[1] !== null; }); //This allows the line to break at null values.
   var xDomain = [];
   //leave empty. First time data are loaded, it will calculate the full x domain.
   var fullxDomain = [];
