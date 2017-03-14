@@ -108,13 +108,12 @@ function scatterChart() {
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,0)");
       g.select(".subtitle").text(dataArray.length + " lines");
-      g.select(".subtitle2").text(dataArray[0].length + " measurements per line")
+      g.select(".subtitle2").text(dataArray[0].length + " measurements per line");
       //title.on("click", myRClickFunction);
 
       //***************Tooltip Code ***************
 
 // append a g for all the mouse over nonsense
-      //TODO: mouse has trouble when a site has no data and part of the dataArray is null.
       var mouseG = g.append("g")
           .attr("class", "mouse-over-effects");
 
@@ -190,19 +189,18 @@ function scatterChart() {
                   if(d.length < 1) { return; } //return if empty set.
                   var xDate = xScale.invert(mouse[0]),
                       bisect = d3.bisector(function(d) { return d[0]; }).right;
-                  idx = bisect(d[1], xDate); //Sometimes an empty set is in viewModel.dataArray and an error occurs.
+                  var idx = bisect(d[1], xDate); //Sometimes an empty set is in viewModel.dataArray and an error occurs.
 
                   // since we are use curve fitting we can't relay on finding the points like I had done in my last answer
                   // this conducts a search using some SVG path functions
                   // to find the correct position on the line
                   // from http://bl.ocks.org/duopixel/3824661
-                  var beginning = 0,
-                      end = lines[i].getTotalLength(),
-                      target = null;
+                  var beginning = 0;
+                  var end = lines[i].getTotalLength(); //getTotalLength() is defined elsewhere...?
 
                   while (true){
-                    target = Math.floor((beginning + end) / 2);
-                    pos = lines[i].getPointAtLength(target);
+                    var target = Math.floor((beginning + end) / 2);
+                    var pos = lines[i].getPointAtLength(target);
                     if ((target === end || target === beginning) && pos.x !== mouse[0]) {
                       break;
                     }
@@ -219,9 +217,6 @@ function scatterChart() {
                   return "translate(" + mouse[0] + "," + pos.y +")";
                 });
           });
-
-
-
       //***************Tooltip Code ***************
 
       //NEW click function for handling mouseclicks on an object.
@@ -254,7 +249,6 @@ function scatterChart() {
         //d3.min(dataArray[0], xValue);
         var localxMax = xmax;
         var localxMin = xmax;
-        var domain = [];
 
         //console.log("domain: " + domain);
         //console.log(domain);
@@ -262,7 +256,7 @@ function scatterChart() {
         //console.log("new domain: " );
         //console.log(domain);
         //x.domain(d3.extent(data.map(function(d) {return d.date;})));
-        for ( i = 0; i < dataArray.length; i++) {
+        for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
           //console.log("localxMax before search: " + localxMax);
           localxMax = d3.max(dataArray[i], function(d) {
@@ -281,9 +275,7 @@ function scatterChart() {
 
         }
 
-        domain = [xmin, xmax];
-        //console.log(domain);
-        return domain;
+        return [xmin, xmax];
       }
 
       function setFullyDomain() {
@@ -295,7 +287,6 @@ function scatterChart() {
         //d3.min(dataArray[0], xValue);
         var localMax = max;
         var localMin = max;
-        var domain = [];
 
         //console.log("y domain: " + domain);
         //console.log(domain);
@@ -303,7 +294,7 @@ function scatterChart() {
         //console.log("new domain: " );
         //console.log(domain);
         //x.domain(d3.extent(data.map(function(d) {return d.date;})));
-        for ( i = 0; i < dataArray.length; i++) {
+        for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
           //console.log("localyMax before search: " + localMax);
           localMax = d3.max(dataArray[i], function(d) {
@@ -321,10 +312,7 @@ function scatterChart() {
           }//it will never be smaller than zero unless it finds a negative value..
 
         }
-
-        domain = [min, max];
-        //console.log("domain min: " + domain[0] + ",  max: " + domain[1]);
-        return domain;
+        return [min, max];
       }
 
     });
