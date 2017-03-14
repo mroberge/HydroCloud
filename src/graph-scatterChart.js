@@ -114,7 +114,7 @@ function scatterChart() {
       //***************Tooltip Code ***************
 
 // append a g for all the mouse over nonsense
-      var mouseG = svg.append("g")
+      var mouseG = g.append("g")
           .attr("class", "mouse-over-effects");
 
 // this is the vertical line
