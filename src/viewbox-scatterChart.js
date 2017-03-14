@@ -43,12 +43,12 @@ function scatterChart() {
       //console.log("unconditioned array");
       //console.log(dataArray);
 
-      for ( i = 0; i < dataArray.length; i++) {
+      for ( var i = 0; i < dataArray.length; i++) {
         dataArray[i] = dataArray[i].map(function(d, i) {
           return [xValue.call(dataArray[i], d, i), yValue.call(dataArray[i], d, i)];
         });
 
-      };
+      }
       //console.log("line 42");
       //console.log(dataArray);
 
@@ -61,7 +61,7 @@ function scatterChart() {
       if (!xDomain.length) {//if xDomain hasn't been set yet, set it to the full domain.
         //xDomain = d3.extent(dataArray[0], function(d) { return d[0]; });
         xDomain = setFullxDomain();
-      };
+      }
 
       // Update the full x & y domain.
       fullxDomain = setFullxDomain();
@@ -154,7 +154,6 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
         //d3.min(dataArray[0], xValue);
         var localxMax = xmax;
         var localxMin = xmax;
-        var domain = [];
 
         //console.log("domain: " + domain);
         //console.log(domain);
@@ -171,19 +170,16 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
           //console.log("localxMax of dataArray[" + i + "] is: " + localxMax);
           if (localxMax > xmax) {
             xmax = localxMax;
-          };
+          }
           localxMin = d3.min(dataArray[i], function(d) {
             return d[0];
           });
           if (localxMin < xmin) {
             xmin = localxMin;
-          };//it will never be smaller than zero.
+          }//it will never be smaller than zero.
 
-        };
-
-        domain = [xmin, xmax];
-        //console.log(domain);
-        return domain;
+        }
+        return [xmin, xmax];
       }
 
       function setFullyDomain() {
@@ -195,7 +191,6 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
         //d3.min(dataArray[0], xValue);
         var localMax = max;
         var localMin = max;
-        var domain = [];
 
         //console.log("y domain: " + domain);
         //console.log(domain);
@@ -203,7 +198,7 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
         //console.log("new domain: " );
         //console.log(domain);
         //x.domain(d3.extent(data.map(function(d) {return d.date;})));
-        for ( i = 0; i < dataArray.length; i++) {
+        for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
           //console.log("localyMax before search: " + localMax);
           localMax = d3.max(dataArray[i], function(d) {
@@ -212,19 +207,16 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
           //console.log("localyMax of dataArray[" + i + "] is: " + localMax);
           if (localMax > max) {
             max = localMax;
-          };
+          }
           localMin = d3.min(dataArray[i], function(d) {
             return d[1];
           });
           if (localMin < min) {
             min = localMin;
-          };//it will never be smaller than zero unless it finds a negative value..
+          }//it will never be smaller than zero unless it finds a negative value..
 
-        };
-
-        domain = [min, max];
-        //console.log(domain);
-        return domain;
+        }
+        return [min, max];
       }
 
     });
@@ -280,7 +272,7 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
     if (!arguments.length){
       console.log("log");
       return xScale;
-    };
+    }
     if (a ==="linear"){
       console.log("log");
       xScale = d3.scale.linear();
@@ -290,7 +282,7 @@ svg.attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "
     } else if (a === "time") {
       xScale = d3.time.scale();
       console.log("time");
-    };
+    }
     return chart;
   };
 
