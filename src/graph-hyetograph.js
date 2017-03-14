@@ -79,7 +79,7 @@ function hyetograph(id) {
     var top = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     var bottom = svg.append("g").attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-    top.append("path").attr("class", "filled").datum(stream).attr("clip-path", "url(#clip)").attr("d", area);
+    top.append("path").attr("class", "filled").datum(stream).attr("clip-path", "url(#clip)").attr("d", area).attr("stroke", "blue");
     top.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
     top.append("g").attr("class", "y axis").call(yAxis);
     bottom.append("path").attr("class", "filled").datum(rain).attr("clip-path", "url(#clip)").attr("d", area2);

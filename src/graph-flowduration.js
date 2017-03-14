@@ -58,7 +58,7 @@ function flowduration(id) {
     }))]);
     //If y.domain has a min value of 0, then you can't plot in a log scale.'
 
-    focus.append("path").datum(data).attr("clip-path", "url(#clip)").attr("d", area);
+    focus.append("path").datum(data).attr("clip-path", "url(#clip)").attr("d", area).attr("stroke", "blue");
     //append the path to the graph, but clip it with the rectangle we defined above.
     //focus.append("path").datum(data).attr("d", area);//This still seems to get clipped even though it doesn't have the clipping path. ???
     focus.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
