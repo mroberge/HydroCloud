@@ -31,7 +31,8 @@ function scatterChart() {
     return yScale.tickFormat(10, d3.format(",d"))(d);
   });
 
-  var color = d3.scaleOrdinal(d3.schemeCategory10);
+  //var color = d3.scaleOrdinal(d3.schemeCategory10);
+  var color = d3.scale.category10();
 
   //NEW
   //var area = d3.svg.area().x(X).y1(Y);
@@ -40,7 +41,7 @@ function scatterChart() {
       .x(X)
       .y(Y)
       .defined(function (d) { return d[1] !== null; });//This allows the line to break at null values.
-      //.lineStyles({stroke: (d, i) => color(i),});
+
   var xDomain = [];
   //leave empty. First time data are loaded, it will calculate the full x domain.
   var fullxDomain = [];
@@ -92,7 +93,7 @@ function scatterChart() {
       var g = svg.select("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       // Update the lines.
-      g.selectAll(".line").attr("d", line);
+      g.selectAll(".line").attr("d", line).attr("stroke", function(d, i) {return color(i);});
 
       // Update the x-axis.
       g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis).on("click", myClickFunction);
