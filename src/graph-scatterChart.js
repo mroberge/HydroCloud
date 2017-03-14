@@ -30,14 +30,17 @@ function scatterChart() {
   var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5).tickFormat(function (d) {
     return yScale.tickFormat(10, d3.format(",d"))(d);
   });
+
+  var color = d3.scaleOrdinal(d3.schemeCategory10);
+
   //NEW
   //var area = d3.svg.area().x(X).y1(Y);
   var line = d3.svg.line()
       .interpolate("step-before")
       .x(X)
       .y(Y)
-      .defined(function (d) { return d[1] !== null; })
-      .lineStyles({stroke: (d, i) => color(i),}); //This allows the line to break at null values.
+      .defined(function (d) { return d[1] !== null; });//This allows the line to break at null values.
+      //.lineStyles({stroke: (d, i) => color(i),});
   var xDomain = [];
   //leave empty. First time data are loaded, it will calculate the full x domain.
   var fullxDomain = [];
