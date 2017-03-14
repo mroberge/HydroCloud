@@ -35,7 +35,7 @@ function hyetograph(id) {
     var y2Axis = d3.svg.axis().scale(y2Scale).orient("left").tickSize(6, 0).ticks(5);
     //y2Axis.tickFormat(function (d) { return y2Scale.tickFormat(10, d3.format(",d"))(d);});
 
-    var area = d3.svg.area()
+    var area = d3.svg.area().interpolate("step-before")
         .x(function(d) {
             return xScale(d[0]);
         })
