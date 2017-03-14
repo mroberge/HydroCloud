@@ -15,10 +15,10 @@ var viewModel = {
     },
 
     view : ko.observable("map"),
-    graph : ko.observable("hyeto"),//temp bugfix. was "scatter"
+    graph : ko.observable("scatter"),
     hydro : function() {
-        this.view("hydro");//temp bugfix. was "scatter"
-        this.graph("hydro");//temp bugfix. was "scatter"
+        this.view("hydro");
+        this.graph("hydro");
         this.plotGraph();
     },
     flow : function() {
@@ -27,13 +27,13 @@ var viewModel = {
         this.plotGraph();
     },
     histo : function() {
-        this.view("histo");//temp bugfix. was "histo"
-        this.graph("histo");//temp bugfix. was "histo"
+        this.view("histo");
+        this.graph("histo");
         this.plotGraph();
     },
     scatter : function() {
-        this.view("scatter");//temp bugfix. was "scatter"
-        this.graph("scatter");//temp bugfix. was "scatter"
+        this.view("scatter");
+        this.graph("scatter");
         this.plotGraph();
     },
     hyeto : function() {
