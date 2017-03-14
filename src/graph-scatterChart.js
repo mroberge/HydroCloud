@@ -83,8 +83,9 @@ function scatterChart() {
       gEnter.append("g").attr("class", "y axis");
       
       var titleGroup = gEnter.append("g").attr("class", "titleGroup");
-      titleGroup.append("svg:text").attr("class", "title").text("Stream Hydrograph");
+      titleGroup.append("svg:text").attr("class", "Title").text("Stream Hydrograph");
       titleGroup.append("svg:text").attr("class", "subtitle").attr("dy", "1em");
+      titleGroup.append("svg:text").attr("class", "subtitle2").attr("dy", "2.2em");
 
       // Update the outer dimensions.
       svg.attr("width", width).attr("height", height);
@@ -103,8 +104,9 @@ function scatterChart() {
 
       //title block
       // Update the title.
-      g.select(".titleGroup").attr("transform", "translate(10,-10)");
+      g.select(".titleGroup").attr("transform", "translate(10,0)");
       g.select(".subtitle").text(dataArray.length + " lines");
+      g.select(".subtitle2").text(dataArray[0].length + " measurements per line")
       //title.on("click", myRClickFunction);
 
       //NEW click function for handling mouseclicks on an object.
