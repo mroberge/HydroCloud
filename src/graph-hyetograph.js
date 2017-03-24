@@ -35,14 +35,15 @@ function hyetograph(id) {
     var y2Axis = d3.svg.axis().scale(y2Scale).orient("left").tickSize(6, 0).ticks(5);
     //y2Axis.tickFormat(function (d) { return y2Scale.tickFormat(10, d3.format(",d"))(d);});
 
-    var area = d3.svg.area()
+    var area = d3.svg.area().interpolate("step-before")
         .x(function(d) {
             return xScale(d[0]);
         })
         .y0(height) //only if you want to fill the graph.
         .y1(function(d) {
             return yScale(d[1]);
-        });
+        })
+        .defined(function (d) { return d[1] !== null; });
     var area2 = d3.svg.area().interpolate("step-before")
         .x(function(d) {
             return xScale(d.date);
@@ -50,7 +51,8 @@ function hyetograph(id) {
         .y0(height2)
         .y1(function(d) {
             return y2Scale(d.value);
-        });
+        })
+        .defined(function (d) { return d[1] !== null; });
 
     var stream = chooseData(id);
     //If there is no data for a site, keep the previous graph alive & do nothing.
@@ -77,7 +79,7 @@ function hyetograph(id) {
     var top = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     var bottom = svg.append("g").attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-    top.append("path").attr("class", "filled").datum(stream).attr("clip-path", "url(#clip)").attr("d", area);
+    top.append("path").attr("class", "filled").datum(stream).attr("clip-path", "url(#clip)").attr("d", area).attr("stroke", "blue");
     top.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
     top.append("g").attr("class", "y axis").call(yAxis);
     bottom.append("path").attr("class", "filled").datum(rain).attr("clip-path", "url(#clip)").attr("d", area2);
