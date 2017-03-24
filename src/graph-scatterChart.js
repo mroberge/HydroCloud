@@ -62,7 +62,7 @@ function scatterChart() {
       fullyDomain = setFullyDomain();
 
       // Update the x-scale.
-      xScale.domain(xDomain)//don't change the xDomain. Why not fullxDomain????
+      xScale.domain(fullxDomain)
       .range([0, width - margin.left - margin.right]);
 
       // Update the y-scale.
@@ -107,7 +107,7 @@ function scatterChart() {
       //title block
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,0)");
-      g.select(".subtitle").text(dataArray.length + " lines");
+      g.select(".subtitle").text(dataArray.length + " sites");
       g.select(".subtitle2").text(dataArray[0].length + " measurements per line");
       //title.on("click", myRClickFunction);
 
