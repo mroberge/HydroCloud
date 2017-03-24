@@ -113,28 +113,28 @@ function scatterChart() {
 
       //***************Tooltip Code ***************
 
-// append a g for all the mouse over nonsense
+      // append a g for all the mouse over nonsense
       var mouseG = g.append("g")
           .attr("class", "mouse-over-effects");
 
-// this is the vertical line
+      // this is the vertical line
       mouseG.append("path")
           .attr("class", "mouse-line")
           .style("stroke", "black")
           .style("stroke-width", "1px")
           .style("opacity", "0");
 
-// keep a reference to all our lines
+      // keep a reference to all our lines
       var lines = document.getElementsByClassName('line');
 
-// here's a g for each circle and text on the line
+      // here's a g for each circle and text on the line
       var mousePerLine = mouseG.selectAll('.mouse-per-line')
           .data(dataArray)
           .enter()
           .append("g")
           .attr("class", "mouse-per-line");
 
-// the circle
+      // the circle
       mousePerLine.append("circle")
           .attr("r", 7)
           .style("stroke", function(d) {
@@ -144,11 +144,11 @@ function scatterChart() {
           .style("stroke-width", "1px")
           .style("opacity", "0");
 
-// the text
+      // the text
       mousePerLine.append("text")
           .attr("transform", "translate(10,3)");
 
-// rect to capture mouse movements
+      // rect to capture mouse movements
       mouseG.append('svg:rect')
           .attr('width', width)
           .attr('height', height)
@@ -217,9 +217,9 @@ function scatterChart() {
                   return "translate(" + mouse[0] + "," + pos.y +")";
                 });
           });
-      //***************Tooltip Code ***************
+      //***************End Tooltip Code ***************
 
-      //NEW click function for handling mouseclicks on an object.
+      //click function for handling mouseclicks on an object.
       function myClickFunction() {//just a silly function taken from http://bl.ocks.org/mbostock/1166403
         console.log("click");
 
