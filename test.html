@@ -12,28 +12,49 @@
     <script type="text/javascript" src="lib/jasmine-2.0.0/boot.js"></script>
 
 
+
     <!-- include library files here... -->
     <script type="text/javascript" src="lib/d3/d3.v3.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery-2.0.2.js  "></script>
     <script type="text/javascript" src="lib/jasmine-jquery.js"></script>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
 
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+    <script src='lib/knockout-3.0.0.js'></script>
+    <script src="lib/d3/d3.min.js"></script>
 
     <!-- include source files here... -->
-    <script src="src/analysis.js"></script>
-    <script src="src/index-drawGraph.js"></script>
+    <!-- My mapping files here. -->
     <script src="src/index-drawMap.js"></script>
-    <script src="src/scatterChart.js"></script>
+
+    <!-- my graphing stuff here -->
+    <script src="src/graph-flowduration.js"></script>
+    <script src="src/graph-hydrograph.js"></script>
+    <script src="src/graph-hyetograph.js"></script>
+    <script src="src/graph-loghistogram.js"></script>
+    <script src="src/graph-scatterChart.js"></script>
+    <script src="src/analysis.js"></script>
+
+    <!-- Local Storage functions -->
+    <script src="src/requestData.js"></script>
+    <script src="src/local-storage.js"></script>
+
+    <!-- viewModel -->
+    <script src="src/viewModel.js"></script>
+    <script src="src/initialize.js"></script>
 
 
     <!-- include spec files here... -->
     <script src="spec/spec.hydrocloud.js"></script>
     <script src="spec/spec.scatterChart.js"></script>
-    <script src="spec/spec.index-drawGraph.js"></script>
+    <script src="spec/spec.graphing.js"></script>
     <script src="spec/spec.index-drawMap.js"></script>
     <script src="spec/spec.analysis.js"></script>
 
   </head>
 
   <body><strong><a href="testAsync.html">Link to tests of asynchronous data sources</a></strong></body>
+<script>ko.applyBindings(viewModel);</script>
 </html>
