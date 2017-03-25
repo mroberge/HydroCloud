@@ -81,7 +81,7 @@ function scatterChart() {
       var lineEnter = lineGroup.selectAll("path").data(dataArray).enter().append("path").attr("class", "line");
       //.attr("d", line);//don't draw the line yet. update the size of the svg first.
 
-      gEnter.append("g").attr("class", "x axis");//is this name okay? It has a space!
+      gEnter.append("g").attr("class", "x axis");//this g belongs to two classes: 'x' and 'axis'.
       gEnter.append("g").attr("class", "y axis");
       
       var titleGroup = gEnter.append("g").attr("class", "titleGroup");
@@ -403,3 +403,4 @@ function scatterChart() {
   };
   return chart;
 }
+

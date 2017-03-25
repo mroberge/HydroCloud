@@ -8,6 +8,8 @@ function initialize() {
 
     var data = [];
 
+
+
     
     
 
@@ -16,9 +18,10 @@ function initialize() {
     viewModel.time.recent("90");
     
     viewModel.dataArray.subscribe(function(newValue) {
-        //alert("dataArray was just updated. " + newValue[0]);
-        console.log("plotGraph() called from index.html");
+        console.log("dataArray was just updated. " + newValue[0][0]);
+        console.log("now calling plotGraph()");
         viewModel.plotGraph();
+        //call the data update function of the chart.
     });
 
 //getUSGS(viewModel.siteDict()[0].id);
