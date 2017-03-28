@@ -38,6 +38,18 @@
     <script src="src/viewModel.js"></script>
     <script src="src/initialize.js"></script>
 
+
+    <!-- Gitter Sidecar -->
+    <script>
+      ((window.gitter = {}).chat = {}).options = {
+        room: 'HydroCloud-app/Lobby',
+        activationElement: false
+      };
+    </script>
+    <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+
+
+
     <!-- My styles here -->
     <style>
       body {
@@ -249,6 +261,9 @@
             </li>
             <li data-target="#carousel-example-generic" data-slide-to="3">
               <a href="#"><strong>?</strong></a>
+            </li>
+            <li>
+              <a href="#" class="js-gitter-toggle-chat-button glyphicon glyphicon-comment"></a>
             </li>
           </ul>
         </div><!-- /.navbar-collapse -->
