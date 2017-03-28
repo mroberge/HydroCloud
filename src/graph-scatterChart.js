@@ -211,7 +211,7 @@ function scatterChart() {
 
                   // update the text with y value
                   d3.select(this).select('text')
-                      .text(yScale.invert(pos.y).toFixed(2));
+                      .text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
 
                   // return position
                   return "translate(" + mouse[0] + "," + pos.y +")";
