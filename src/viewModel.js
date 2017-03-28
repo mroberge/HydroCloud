@@ -1,4 +1,8 @@
 var fourthChart = scatterChart();
+//console.log(fourthChart);
+var updatableChart = scatterChart2();
+
+//console.log(updatableChart);
 
 var viewModel = {
     width : ko.observable($(window).width()),
@@ -56,11 +60,17 @@ var viewModel = {
             hydrograph(this.siteId());
         } else if (this.graph() === "flow") {
             flowduration(this.siteId());
+            //alternatively, use a fourthChart.duration() method.
         } else if (this.graph() === "histo") {
-            loghistogram(this.siteId());
+            //loghistogram(this.siteId());
+            updatableChart.plot();
+            d3.select('#updatableChart')
+                .data(viewModel.dataArray())
+                .call(updatableChart);
         } else if (this.graph() === "hyeto") {
             hyetograph(this.siteId());
         } else if (this.graph() === "scatter") {
+            //alternatively, use a fourthChart.hydrograph() method.
             var graphDiv = d3.select("#graph_div");
             //console.log(this.dataArray());
             //fourthChart.datum(dataArray());

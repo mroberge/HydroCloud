@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="author" content="Martin Roberge" />
+    <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
+
+    <link rel="shortcut icon" href="resources/favicon.ico" />
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+
+    <title>HydroCloud Testbed.html</title>
+
+    <!-- jQuery, Bootstrap, Knockout, D3 -->
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+    <script src='lib/knockout-3.0.0.js'></script>
+    <script src="lib/d3/d3.min.js"></script>
+
+    <!-- My mapping files here. -->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY"></script>
+    <script src="src/index-drawMap.js"></script>
+
+    <!-- my graphing stuff here -->
+    <script src="src/graph-flowduration.js"></script>
+    <script src="src/graph-hydrograph.js"></script>
+    <script src="src/graph-hyetograph.js"></script>
+    <script src="src/graph-loghistogram.js"></script>
+    <script src="src/graph-scatterChart.js"></script>
+
+    <!-- Local Storage functions -->
+    <script src="src/requestData.js"></script>
+    <script src="src/local-storage.js"></script>
+
+    <!-- viewModel -->
+    <script src="src/viewModel.js"></script>
+    <script src="src/initialize.js"></script>
+
+    <!-- My styles here -->
+    <style>
+        body {
+            /*bootstrap sets the navbar height at 50px.*/
+            padding-top: 50px;
+            padding-bottom: 50px;
+            background-color: lightgray;
+        }
+        /*for google maps*/
+        html, body, #carousel-example-generic, .carousel-inner, .item {
+            height: 100%;
+        }
+
+        #brand {
+            font-family: 'Vollkorn', serif;
+            font-style: italic;
+            font-size: 24pt;
+            color: white;
+            text-shadow: 3px 3px 10px #aaf;
+        }
+
+        /*for carousel indicators */
+        .carousel-indicators {
+            position: absolute;
+            bottom: -50px;
+            color: #666;
+        }
+        .carousel-indicators :hover {
+            color: #bbb;
+        }
+        .carousel-indicators .active {
+            height: 20px;
+            width: 40px;
+            background-color: transparent;
+            color: white;
+        }
+
+        .carousel-indicators li {
+            /*override default behavior*/
+            text-indent: 0px;
+            height: 20px;
+            width: 40px;
+            border-style: none;
+            margin: 0;
+            font-size: 20px;
+        }
+
+        /*for my bottom button bar*/
+        #button-bar {
+            position: absolute;
+            bottom: 0px;
+            height: 50px;
+            width: 100%;
+        }
+
+        #button-bar a {
+            font-size: 30px;
+            color: #bbb;
+            bottom: 0px;
+        }
+
+        #button-bar a span {
+            vertical-align: middle;
+        }
+
+        #legend-btn {
+            color: white;
+            background-color: #444;
+            border-color: #444;
+        }
+
+        #legend-btn.active {
+            color: black;
+            background-color: #aaa;
+        }
+
+        #legend-modal {
+            position: absolute;
+            top: 80px;
+            right: 30px;
+            padding: 5px;
+            background-color: silver;
+            border: 1px solid black;
+            z-index: 50;
+            /*display: none;*/
+        }
+
+        .v-scroll{
+            overflow-y: auto;
+        }
+
+        /*For graphs*/
+
+        svg {
+            font: 10px sans-serif;
+        }
+
+        /*TODO: .axisTitle was there a typo? how are the axes titled?*/
+        .axisTitle {
+            font: 14px serif;
+        }
+        /*TODO: .Title was there a typo? how are the axes titled?*/
+        .Title {
+            font: 20px serif;
+        }
+        /*TODO: .subTitle was there a typo? how are the axes titled?*/
+        .subTitle {
+            font: 12px serif;
+        }
+
+        path {
+            /*  I need a way to set a default that can be overridden by D3 .attr("stroke", color)
+            stroke: black;
+            */
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* keep the .filled selector for filled hydrographs.*/
+        .filled {
+            fill: skyblue;
+        }
+
+        path:hover {
+            stroke: red;
+        }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .bar rect {
+            fill: lightskyblue;
+            shape-rendering: crispEdges;
+        }
+
+        .bar text {
+            fill: black;
+        }
+
+        .brush .extent {
+            stroke: #fff;
+            fill-opacity: .125;
+            shape-rendering: crispEdges;
+        }
+
+        svg .dataNotice {
+            font: 30px sans-serif;
+            fill: gray;
+        }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        div {
+            padding: 20px 0 0 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Testbed.html</h1>
+<button>Hello</button>
+
+
+<div class="item" id="graph_div"></div>
+
+<script>
+
+
+
+</script>
+<div id="text_div">text</div>
+<div id="updatableChart"></div>
+
+<script>
+    function barChart() {
+
+        // All options that should be accessible to caller
+        var width = 500;
+        var height = 300;
+        var barPadding = 1;
+        var fillColor = 'coral';
+        var data = [];
+
+        var updateWidth;
+        var updateHeight;
+        var updateFillColor;
+        var updateData;
+
+        function chart(selection){
+            selection.each(function () {
+
+                var barSpacing = height / data.length;
+                var barHeight = barSpacing - barPadding;
+                var maxValue = d3.max(data);
+                var widthScale = width / maxValue;
+
+                var dom = d3.select(this);
+                var svg = dom.append('svg')
+                        .attr('class', 'bar-chart')
+                        .attr('height', height)
+                        .attr('width', width)
+                        .style('fill', fillColor);
+
+                var bars = svg.selectAll('rect.display-bar')
+                        .data(data)
+                        .enter()
+                        .append('rect')
+                        .attr('class', 'display-bar')
+                        .attr('y', function (d, i) { return i * barSpacing;  })
+                        .attr('height', barHeight)
+                        .attr('x', 0)
+                        .attr('width', function (d) { return d * widthScale; });
+
+
+                // update functions
+                updateWidth = function() {
+                    widthScale = width / maxValue;
+                    bars.transition().duration(0).attr('width', function(d) { return d * widthScale; });
+                    svg.transition().duration(0).attr('width', width);
+                };
+
+                updateHeight = function() {
+                    barSpacing = height / data.length;
+                    barHeight = barSpacing - barPadding;
+                    bars.transition().duration(1000).attr('y', function(d, i) { return i * barSpacing; })
+                            .attr('height', barHeight);
+                    svg.transition().duration(1000).attr('height', height);
+
+                };
+
+                updateFillColor = function() {
+                    svg.transition().duration(1000).style('fill', fillColor);
+                };
+
+                updateData = function() {
+                    barSpacing = height / data.length;
+                    barHeight = barSpacing - barPadding;
+                    maxValue = d3.max(data);
+                    widthScale = width / maxValue;
+
+                    var update = svg.selectAll('rect.display-bar')
+                            .data(data);
+
+                    update
+                            .transition()
+                            .duration(1000)
+                            .attr('y', function(d, i) { return i * barSpacing; })
+                            .attr('height', barHeight)
+                            .attr('x', 0)
+                            .attr('width', function(d) { return d * widthScale; });
+
+                    update.enter()
+                            .append('rect')
+                            .attr('class', 'display-bar')
+                            .attr('y', function(d, i) { return i * barSpacing; })
+                            .attr('height', barHeight)
+                            .attr('x', 0)
+                            .attr('width', 0)
+                            .style('opacity', 0)
+                            .transition()
+                            .duration(1000)
+                            .delay(function(d, i) { return (data.length - i) * 40; })
+                            .attr('width', function(d) { return d * widthScale; })
+                            .style('opacity', 1);
+
+                    update.exit()
+                            .transition()
+                            .duration(650)
+                            .delay(function(d, i) { return (data.length - i) * 20; })
+                            .style('opacity', 0)
+                            .attr('height', 0)
+                            .attr('x', 0)
+                            .attr('width', 0)
+                            .remove();
+                }
+
+            });
+        }
+
+        chart.width = function(value) {
+            if (!arguments.length) return width;
+            width = value;
+            if (typeof updateWidth === 'function') updateWidth();
+            return chart;
+        };
+
+        chart.height = function(value) {
+            if (!arguments.length) return height;
+            height = value;
+            if (typeof updateHeight === 'function') updateHeight();
+            return chart;
+        };
+
+        chart.fillColor = function(value) {
+            if (!arguments.length) return fillColor;
+            fillColor = value;
+            if (typeof updateFillColor === 'function') updateFillColor();
+            return chart;
+        };
+
+        chart.data = function(value) {
+            if (!arguments.length) return data;
+            data = value;
+            if (typeof updateData === 'function') updateData();
+            return chart;
+        };
+
+        return chart;
+    }
+</script>
+
+<script>
+
+    var dataSet = [];
+    var highTemperatures = dataSet[0] = [77, 71, 82, 87, 84, 78, 80, 84, 86, 72, 71, 68, 75, 73, 80, 85, 86, 80];
+    var lowTemperatures = dataSet[1] = highTemperatures.map(function(d) { return d - Math.random() * 30});
+    var milesRun = dataSet[2] = [2, 5, 4, 3, 1, 2, 1];
+    var fillColors = ['coral', 'steelblue', 'teal'];
+
+    var updatableChart = barChart().width(600).data(highTemperatures);
+
+    d3.select('#updatableChart')
+            .call(updatableChart);
+
+    window.setTimeout(function() {
+        updatableChart.height(450);
+    }, 1000);
+
+    var i = 1;
+    window.setInterval(function() {
+        //updatableChart.data(dataSet[i]);
+        //updatableChart.fillColor(fillColors[i]);
+        //i = (i+1) % 3 ;
+    }, 2500);
+    var graphdiv = d3.select("#graph_div");
+    var textDiv = $("#text_div");
+    var jdiv = $("#graph_div");
+    function resizeHandler() {
+        console.log("window.innerWidth: " + window.innerWidth + "jQuery: " + jdiv.width());
+        //console.log(jdiv.width());
+        updatableChart.width(jdiv.width()-20);
+        //i = (i+1) % 3 ;
+    }
+
+    (function() {
+        //throttle is a system that uses requestAnimationFrame() to slow down redraws.
+        //Use it by sending the following parameters:
+        //    type: the Event that you want to capture. "resize" is what we'll be using this for.
+        //    name: the new Event that we will be dispatching in the place of the original.
+        //    obj: the element that we are attaching the listener to and which will emit the new Event.
+        //From MDN: https://developer.mozilla.org/en-US/docs/Web/Events/resize
+        var throttle = function(type, name, obj) {
+            obj = obj || window;
+            var running = false;
+            var func = function() {
+                if (running) { return; }
+                running = true;
+                requestAnimationFrame(function() {
+                    obj.dispatchEvent(new CustomEvent(name));
+                    running = false;
+                });
+            };
+            obj.addEventListener(type, func);
+        };
+
+        /* init - you can init any event */
+        throttle("resize", "optimizedResize");
+    })();
+
+    window.addEventListener('optimizedResize', resizeHandler);
+
+
+</script>
+
+</body>
+</html>
