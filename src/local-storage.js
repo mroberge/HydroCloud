@@ -8,7 +8,7 @@ function storageAvailable(storageType) {
         return true;
     }
     catch(e) {
-        console.log(storageType + " not available.")
+        console.log(storageType + " not available.");
         console.dir(e);
         return false;
     }

@@ -14,7 +14,7 @@
       var name = $('#nameInput').val();
       var text = $('#messageInput').val();
       myDataRef.push({name: name, text: text});
-      $('#messageInput').val('');
+      text.val('');
     }
   });
   myDataRef.on('child_added', function(snapshot) {
@@ -24,7 +24,7 @@
   function displayChatMessage(name, text) {
     $('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
     $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
-  };
+  }
 </script>
 </body>
 </html>

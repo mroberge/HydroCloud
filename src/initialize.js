@@ -11,8 +11,8 @@ function initialize() {
     
     
 
-    viewModel.time.start(new Date(2014,01,01));
-    viewModel.time.end(new Date(2015,01,01));
+    viewModel.time.start(new Date(2014,1,1));
+    viewModel.time.end(new Date(2015,1,1));
     viewModel.time.recent("90");
     
     viewModel.dataArray.subscribe(function(newValue) {

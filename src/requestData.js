@@ -23,7 +23,7 @@ function requestData(id, name, info) {
 
         //Now collect the Stream Gage data and put in the dataArray
         //First check storage. We might have collected this data earlier, but not in this session.
-        console.log("Checking for gage data in localStorage. Result of stored:")
+        console.log("Checking for gage data in localStorage. Result of stored:");
         var stored = checkStorage(id);
         console.log(stored);
         if (stored) {
@@ -39,7 +39,7 @@ function requestData(id, name, info) {
 
         }
     } else {
-        console.log("This site is already in the siteIdArray, so it is likely that we already have the data in the dataArray.")
+        console.log("This site is already in the siteIdArray, so it is likely that we already have the data in the dataArray.");
         //If we matched the site to our siteIdArray, then we should already have gage data. Plot.
         viewModel.plotGraph();
     }
@@ -50,9 +50,9 @@ function requestData(id, name, info) {
 
 function dateStr(d) {
     var month = +d.getMonth() + 1;
-    month = new String("00" + month).slice(-2);
+    month = String("00" + month).slice(-2);
     var date = +d.getDate();
-    date = new String("00" + date).slice(-2);
+    date = String("00" + date).slice(-2);
 
     var now = {
         time : d,
@@ -93,7 +93,7 @@ function getTuNexrad(id) {
     var urlRecent = "http://10.55.15.196:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
 
     //console.log(endstr);
-    result = $.ajax({
+    var result = $.ajax({
         url : urlDates,
         //url : urlRecent,
         dataType : "json",
@@ -135,16 +135,17 @@ function getUSGS(id) {
     var testDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&period=P10D&parameterCd=00060";
     var recentDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=" + usgsId + "&period=P" + viewModel.time.recent() + "D&parameterCd=00060";
     var staticDateDaily = "https://waterservices.usgs.gov/nwis/dv/?format=json&sites=01646500&startDT=2013-05-01&endDT=2013-5-10&parameterCd=00060";
+    var url = recentDaily;
 
     if (id == "local") {
-        var url = localQuery;
+        url = localQuery;
     } else {
         // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
         // recentDaily will minimize the impact the program has on the USGS servers.
-        var url = recentDaily;
+        url = recentDaily;
         console.log("Requesting data from: " + url);
     }
-    result = $.ajax({
+    var result = $.ajax({
         url: url,
         //headers: {"Accept-Encoding": "gzip, compress"},//These are sent automatically by the browser. No need for this here.
         dataType: "json",
@@ -167,7 +168,6 @@ function getUSGS(id) {
             //process data
             //    check for no data or empty set;
             if (returnedData.value.timeSeries[0] < 1) {
-                //This site does not exist. Somehow the FusionTable had a site that doesn't exist.
                 // Leave data = [] for storage.
             } else {
                 var temp = returnedData.value.timeSeries[0].values[0].value;
