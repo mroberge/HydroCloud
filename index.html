@@ -25,9 +25,6 @@
 
     <!-- my graphing stuff here -->
     <script src="src/graph-flowduration.js"></script>
-    <script src="src/graph-hydrograph.js"></script>
-    <script src="src/graph-hyetograph.js"></script>
-    <script src="src/graph-loghistogram.js"></script>
     <script src="src/graph-scatterChart.js"></script>
 
     <!-- Local Storage functions -->
@@ -247,25 +244,15 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"> </b></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="#"  data-bind="click: hydro">Hydrograph</a>
+                  <a href="#"  data-bind="click: scatter">Hydrograph</a>
                 </li>
                 <li>
                   <a href="#" data-bind="click: flow">Flow Duration</a>
-                </li>
-                <li>
-                  <a href="#" data-bind="click: histo">Histogram</a>
-                </li>
-                <li>
-                  <a href="#" data-bind="click: hyeto">Hyetograph</a>
-                </li>
-                <li>
-                  <a href="#" data-bind="click: scatter">Scatter</a>
                 </li>
                 <li class="divider"></li>
                 <li>
                   <a href="#" data-bind="click: toggleLegend">Show Legend</a>
                 </li>
-
               </ul>
             </li>
             <li data-target="#carousel-example-generic" data-slide-to="2">

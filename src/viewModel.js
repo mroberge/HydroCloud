@@ -52,21 +52,12 @@ var viewModel = {
     },
     plotGraph : function() {
         console.log(this.graph());
-        if (this.graph() == "hydro") {
-            hydrograph(this.siteId());
-        } else if (this.graph() === "flow") {
+        if (this.graph() === "flow") {
             flowduration(this.siteId());
-        } else if (this.graph() === "histo") {
-            loghistogram(this.siteId());
-        } else if (this.graph() === "hyeto") {
-            hyetograph(this.siteId());
         } else if (this.graph() === "scatter") {
             var graphDiv = d3.select("#graph_div");
-            //console.log(this.dataArray());
-            //fourthChart.datum(dataArray());
             d3.select("#graph_div svg").remove();
             graphDiv.datum(this.dataArray()).call(fourthChart);
-            //scatterChart();
         } else {
             console.log("no option selected");
         }
@@ -76,7 +67,7 @@ var viewModel = {
     siteName : ko.observable(),
     siteDict : ko.observableArray(),
     dataArray : ko.observableArray([]),//Initial value set to empty.
-    tuNexrad : ko.observable({status: "requesting data"}) //just a single object, which happens to be an array...
+    tuNexrad : ko.observable({status: "requesting data"})
 };
 
 
