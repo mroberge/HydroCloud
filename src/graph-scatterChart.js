@@ -1,5 +1,20 @@
 function scatterChart() {
   /*
+   * (c) 2017 Martin Roberge
+   * MIT license
+   *
+   * How to use:
+   *   Create a <div> element in your html to place the chart inside. You can set its size here, or programmatically.
+   *   `  <div id="graphDiv"></div>
+   *   Select the div and assign a reference to it. ("graphDiv" in this example)
+   *   `  var graphDiv = d3.select("#graph_div");
+   *   Create an instance of the scatterChart
+   *   `  var myChart = scatterChart();
+   *   Assign some data to your div. Use datum for a static graph. See note below on data requirements.
+   *   Call the graph function on the div. It will return a chart object that you can modify later on.
+   *   `  graphDiv.datum(this.dataArray()).call(myChart);
+   *
+   *
    * Based on Mike Bostock's system for creating reusable charts, described
    * here: http://bost.ocks.org/mike/chart/
    *
@@ -36,8 +51,6 @@ function scatterChart() {
   //var color = d3.scaleOrdinal(d3.schemeCategory10);
   var color = d3.scale.category10();
 
-  //NEW
-  //var area = d3.svg.area().x(X).y1(Y);
   var line = d3.svg.line()
       .interpolate("step-before")
       .x(X)
@@ -45,7 +58,6 @@ function scatterChart() {
       .defined(function (d) { return d[1] !== null; });//This allows the line to break at null values.
 
   var xDomain = [];
-  //leave empty. First time data are loaded, it will calculate the full x domain.
   var fullxDomain = [];
   var fullyDomain = [];
 
@@ -62,13 +74,14 @@ function scatterChart() {
       fullyDomain = setFullyDomain();
 
       // Update the x-scale.
-      xScale.domain(fullxDomain)
-      .range([0, width - margin.left - margin.right]);
+      xScale
+        .domain(fullxDomain)
+        .range([0, width - margin.left - margin.right]);
 
       // Update the y-scale.
       yScale
-      //.domain([0, d3.max(dataArray[0], function(d) { return d[1]; })])//need to set extent in a new way, since some lines will have a different max.
-      .domain(fullyDomain).range([height - margin.top - margin.bottom, 0]);
+        .domain(fullyDomain)
+        .range([height - margin.top - margin.bottom, 0]);
 
       // Select the svg element, if it exists.
       var svg = d3.select(this).selectAll("svg").data([dataArray]);
@@ -79,9 +92,8 @@ function scatterChart() {
 
       var lineGroup = gEnter.append("g").attr("class", "lineGroup");
       var lineEnter = lineGroup.selectAll("path").data(dataArray).enter().append("path").attr("class", "line");
-      //.attr("d", line);//don't draw the line yet. update the size of the svg first.
 
-      gEnter.append("g").attr("class", "x axis");//is this name okay? It has a space!
+      gEnter.append("g").attr("class", "x axis");//g given two classes: x and axis.
       gEnter.append("g").attr("class", "y axis");
       
       var titleGroup = gEnter.append("g").attr("class", "titleGroup");
@@ -99,12 +111,11 @@ function scatterChart() {
       g.selectAll(".line").attr("d", line).attr("stroke", function(d, i) {return color(i);});
 
       // Update the x-axis.
-      g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis).on("click", myClickFunction);
+      g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis);
 
       // Update the y-axis.
-      g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis).on("click", myRClickFunction);
+      g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
 
-      //title block
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,0)");
       g.select(".subtitle").text(dataArray.length + " sites");
@@ -184,23 +195,21 @@ function scatterChart() {
             // position the circle and text
             d3.selectAll(".mouse-per-line")
                 .attr("transform", function(d, i) {
-                  //console.log(width/mouse[0]);
-                  //console.log(d);
                   if(d.length < 1) { return; } //return if empty set.
                   var xDate = xScale.invert(mouse[0]),
                       bisect = d3.bisector(function(d) { return d[0]; }).right;
                   var idx = bisect(d[1], xDate); //Sometimes an empty set is in viewModel.dataArray and an error occurs.
 
-                  // since we are use curve fitting we can't relay on finding the points like I had done in my last answer
+                  // since we are use curve fitting we need to find by searching along the length
                   // this conducts a search using some SVG path functions
                   // to find the correct position on the line
                   // from http://bl.ocks.org/duopixel/3824661
                   var beginning = 0;
-                  var end = lines[i].getTotalLength(); //getTotalLength() is defined elsewhere...?
+                  var end = lines[i].getTotalLength(); //getTotalLength() is a method of SVGGeometryElement
 
                   while (true){
                     var target = Math.floor((beginning + end) / 2);
-                    var pos = lines[i].getPointAtLength(target);
+                    var pos = lines[i].getPointAtLength(target); //getPointAtLength() is a method of SVGGeometryElement
                     if ((target === end || target === beginning) && pos.x !== mouse[0]) {
                       break;
                     }
@@ -220,49 +229,26 @@ function scatterChart() {
       //***************End Tooltip Code ***************
 
       //click function for handling mouseclicks on an object.
-      function myClickFunction() {//just a silly function taken from http://bl.ocks.org/mbostock/1166403
-        console.log("click");
-
-        var n = dataArray[0].length - 1, i = Math.floor(Math.random() * n / 2), j = i + Math.floor(Math.random() * n / 2) + 1;
-        xDomain = [xValue(dataArray[0][i]), xValue(dataArray[0][j])];
-        xScale.domain(xDomain);
-        var t = g.transition().duration(750);
-        t.select(".x.axis").call(xAxis);
-        t.selectAll(".line").attr("d", line);
+      function myClickFunction() {
+        console.log("myClickFunction");
       }
 
       function myRClickFunction() {
-        xDomain = setFullxDomain();
         console.log("myRClickFunction");
-        xScale.domain(xDomain);
-        var t = g.transition().duration(750);
-        t.select(".x.axis").call(xAxis);
-        t.selectAll(".line").attr("d", line);
       }
 
       function setFullxDomain() {
-        //console.log("setFullxDomain");
         //set xmax and xmin to x value in first element in first array.
         var xmax = dataArray[0][0][0];
         var xmin = xmax;
-        //console.log("xmax: " + xmax + " xmin: " + xmin);
-        //d3.min(dataArray[0], xValue);
         var localxMax = xmax;
         var localxMin = xmax;
 
-        //console.log("domain: " + domain);
-        //console.log(domain);
-        //domain = d3.extent(dataArray[0].map(function(d) {return d.date;}));
-        //console.log("new domain: " );
-        //console.log(domain);
-        //x.domain(d3.extent(data.map(function(d) {return d.date;})));
         for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
-          //console.log("localxMax before search: " + localxMax);
           localxMax = d3.max(dataArray[i], function(d) {
             return d[0];
           });
-          //console.log("localxMax of dataArray[" + i + "] is: " + localxMax);
           if (localxMax > xmax) {
             xmax = localxMax;
           }
@@ -272,35 +258,22 @@ function scatterChart() {
           if (localxMin < xmin) {
             xmin = localxMin;
           }//it will never be smaller than zero.
-
         }
-
         return [xmin, xmax];
       }
 
       function setFullyDomain() {
-        //console.log("setFullyDomain");
         //set xmax and xmin to x value in first element in first array.
         var max = dataArray[0][0][1];
         var min = max;
-        //console.log("max: " + max + " min: " + min);
-        //d3.min(dataArray[0], xValue);
         var localMax = max;
         var localMin = max;
 
-        //console.log("y domain: " + domain);
-        //console.log(domain);
-        //domain = d3.extent(dataArray[0].map(function(d) {return d.date;}));
-        //console.log("new domain: " );
-        //console.log(domain);
-        //x.domain(d3.extent(data.map(function(d) {return d.date;})));
         for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
-          //console.log("localyMax before search: " + localMax);
           localMax = d3.max(dataArray[i], function(d) {
             return d[1];
           });
-          //console.log("localyMax of dataArray[" + i + "] is: " + localMax);
           if (localMax > max) {
             max = localMax;
           }
@@ -309,21 +282,19 @@ function scatterChart() {
           });
           if (localMin < min) {
             min = localMin;
-          }//it will never be smaller than zero unless it finds a negative value..
-
+          }//it will never be smaller than zero unless it finds a negative value.
         }
         return [min, max];
       }
-
     });
   }
 
-  // The x-accessor for the path generator; xScale âˆ˜ xValue.
+  // The x-accessor for the path generator
   function X(d) {
     return xScale(d[0]);
   }
 
-  // The x-accessor for the path generator; yScale âˆ˜ yValue.
+  // The y-accessor for the path generator
   function Y(d) {
     return yScale(d[1]);
   }
@@ -350,7 +321,7 @@ function scatterChart() {
     return chart;
   };
 
-  chart.x = function(a) {//Do we need this?
+  chart.x = function(a) {
     if (!arguments.length)
       return xValue;
     xValue = a;

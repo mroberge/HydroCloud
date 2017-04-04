@@ -3,14 +3,12 @@ var fusionLayerInfoWindow;
 var center = new google.maps.LatLng(39.395, -76.609);
 
 function drawMap() {
-  //document.getElementById('map_div').style.display = "none";
   var mapOptions = {
     zoom : 8,
     center : new google.maps.LatLng(39.395, -76.609),
     mapTypeId : google.maps.MapTypeId.TERRAIN
   };
 
-  //console.log(document.getElementById('map_div'));
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
 
   fusionLayerInfoWindow = new google.maps.InfoWindow();
@@ -20,7 +18,7 @@ function drawMap() {
   var fusionLayer = new google.maps.FusionTablesLayer({
     query : {
       select : 'location',
-      //real.kmz, has more sites than Gages II, but less info.
+      //real.kmz, has more sites than Gages II, but less info for each.
       //from : '1Rt_U4LqeNPi6Tk1-kq8ta-6OP748nJJJTqdwlC0Q'
 
       //from Gages II merge, too large, takes too long to load
@@ -28,6 +26,7 @@ function drawMap() {
 
       //from Gages II merge- small
       from : '103gQIyU069THrk7KGZYtbC8_My1rW4JwaHhX1ehe'
+      //Add queries like this:
       //where : 'DRAIN_SQKM < 20'
     },
     suppressInfoWindows: true
@@ -35,6 +34,9 @@ function drawMap() {
   fusionLayer.setMap(map);
 
   google.maps.event.addListener(fusionLayer, 'click', function(event) {
+    //TODO: Google sometimes returns an error; I can't replicate this anymore. ???
+    //console.dir(event);
+
     //Parse real.kmz
     //var re = /[0-9]+/;
     //var sId = "dv" + re.exec(event.row.site_no.value)[0];
@@ -54,7 +56,6 @@ function drawMap() {
     //Update our viewModel with the current site information.
     viewModel.siteId(sId);
     viewModel.siteName(siteName);
-    //viewModel.siteDict.push(siteDict);
 
     //update our InfoWindow, then open it.
     fusionLayerInfoWindow.setOptions(
@@ -82,27 +83,9 @@ function drawMap() {
     map : map
   });
 
-  google.maps.event.addListener(fusionLayer, 'click', function(event) {
-    console.log(event);
-    var re = /^[0-9]+/;
-    var sId = re.exec(event.featureData.name)[0];
-    viewModel.siteId(sId);
-    viewModel.siteName(event.featureData.name);
-    //This siteIdArray.push won't capture the first data requested.
-    viewModel.siteIdArray.push(+sId);
-    console.log(viewModel.siteId());
-    console.log(viewModel.siteIdArray());
-    //viewModel.siteName.push(kmlEvent.featureData.name);
-
-    //console.log(sId);
-    //console.log(viewModel.siteId());
-    //console.log(viewModel.siteName());
-
-    getUSGS(sId);
-  });
 */
 
-  tileNEX = new google.maps.ImageMapType({
+  var tileNEX = new google.maps.ImageMapType({
     getTileUrl : function(tile, zoom) {
       return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
     },
@@ -112,7 +95,7 @@ function drawMap() {
     isPng : true
   });
 
-  goes = new google.maps.ImageMapType({
+  var goes = new google.maps.ImageMapType({
     getTileUrl : function(tile, zoom) {
       return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/goes-east-vis-1km-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
     },
@@ -122,12 +105,10 @@ function drawMap() {
     isPng : true
   });
 
-  map.overlayMapTypes.push(null);
   //create empty overlay entry
-  //map.overlayMapTypes.setAt("0",goes);
+  map.overlayMapTypes.push(null);
+  //Add the GOES cloud imagery layer
+  //map.overlayMapTypes.setAt("0", goes);
   map.overlayMapTypes.setAt("1", tileNEX);
-  google.maps.event.addListener(map, 'bounds_changed', function() {
-    //console.log(map.getBounds());
-  });
 }
 

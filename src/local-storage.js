@@ -8,7 +8,7 @@ function storageAvailable(storageType) {
         return true;
     }
     catch(e) {
-        console.log(storageType + " not available.")
+        console.log(storageType + " not available.");
         console.dir(e);
         return false;
     }
@@ -17,7 +17,6 @@ function storageAvailable(storageType) {
 function checkStorage(site){
     if (storageAvailable('localStorage')) {
         // localStorage is available
-        console.log("localStorage is available. site: " + site);
         try {
             var storage = window['localStorage'];
             var data = JSON.parse(storage.getItem(site));
@@ -26,14 +25,12 @@ function checkStorage(site){
             //In this case, I may want to have a refresh button near the graph to ask for more data.
             //
             if (Array.isArray(data)) {
-                console.log("Retrieved data from site " + site + ". Length is:" + data.length);
+                //console.log("Retrieved data from site " + site + ". Length is:" + data.length);
                 //convert string to Date
                 data.forEach(function(d, index, array){
                     d[0] = new Date(d[0]);
                 });
                 return data;
-                //console.log(data);
-                //return false;
             } else {
                 console.log("Problem with retrieved data for site " + site);
                 console.log(data);
@@ -56,7 +53,7 @@ function checkStorage(site){
 function saveData(key, data) {
     if (storageAvailable('localStorage')) {
         // localStorage is available
-        console.log("attempting to save");
+        //console.log("attempting to save");
         try {
             var storage = window['localStorage'];
             storage.setItem(key, JSON.stringify(data));

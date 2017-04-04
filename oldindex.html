@@ -246,7 +246,6 @@
       } else {
         //don't need to plot a thing if we aren't showing a graph.
       }
-      ;
     }
 
     $(function() {
@@ -363,12 +362,12 @@
           var filename = "resources/USGSshort.txt";
         } else {
           var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
-        };
+        }
         d3.json(filename, function(error, json) {
           if (error) {
             if (error.status === 0) {
               alert("CORS is not enabled.");
-            };
+            }
             return console.warn(error);
           }
           //if (!json.value.timeSeries[0].values[0].value){console.warn("there is no data for this site")};
@@ -397,7 +396,7 @@
 
 
     </script>
-    <div id="aboutText" style="display:none">
+    <div id="aboutText" style="display:none;">
       <h2>Description of the HydroCloud project</h2>
       <p>
         HydroCloud is a hydrological analysis system consisting of a fast, lightweight mapping and analysis tool and a scalable, distributed database. This page is a partial demonstration of the interface for this project.
