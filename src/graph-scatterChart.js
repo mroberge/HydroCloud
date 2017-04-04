@@ -36,8 +36,6 @@ function scatterChart() {
   //var color = d3.scaleOrdinal(d3.schemeCategory10);
   var color = d3.scale.category10();
 
-  //NEW
-  //var area = d3.svg.area().x(X).y1(Y);
   var line = d3.svg.line()
       .interpolate("step-before")
       .x(X)
@@ -45,7 +43,6 @@ function scatterChart() {
       .defined(function (d) { return d[1] !== null; });//This allows the line to break at null values.
 
   var xDomain = [];
-  //leave empty. First time data are loaded, it will calculate the full x domain.
   var fullxDomain = [];
   var fullyDomain = [];
 
@@ -62,13 +59,14 @@ function scatterChart() {
       fullyDomain = setFullyDomain();
 
       // Update the x-scale.
-      xScale.domain(fullxDomain)
-      .range([0, width - margin.left - margin.right]);
+      xScale
+        .domain(fullxDomain)
+        .range([0, width - margin.left - margin.right]);
 
       // Update the y-scale.
       yScale
-      //.domain([0, d3.max(dataArray[0], function(d) { return d[1]; })])//need to set extent in a new way, since some lines will have a different max.
-      .domain(fullyDomain).range([height - margin.top - margin.bottom, 0]);
+        .domain(fullyDomain)
+        .range([height - margin.top - margin.bottom, 0]);
 
       // Select the svg element, if it exists.
       var svg = d3.select(this).selectAll("svg").data([dataArray]);
@@ -220,49 +218,26 @@ function scatterChart() {
       //***************End Tooltip Code ***************
 
       //click function for handling mouseclicks on an object.
-      function myClickFunction() {//just a silly function taken from http://bl.ocks.org/mbostock/1166403
-        console.log("click");
-
-        var n = dataArray[0].length - 1, i = Math.floor(Math.random() * n / 2), j = i + Math.floor(Math.random() * n / 2) + 1;
-        xDomain = [xValue(dataArray[0][i]), xValue(dataArray[0][j])];
-        xScale.domain(xDomain);
-        var t = g.transition().duration(750);
-        t.select(".x.axis").call(xAxis);
-        t.selectAll(".line").attr("d", line);
+      function myClickFunction() {
+        console.log("myClickFunction");
       }
 
       function myRClickFunction() {
-        xDomain = setFullxDomain();
         console.log("myRClickFunction");
-        xScale.domain(xDomain);
-        var t = g.transition().duration(750);
-        t.select(".x.axis").call(xAxis);
-        t.selectAll(".line").attr("d", line);
       }
 
       function setFullxDomain() {
-        //console.log("setFullxDomain");
         //set xmax and xmin to x value in first element in first array.
         var xmax = dataArray[0][0][0];
         var xmin = xmax;
-        //console.log("xmax: " + xmax + " xmin: " + xmin);
-        //d3.min(dataArray[0], xValue);
         var localxMax = xmax;
         var localxMin = xmax;
 
-        //console.log("domain: " + domain);
-        //console.log(domain);
-        //domain = d3.extent(dataArray[0].map(function(d) {return d.date;}));
-        //console.log("new domain: " );
-        //console.log(domain);
-        //x.domain(d3.extent(data.map(function(d) {return d.date;})));
         for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
-          //console.log("localxMax before search: " + localxMax);
           localxMax = d3.max(dataArray[i], function(d) {
             return d[0];
           });
-          //console.log("localxMax of dataArray[" + i + "] is: " + localxMax);
           if (localxMax > xmax) {
             xmax = localxMax;
           }
@@ -279,28 +254,17 @@ function scatterChart() {
       }
 
       function setFullyDomain() {
-        //console.log("setFullyDomain");
         //set xmax and xmin to x value in first element in first array.
         var max = dataArray[0][0][1];
         var min = max;
-        //console.log("max: " + max + " min: " + min);
-        //d3.min(dataArray[0], xValue);
         var localMax = max;
         var localMin = max;
 
-        //console.log("y domain: " + domain);
-        //console.log(domain);
-        //domain = d3.extent(dataArray[0].map(function(d) {return d.date;}));
-        //console.log("new domain: " );
-        //console.log(domain);
-        //x.domain(d3.extent(data.map(function(d) {return d.date;})));
         for ( var i = 0; i < dataArray.length; i++) {
           //loop through each of the arrays.
-          //console.log("localyMax before search: " + localMax);
           localMax = d3.max(dataArray[i], function(d) {
             return d[1];
           });
-          //console.log("localyMax of dataArray[" + i + "] is: " + localMax);
           if (localMax > max) {
             max = localMax;
           }
@@ -309,7 +273,7 @@ function scatterChart() {
           });
           if (localMin < min) {
             min = localMin;
-          }//it will never be smaller than zero unless it finds a negative value..
+          }//it will never be smaller than zero unless it finds a negative value.
 
         }
         return [min, max];
@@ -318,12 +282,12 @@ function scatterChart() {
     });
   }
 
-  // The x-accessor for the path generator; xScale âˆ˜ xValue.
+  // The x-accessor for the path generator
   function X(d) {
     return xScale(d[0]);
   }
 
-  // The x-accessor for the path generator; yScale âˆ˜ yValue.
+  // The y-accessor for the path generator
   function Y(d) {
     return yScale(d[1]);
   }
@@ -350,7 +314,7 @@ function scatterChart() {
     return chart;
   };
 
-  chart.x = function(a) {//Do we need this?
+  chart.x = function(a) {
     if (!arguments.length)
       return xValue;
     xValue = a;
