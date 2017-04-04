@@ -57,7 +57,7 @@ function dateStr(d) {
 
 function processN(inputArray) {
     var myArray = [];
-    InputArray.forEach(function (d, index, array) {
+    inputArray.forEach(function (d, index, array) {
         myArray[index] = {};
         myArray[index].date = new Date(d.dateTime);
         myArray[index].value = +d.precipitation;
