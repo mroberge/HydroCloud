@@ -106,7 +106,7 @@
 
         d3.select('.chart-container').append('button')
                 .text('New Data')
-                .on('click', function () { updateChart(generateRandom(20)); })
+                .on('click', function () { updateChart(generateRandom(20)); });
 
         updateChart(data);
     }
@@ -119,7 +119,7 @@
                 .curve(d3.curveLinear)
                 .defined(function (d) { return d.y != null; })
                 .lineStyles({
-                    stroke: '#0bb',
+                    stroke: '#0bb'
                 });
 
         root
@@ -189,7 +189,7 @@
                 .attr('x1', function (d) { return x(d.x); })
                 .attr('x2', function (d) { return x(d.x); })
                 .attr('y1', 0)
-                .attr('y2', height)
+                .attr('y2', height);
 
         binding.exit().remove();
     }

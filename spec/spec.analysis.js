@@ -8,7 +8,7 @@ describe("analysis.js is a suite of functions that includes:", function() {
     var value = 40 * Math.sin(i / 10) + 100 + i;
     var obs = [time, value];
     series1.push(obs);
-  };
+  }
   //console.log(startDate);
   //console.log(increment);
   //console.log(series1);
@@ -136,7 +136,7 @@ describe("The tableJoin() function", function() {
   
   describe("contains a validate() function that", function() {
     xit("returns 'invalid' if a data object is invalid", function() {
-      expect(dataJoin.validate()).toEqual("invalid");
+      expect(tableJoin.validate()).toEqual("invalid");
     });
     xit("validates input objects to determine if they have id and data", function() {
       var result = tableJoin(data1);

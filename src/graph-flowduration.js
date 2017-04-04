@@ -2,7 +2,7 @@
  * Created by Marty on 3/12/2017.
  */
 function flowduration(id) {
-    console.log("flowduration");
+    //console.log("flowduration");
     var data = chooseData(id);
     //If there is no data for a site, keep the previous graph alive & do nothing.
     if(!data) return;
@@ -17,7 +17,6 @@ function flowduration(id) {
     data.sort(function(a, b) {
         return a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0;
     });
-    //console.log(data);
 
     var margin = {
         top : 10,
@@ -37,8 +36,6 @@ function flowduration(id) {
     var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
     var rank = 0;
-    //console.log(sorted.length)
-    //var testarray = [];
 
     var area = d3.svg.line().interpolate("step-before").x(function(d) {
         rank = rank + 1;
@@ -56,11 +53,10 @@ function flowduration(id) {
     yScale.domain([1, d3.max(data.map(function(d) {
         return d[1];
     }))]);
-    //If y.domain has a min value of 0, then you can't plot in a log scale.'
+    //If y.domain has a min value of 0, then you can't plot in a log scale.
 
     focus.append("path").datum(data).attr("clip-path", "url(#clip)").attr("d", area).attr("stroke", "blue");
     //append the path to the graph, but clip it with the rectangle we defined above.
-    //focus.append("path").datum(data).attr("d", area);//This still seems to get clipped even though it doesn't have the clipping path. ???
     focus.append("g").attr("class", "x axis").attr("transform", "translate(0," + height + ")").call(xAxis);
     focus.append("g").attr("class", "y axis").call(yAxis);
 
