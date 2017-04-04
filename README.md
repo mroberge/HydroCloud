@@ -1,7 +1,7 @@
 HydroCloud
 ==========
 
-[![Join the chat at https://gitter.im/HydroCloud-app/Lobby](https://badges.gitter.im/HydroCloud-app/Lobby.svg)](https://gitter.im/HydroCloud-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/HydroCloud-app/Lobby](https://badges.gitter.im/HydroCloud-app/Lobby.svg)](https://gitter.im/HydroCloud-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![DOI](https://zenodo.org/badge/16010929.svg)](https://zenodo.org/badge/latestdoi/16010929)
 
 [HydroCloud](http://hydrocloud.org) is a web-application for quickly viewing and analyzing hydrologic data from multiple sources.
 
