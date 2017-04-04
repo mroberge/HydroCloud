@@ -1,51 +1,43 @@
-/**
- * Created by Marty on 3/11/2017.
- */
-
 function requestData(id, name, info) {
     //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(id);
-    console.log("The siteIndex is: " + siteIndex);
+    //console.log("The siteIndex is: " + siteIndex);
     if (siteIndex === -1) {
         //If the id is not in the siteIdArray, this will return -1.
         //Now we must add the site to the siteIdArray and request data.
 
         //Update the viewModel with the new site id and site info.
-        console.log("siteIndex is -1, so pushing id and site info to arrays. Before val:");
-        console.log(viewModel.siteIdArray().toString());
+        //console.log("siteIndex is -1, so pushing id and site info to arrays. Before val:");
+        //console.log(viewModel.siteIdArray().toString());
         viewModel.siteIdArray.push(id);
-        console.log(viewModel.siteIdArray().toString());
+        //console.log(viewModel.siteIdArray().toString());
 
-        console.log(viewModel.siteDict().toString());
+        //console.log(viewModel.siteDict().toString());
         viewModel.siteDict.push(info);
-        console.log(viewModel.siteDict().toString());
+        //console.log(viewModel.siteDict().toString());
 
         //Now collect the Stream Gage data and put in the dataArray
         //First check storage. We might have collected this data earlier, but not in this session.
-        console.log("Checking for gage data in localStorage. Result of stored:");
+        //console.log("Checking for gage data in localStorage. Result of stored:");
         var stored = checkStorage(id);
-        console.log(stored);
+        //console.log(stored);
         if (stored) {
-            console.log("Old data for site " + id + " retrieved from localStorage; length: " + stored.length);
+            //console.log("Old data for site " + id + " retrieved from localStorage; length: " + stored.length);
             viewModel.dataArray.push(stored);
-
             //console.dir(viewModel.siteIdArray());
         } else {
             //The site is not in our siteIdArray and gage data is not in localStorage.
             //This is the first time we've ever selected this site!
-            console.log("No data in storage. Calling getUSGS(" + id + ");");
+            //console.log("No data in storage. Calling getUSGS(" + id + ");");
             getUSGS(id);
 
         }
     } else {
-        console.log("This site is already in the siteIdArray, so it is likely that we already have the data in the dataArray.");
+        //console.log("This site is already in the siteIdArray, so it is likely that we already have the data in the dataArray.");
         //If we matched the site to our siteIdArray, then we should already have gage data. Plot.
         viewModel.plotGraph();
     }
-    //We've got our data, now it is time to plot the graph.
-    //console.log("plotGraph");
-    //viewModel.plotGraph();
 }
 
 function dateStr(d) {
@@ -60,10 +52,7 @@ function dateStr(d) {
         month : month,
         date : date
     };
-    //console.log(now);
-    var dstr = "" + now.year + "-" + now.month + "-" + now.date;
-    //console.log(dstr);
-    return dstr;
+    return "" + now.year + "-" + now.month + "-" + now.date;
 }
 
 function processN(inputArray) {
@@ -73,7 +62,6 @@ function processN(inputArray) {
         myArray[index].date = new Date(d.dateTime);
         myArray[index].value = +d.precipitation;
     });
-    //console.log(myArray);
     return myArray;
 }
 
@@ -82,13 +70,8 @@ function getTuNexrad(id) {
     //if new data is requested, get rid of old data, set one element to null.
     viewModel.tuNexrad({status: "requesting data...", data: [{date: null, value: null}]});
     console.log("requesting data from TU NEXRAD service");
-    //var now = new Date(); //system stopped collecting data 2015-03-01
-    //var end = new Date(now - (1 * 24 * 60 * 60 * 1000));
-    //var start = new Date(end - (90 * 24 * 60 * 60 * 1000));
     var endstr = "/enddate=" + dateStr(time.end);
     var startstr = "/startdate=" + dateStr(time.start);
-    //var endstr = "/enddate=" + dateStr(end);
-    //var startstr = "/startdate=" + dateStr(start);
     var urlDates = "http://10.55.15.196:5000/nexradTS/id=" + id + startstr + endstr;
     var urlRecent = "http://10.55.15.196:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
 
@@ -127,7 +110,7 @@ function getUSGS(id) {
     // strip the id of the leading characters before requesting from USGS.
     var re = /[0-9]+/;
     var usgsId = re.exec(id)[0];
-    console.log("id: " + id + ", usgsId: " + usgsId);
+    //console.log("id: " + id + ", usgsId: " + usgsId);
     var localQuery = "resources/USGSshort.txt";
     var recentQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&period=P" + viewModel.time.recent() + "D&parameterCd=00060";
     var dateQuery = "https://nwis.waterservices.usgs.gov/nwis/iv/?format=json&sites=" + usgsId + "&startDT=" + dateStr(viewModel.time.start()) + "&endDT=" + dateStr(viewModel.time.end()) + "&parameterCd=00060";
@@ -140,10 +123,7 @@ function getUSGS(id) {
     if (id == "local") {
         url = localQuery;
     } else {
-        // The ideal query for now (2017-03-07) is to request a small amount of the most recent daily data: recentDaily
-        // recentDaily will minimize the impact the program has on the USGS servers.
         url = recentDaily;
-        console.log("Requesting data from: " + url);
     }
     var result = $.ajax({
         url: url,
@@ -154,7 +134,6 @@ function getUSGS(id) {
             console.dir(ErrObj);//The header.
             //console.log(ErrStr);//This is ErrObj.statusText; it is only 'error'
             //Display a message, don't plot the graph?
-            //TODO: add an error message to the pop-up box;
             $('.googft-info-window').append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
             //We've got nothing, so save [] to localStorage. This happens when complete.
             //TODO: maybe create a status attribute for USGS data? This would let us try again.
@@ -205,7 +184,7 @@ function getUSGS(id) {
 function chooseData(id) {
     //Plot the data from the viewModel.dataArray() that matches the id.
     var siteIndex = viewModel.siteIdArray().indexOf(id);
-    console.log("inside chooseData(" + id + "); siteIndex: " + siteIndex);
+    //console.log("inside chooseData(" + id + "); siteIndex: " + siteIndex);
     if (siteIndex === -1) {
         //The id should be in the siteIdArray already; this should have been tested for already. If it isn't, it returns -1.
         console.log("chooseData() was called with an id that is not in the siteIdArray.");
@@ -220,6 +199,7 @@ function chooseData(id) {
     if (data.length < 1) {
         //No data!
         console.log("No data for site" + id);
+        //TODO: The code gets too spaghetti-like here. (Why would we update something in the map view from the flow duration chart???) Instead of improving this code, wait for improved viewModel with a stored status.
         $('.googft-info-window').append( "<p class='bg-warning'>There is no stream data for this site.</p>" );
         //no data, so we can't plot, so return?
         return false;
@@ -238,6 +218,6 @@ function redraw() {
     if (viewModel.dataArray().length) {
         viewModel.plotGraph();
     }
-    console.log("resize");
+    //console.log("resize");
     google.maps.event.trigger(map, 'resize');
 }

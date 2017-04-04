@@ -93,7 +93,7 @@ function scatterChart() {
       var lineGroup = gEnter.append("g").attr("class", "lineGroup");
       var lineEnter = lineGroup.selectAll("path").data(dataArray).enter().append("path").attr("class", "line");
 
-      gEnter.append("g").attr("class", "x axis");//is this name okay? It has a space!
+      gEnter.append("g").attr("class", "x axis");//g given two classes: x and axis.
       gEnter.append("g").attr("class", "y axis");
       
       var titleGroup = gEnter.append("g").attr("class", "titleGroup");
@@ -111,10 +111,10 @@ function scatterChart() {
       g.selectAll(".line").attr("d", line).attr("stroke", function(d, i) {return color(i);});
 
       // Update the x-axis.
-      g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis).on("click", myClickFunction);
+      g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis);
 
       // Update the y-axis.
-      g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis).on("click", myRClickFunction);
+      g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
 
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,0)");

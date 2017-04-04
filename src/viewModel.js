@@ -10,7 +10,7 @@ var viewModel = {
       recent : ko.observable()
     },
     toggleLegend : function() {
-        console.log("toggleLegend click");
+        //console.log("toggleLegend click");
         this.showLegend() ? this.showLegend(false) : this.showLegend(true);
     },
 
@@ -51,7 +51,7 @@ var viewModel = {
         fusionLayerInfoWindow.close();
     },
     plotGraph : function() {
-        console.log(this.graph());
+        //console.log(this.graph());
         if (this.graph() === "flow") {
             flowduration(this.siteId());
         } else if (this.graph() === "scatter") {
