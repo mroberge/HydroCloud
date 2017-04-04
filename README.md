@@ -2,7 +2,8 @@ HydroCloud
 ==========
 
 [![Join the chat at https://gitter.im/HydroCloud-app/Lobby](https://badges.gitter.im/HydroCloud-app/Lobby.svg)](https://gitter.im/HydroCloud-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-HydroCloud is a system for viewing and analyzing hydrologic data from multiple sources. It consists of a web app that handles mapping, graphing, and analysis, plus a scalable, distributed database system on the back end that processes NEXRAD imagery and provides precipitation data.
+
+[HydroCloud](http://hydrocloud.org) is a web-application for quickly viewing and analyzing hydrologic data from multiple sources.
 
 This repository hosts the web client.
 
@@ -11,21 +12,25 @@ Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how 
 Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/)
 * Unit tests: [http://mroberge.github.io/HydroCloud/test.html](http://mroberge.github.io/HydroCloud/test.html)
-* Visit [http://mroberge.github.io](http://mroberge.github.io) to see an early proof-of-concept for this project.
 
-###Features
-* Map view shows location of stream gauges & NEXRAD imagery
-* Click on a stream gauge to select it for plotting
-* Plot multiple time series:
-  * stream hydrographs
-  * hyetographs
-* Plot time series as a culmulative probability function (flow duration graph)
-* Plot time series as a histogram
-* User can download time-series data as a *.CSV file for MS Excel, JSON, or tab-delimited.
+### Features
+* Map view: shows location of stream gauges & NEXRAD imagery
+  * Click on a stream gauge to select it for plotting
+  * Info window gives the name and some information about the site
+* Graph view: plot USGS stream gage data
+  * stream hydrograph: plots discharge over time
+  * flow duration: plots a culmulative probability function of stream discharge
+* Stats view: a table of non-spatial data from the [Gages-II](https://water.usgs.gov/GIS/metadata/usgswrd/XML/gagesII_Sept2011.xml) dataset (J. Falcone 2011)
+* Help
+* Legend: lists selected sites
+* Chat: opens a sidebara where users can ask questions and provide feedback
+
+### More Features...
 * Works on mobile.
-* Stream gauge data from USGS or our database
-* NEXRAD time series from our cloud-based back-end system
+* Stream gage data is saved and retrieved from local storage  
+
 * Future features:
   * User can select linear or logarithmic Y axis for discharge
+  * Legend will display pending data requests and line symbol for graph
   * User can request earlier time-series data
   * User can plot stream discharge against precipitation
