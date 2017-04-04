@@ -1,5 +1,20 @@
 function scatterChart() {
   /*
+   * (c) 2017 Martin Roberge
+   * MIT license
+   *
+   * How to use:
+   *   Create a <div> element in your html to place the chart inside. You can set its size here, or programmatically.
+   *   `  <div id="graphDiv"></div>
+   *   Select the div and assign a reference to it. ("graphDiv" in this example)
+   *   `  var graphDiv = d3.select("#graph_div");
+   *   Create an instance of the scatterChart
+   *   `  var myChart = scatterChart();
+   *   Assign some data to your div. Use datum for a static graph. See note below on data requirements.
+   *   Call the graph function on the div. It will return a chart object that you can modify later on.
+   *   `  graphDiv.datum(this.dataArray()).call(myChart);
+   *
+   *
    * Based on Mike Bostock's system for creating reusable charts, described
    * here: http://bost.ocks.org/mike/chart/
    *
@@ -77,7 +92,6 @@ function scatterChart() {
 
       var lineGroup = gEnter.append("g").attr("class", "lineGroup");
       var lineEnter = lineGroup.selectAll("path").data(dataArray).enter().append("path").attr("class", "line");
-      //.attr("d", line);//don't draw the line yet. update the size of the svg first.
 
       gEnter.append("g").attr("class", "x axis");//is this name okay? It has a space!
       gEnter.append("g").attr("class", "y axis");
@@ -102,7 +116,6 @@ function scatterChart() {
       // Update the y-axis.
       g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis).on("click", myRClickFunction);
 
-      //title block
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,0)");
       g.select(".subtitle").text(dataArray.length + " sites");
@@ -182,23 +195,21 @@ function scatterChart() {
             // position the circle and text
             d3.selectAll(".mouse-per-line")
                 .attr("transform", function(d, i) {
-                  //console.log(width/mouse[0]);
-                  //console.log(d);
                   if(d.length < 1) { return; } //return if empty set.
                   var xDate = xScale.invert(mouse[0]),
                       bisect = d3.bisector(function(d) { return d[0]; }).right;
                   var idx = bisect(d[1], xDate); //Sometimes an empty set is in viewModel.dataArray and an error occurs.
 
-                  // since we are use curve fitting we can't relay on finding the points like I had done in my last answer
+                  // since we are use curve fitting we need to find by searching along the length
                   // this conducts a search using some SVG path functions
                   // to find the correct position on the line
                   // from http://bl.ocks.org/duopixel/3824661
                   var beginning = 0;
-                  var end = lines[i].getTotalLength(); //getTotalLength() is defined elsewhere...?
+                  var end = lines[i].getTotalLength(); //getTotalLength() is a method of SVGGeometryElement
 
                   while (true){
                     var target = Math.floor((beginning + end) / 2);
-                    var pos = lines[i].getPointAtLength(target);
+                    var pos = lines[i].getPointAtLength(target); //getPointAtLength() is a method of SVGGeometryElement
                     if ((target === end || target === beginning) && pos.x !== mouse[0]) {
                       break;
                     }
@@ -247,9 +258,7 @@ function scatterChart() {
           if (localxMin < xmin) {
             xmin = localxMin;
           }//it will never be smaller than zero.
-
         }
-
         return [xmin, xmax];
       }
 
@@ -274,11 +283,9 @@ function scatterChart() {
           if (localMin < min) {
             min = localMin;
           }//it will never be smaller than zero unless it finds a negative value.
-
         }
         return [min, max];
       }
-
     });
   }
 
