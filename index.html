@@ -364,14 +364,25 @@
           </div>
 
         </div>
+
+        <div class="item v-scroll" id="help_div">
+
+          <h2>HydroCloud Instructions</h2>
+          <ul class="list-unstyled">
+            <li><span class="glyphicon glyphicon-globe"></span> <strong>Map:</strong> The mapping page. This page defaults to a Google Maps interface using the topographic maps as a background and the current NEXRAD precipitation image as the foreground. Points represent USGS stream gages. By clicking on a point, the stream discharge and precipitation data for that site will be loaded into the system, where it can be viewed on the graphing page. Clicking on a point will also open a dialog box giving supplementary information about the site, including the name and ID# of the stream gage.</li>
+            <li><span class="glyphicon glyphicon-stats"></span> <strong>Graph:</strong> The graphing page. There are two graphs available:
               <ul>
+                <li><strong>Hydrograph:</strong> Stream discharge, measured in cubic feet per second (cfs) is plotted on a logarithmic Y axis. Time is plotted on the X axis. The tooltip displays the discharge and the name of the stream gage.</li>
+                <li><strong>Flow Duration:</strong> a plot of all stream discharge measurements in cfs ordered by size, from largest to smallest. Stream discharge is plotted on the y axis in a logarithmic scale in scientific notation, so that "1e+2" equals 100 cfs and "4e+3" = 4000 cfs.</li>
               </ul>
             </li>
+            <li><span class="glyphicon glyphicon-th-list"> </span> <strong>Stats:</strong> The site statistics page. This lists each site that has been selected in the map view, along with some simple site statistics, including the USGS site # and the area of the watershed in square miles.</li>
+            <li><span class="glyphicon glyphicon-question-sign"> </span> <strong>Help:</strong> Takes you to this page.</li>
+            <li><span class="glyphicon glyphicon-comment"> </span> <strong>Chat:</strong> Opens a chat sidebar where you can ask for help or post your comments.</li>
+            <li><span class="glyphicon glyphicon-list-alt"> </span> <strong>Legend:</strong> Toggles the legend box, which will float over the current page. The legend lists all of the selected sites. Selected sites with no stream gage data will be listed here, but will not appear in the graph view.</li>
           </ul>
-        </div>
 
-        <div class="item v-scroll">
-          <h2>Description of the HydroCloud project</h2>
+          <h3>Description of the HydroCloud project</h3>
           <p>
             HydroCloud is a web-based, mobile-friendly tool for visually browsing hydrology data.
             Martin Roberge and Michael McGuire are the principal investigators for this project, which has been generously supported with a seed grant from the TU School of Emerging Technology.
