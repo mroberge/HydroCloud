@@ -345,19 +345,26 @@
           <p>
             <span data-bind="text: viewModel.dataArray().length"> </span> sites selected
           </p>
-          <ul class="list-unstyled" data-bind="foreach: viewModel.siteDict">
-            <li>
-              <strong><span data-bind="text: $index"></span>: <span data-bind="text: $data.name"> </span></strong>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Site Name</th><th>USGS ID#</th><th>Watershed area (km<sup>2</sup>)</th><th>% Impervious</th>
+                </tr>
+              </thead>
+              <tbody data-bind="foreach: viewModel.siteDict">
+                <tr>
+                  <td data-bind="text: $data.name"></td>
+                  <td data-bind="text: $data.id"></td>
+                  <td data-bind="text: $data.area"></td>
+                  <td data-bind="text: $data.impervious"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
               <ul>
-                <li>
-                  site #<span data-bind="text: $data.id"> </span>
-                </li>
-                <li>
-                  area: <span data-bind="text: $data.area"> </span> km<sup>2</sup>
-                </li>
-                <li>
-                  imperviousness: <span data-bind="text: $data.impervious"> </span>%
-                </li>
               </ul>
             </li>
           </ul>
