@@ -117,7 +117,7 @@ function scatterChart() {
       g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
 
       // Update the title.
-      g.select(".titleGroup").attr("transform", "translate(10,0)");
+      g.select(".titleGroup").attr("transform", "translate(10,-3)");
       g.select(".subtitle").text(dataArray.length + " sites");
       g.select(".subtitle2").text(dataArray[0].length + " measurements per line");
       //title.on("click", myRClickFunction);
