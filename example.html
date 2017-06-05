@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Graph</title>
+
+    <script src="lib/d3/d3.min.js"></script>
+    <script src="src/graph-scatterChart.js"></script>
+    <style>
+        /*For graphs*/
+
+        svg {
+            font: 10px sans-serif;
+        }
+
+        .axisTitle {
+            font: 14px serif;
+        }
+        .Title {
+            font: 20px serif;
+        }
+        .subTitle {
+            font: 12px serif;
+        }
+
+        path {
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+    </style>
+</head>
+<body>
+<div id="graph_div"></div>
+<script>
+    var graphDiv = d3.select("#graph_div");
+    var myChart = scatterChart();
+
+    //each timeseries is an array of elements.
+    //each element is an array with a Date object and a value.
+    //each dataset is an array of timeseries.
+    var timeseries1 = [   [new Date(2017, 1, 1),5],
+                          [new Date(2017, 1, 2),9],
+                          [new Date(2017, 1, 3),3],
+                          [new Date(2017, 1, 4),5],
+                          [new Date(2017, 1, 5),5]    ];
+
+    var timeseries2 = [   [new Date(2017, 1, 1),12],
+                          [new Date(2017, 1, 2),23],
+                          [new Date(2017, 1, 3),7],
+                          [new Date(2017, 1, 4),11],
+                          [new Date(2017, 1, 5),15]    ];
+    myData = [timeseries1, timeseries2];
+    graphDiv.datum(myData).call(myChart);
+</script>
+</body>
+</html>
