@@ -12,8 +12,8 @@ Links:
 * Unit tests: [http://mroberge.github.io/HydroCloud/test.html](http://mroberge.github.io/HydroCloud/test.html)
 
 ### Features
-* Responsive design: works great on mobile phones.
-* Data is stored locally
+* Responsive design: optimized for mobile phones.
+* Local data storage.
 * Map view: shows location of stream gauges & NEXRAD imagery
   * Click on a stream gauge to select it for plotting
   * Info window gives the name and some information about the site
@@ -21,7 +21,7 @@ Links:
   * stream hydrograph: plot discharge over time
   * flow duration: plot a culmulative probability function of stream discharge
 * Stats view: a table of non-spatial data from the [Gages-II](https://water.usgs.gov/GIS/metadata/usgswrd/XML/gagesII_Sept2011.xml) dataset (J. Falcone 2011)
-* Help
+* Help view: instructions for working with HydroCloud
 * Legend: lists selected sites
 * Chat: opens a sidebar where users can ask questions and provide feedback
 

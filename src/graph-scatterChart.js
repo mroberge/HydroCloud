@@ -27,7 +27,7 @@ function scatterChart() {
    *   6) Call the graph function on the div. It will return a chart object that you can modify later on.
    *   `    graphDiv.call(myChart);
    *
-   *   Take a look at example.html for a working copy!
+   *   Take a look at example-hydrograph.html for a working copy!
    *
    * graph-scatterChart.js 
    * Based on Mike Bostock's system for creating reusable charts, described
