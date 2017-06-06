@@ -28,8 +28,8 @@ Links:
 ### Re-using and Adapting HydroCloud
 Many of the features found in HydroCloud can be repurposed and re-used in your own application. For example, you can: 
 * Add a stream hydrograph to your own webpage: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Add-a-hydrograph-to-your-website) | [Example](http://mroberge.github.io/HydroCloud/example-hydrograph.html)
-* Create a HydroCloud widget in your webpage using an iframe: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Embed-HydroCloud) | [Example](http://mroberge.github.io/HydroCloud/example-iframe.html)
-* Incorporate a HydroCloud map widget in your Jupyter Notebook: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Using-hydrocloud-with-Jupyter-notebooks)
+* Embed a HydroCloud widget in your webpage using an iframe: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Embed-HydroCloud) | [Example](http://mroberge.github.io/HydroCloud/example-iframe.html)
+* Include a HydroCloud widget in your Jupyter Notebook: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Using-hydrocloud-with-Jupyter-notebooks)
 
 ### Contribute to HydroCloud
 We welcome your comments, complaints, and pull requests!
