@@ -7,30 +7,33 @@ HydroCloud
 
 This repository hosts the web client.
 
-Visit [the wiki](https://github.com/mroberge/HydroCloud/wiki) to read about how I have organized the folders, branches, and for the style guide.
-
 Links:
 * Latest stable version: [http://mroberge.github.io/HydroCloud/](http://mroberge.github.io/HydroCloud/)
 * Unit tests: [http://mroberge.github.io/HydroCloud/test.html](http://mroberge.github.io/HydroCloud/test.html)
 
 ### Features
+* Responsive design: optimized for mobile phones.
+* Local data storage.
 * Map view: shows location of stream gauges & NEXRAD imagery
   * Click on a stream gauge to select it for plotting
   * Info window gives the name and some information about the site
-* Graph view: plot USGS stream gage data
-  * stream hydrograph: plots discharge over time
-  * flow duration: plots a culmulative probability function of stream discharge
+* Graph view: plot stream gage data
+  * stream hydrograph: plot discharge over time
+  * flow duration: plot a culmulative probability function of stream discharge
 * Stats view: a table of non-spatial data from the [Gages-II](https://water.usgs.gov/GIS/metadata/usgswrd/XML/gagesII_Sept2011.xml) dataset (J. Falcone 2011)
-* Help
+* Help view: instructions for working with HydroCloud
 * Legend: lists selected sites
-* Chat: opens a sidebara where users can ask questions and provide feedback
+* Chat: opens a sidebar where users can ask questions and provide feedback
 
-### More Features...
-* Works on mobile.
-* Stream gage data is saved and retrieved from local storage  
+### Re-using and Adapting HydroCloud
+Many of the features found in HydroCloud can be repurposed and re-used in your own application. For example, you can: 
+* Add a stream hydrograph to your own webpage: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Add-a-hydrograph-to-your-website) | [Example](http://mroberge.github.io/HydroCloud/example-hydrograph.html)
+* Embed a HydroCloud widget in your webpage using an iframe: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Embed-HydroCloud) | [Example](http://mroberge.github.io/HydroCloud/example-iframe.html)
+* Include a HydroCloud widget in your Jupyter Notebook: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Using-hydrocloud-with-Jupyter-notebooks)
 
-* Future features:
-  * User can select linear or logarithmic Y axis for discharge
-  * Legend will display pending data requests and line symbol for graph
-  * User can request earlier time-series data
-  * User can plot stream discharge against precipitation
+### Contribute to HydroCloud
+We welcome your comments, complaints, and pull requests!
+* Suggest a new feature or report a bug: [Issue List](https://github.com/mroberge/HydroCloud/issues)
+* Fork this project to your own GitHub account: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Contribute-to-HydroCloud)
+* Clone or download this project for local development: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Contribute-to-HydroCloud)
+* [Style guide](https://github.com/mroberge/HydroCloud/wiki/Coding-Style-Conventions) for the code, branches, and pull requests. 

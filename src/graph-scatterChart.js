@@ -4,17 +4,32 @@ function scatterChart() {
    * MIT license
    *
    * How to use:
-   *   Create a <div> element in your html to place the chart inside. You can set its size here, or programmatically.
-   *   `  <div id="graphDiv"></div>
-   *   Select the div and assign a reference to it. ("graphDiv" in this example)
-   *   `  var graphDiv = d3.select("#graph_div");
-   *   Create an instance of the scatterChart
-   *   `  var myChart = scatterChart();
-   *   Assign some data to your div. Use datum for a static graph. See note below on data requirements.
-   *   Call the graph function on the div. It will return a chart object that you can modify later on.
-   *   `  graphDiv.datum(this.dataArray()).call(myChart);
+   *   1) Include d3 and this file in the header.
+   *   `    <script src="lib/d3/d3.min.js"></script>
+   *   `    <script src="src/graph-scatterChart.js"></script>
+   *   2) Create a <div> element in your html to place the chart inside. You can set its size here, or programmatically.
+   *   `    <div id="graphDiv"></div>
+   *   3) In a script, select the div and assign a reference to it.
+   *   `    var graphDiv = d3.select("#graph_div");
+   *   4) Create an instance of the scatterChart
+   *   `    var myChart = scatterChart();
+   *   5) Create your dataset. It should be an array of timeseries. Each timeseries should be an array of measurements.
+   *      Each measurement should be an array with a Date object and the stream discharge.
+   *   `    var time = new Date(2017, 0, 1);
+   *   `    var discharge = 45.1;
+   *   `    var meas = [time, discharge];
+   *   `    var timeseries = [meas, meas, meas, meas];
+   *   `    var dataset = [timeseries, timeseries];
+   *   `
+   *   `    var myData = [[[time, 45], [time.setDate(time.getDate()+1, 32], [time.setDate(time.getDate()+2, 87], [time.setDate(time.getDate()+3, 95]]];
+   *   5) Assign some data to your div using the datum method if you plan to have a static graph.
+   *   `    graphDiv.datum(myData);
+   *   6) Call the graph function on the div. It will return a chart object that you can modify later on.
+   *   `    graphDiv.call(myChart);
    *
+   *   Take a look at example-hydrograph.html for a working copy!
    *
+   * graph-scatterChart.js 
    * Based on Mike Bostock's system for creating reusable charts, described
    * here: http://bost.ocks.org/mike/chart/
    *
@@ -117,7 +132,7 @@ function scatterChart() {
       g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
 
       // Update the title.
-      g.select(".titleGroup").attr("transform", "translate(10,0)");
+      g.select(".titleGroup").attr("transform", "translate(10,-3)");
       g.select(".subtitle").text(dataArray.length + " sites");
       g.select(".subtitle2").text(dataArray[0].length + " measurements per line");
       //title.on("click", myRClickFunction);
@@ -220,7 +235,9 @@ function scatterChart() {
 
                   // update the text with y value
                   d3.select(this).select('text')
-                      .text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
+                  //This refers to a global viewModel. Can't do that!
+                      .text(yScale.invert(pos.y).toFixed(2) + " cfs");
+                      //.text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
 
                   // return position
                   return "translate(" + mouse[0] + "," + pos.y +")";
