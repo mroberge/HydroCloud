@@ -23,19 +23,19 @@
         'PEGEL': {
             'name': 'PEGELONLINE',
             'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
-            'type': 'json',
+            'siteType': 'json',
             'siteParse': processPegelStations
         },
         'USGS-DV': {
             'name': 'USGS-DV',
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
-            'type': 'text/plain',
+            'siteType': 'text',
             'siteParse': processUSGSstations
         },
         'USGS-IV': {
             'name': 'USGS-IV',
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
-            'type': 'text/plain',
+            'siteType': 'text',
             'siteParse': processUSGSstations
         }
     };
@@ -83,14 +83,11 @@
 
         $.ajax({
             url: provider.siteURL,
-            dataType: provider.type,
+            dataType: provider.siteType,
             error: function (ErrObj, ErrStr) {
                 console.warn(provider.name + " returned an error.");
                 console.dir(ErrObj);
                 window.alert(provider.name + " returned an error.\n" + ErrObj.statusText);
-                //Confusion! USGS sometimes triggers error even though it has a 200 status and returns data.
-                //This will attempt to parse the response even if it triggers an error.
-                stationCSV = provider.siteParse(ErrObj.responseText);
             },
             success: function (returnedData, statusMsg, returnedjqXHR) {
                 console.log("Success!");
