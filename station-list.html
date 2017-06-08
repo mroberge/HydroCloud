@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download</title>
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+</head>
+<body>
+<h1>Request Lists of Stations</h1>
+
+<h3>Data Providers:</h3>
+<ul>
+    <li>USGS Daily (USA): <a href='#' onclick='getStations("USGS-DV");'>Download CSV of stations</a></li>
+    <li>USGS Real-time (USA): <a href='#' onclick='getStations("USGS-IV");'>Download CSV of stations</a></li>
+    <li>PEGEL-ONLINE (Germany): <a href='#' onclick='getStations("PEGEL");'>Download CSV of stations</a></li>
+</ul>
+
+
+<script type="text/javascript">
+    var stationdata = [];
+
+    var providerList = {
+        'PEGEL': {
+            'name': 'PEGELONLINE',
+            'url': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
+            'type': 'json',
+            'translate': processPegelStations
+        },
+        'USGS-DV': {
+            'name': 'USGS-DV',
+            'url': 'https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=al&period=P90D&outputDataTypeCd=dv&siteType=ST&siteStatus=active&hasDataTypeCd=dv',
+            'type': 'text/plain',
+            'translate': processUSGSstations
+        },
+        'USGS-IV': {
+            'name': 'USGS-IV',
+            'url': '',
+            'type': 'text/plain',
+            'translate': processUSGSstations
+        }
+    };
+
+    function processPegelStations(input) {
+        var outJSON = [];
+        var csvHeader = 'data:text/csv;charset=utf-8,';
+        var outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n';
+        input.forEach(function(station, index, array) {
+            var tempJSON = {};
+            tempJSON['Source'] = 'PEGELONLINE';
+            tempJSON['STAID'] = station['number'];
+            tempJSON['STANAME'] = station['water']['longname'] + ' at ' + station['longname'];
+            tempJSON['LAT_GAGE'] = station['latitude'];
+            tempJSON['LNG_GAGE'] = station['longitude'];
+
+            outJSON.push(tempJSON);
+
+            outCSV += 'PEGELONLINE,' + station['number'] + ',' + station['water']['longname'] + ' at ' + station['longname'] + ',null,null,' + station['latitude'] + ',' + station['longitude'] + '\n';
+        });
+        //console.dir(outJSON);
+        return outCSV;
+    }
+
+    function processUSGSstations(input) {
+        console.log("processUSGSstations");
+        var outCSV = 'TEMP for USGS!';
+        //remove header
+
+        //replace tabs with commas
+
+        //remove unwanted columns
+
+        //add csv header and header row
+        var csvHeader = 'data:text/csv;charset=utf-8,';
+        outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
+        return outCSV;
+    }
+
+    function getStations(providerName) {
+        var provider = providerList[providerName];
+        console.log("Get station list from " + provider.name);
+        var URL = '';
+        var stationCSV = null;
+
+        $.ajax({
+            url: provider.url,
+            dataType: provider.type,
+            error: function (ErrObj, ErrStr) {
+                console.warn(provider.name + " returned an error.");
+                console.dir(ErrObj);
+                window.alert(provider.name + " returned an error.\n" + ErrObj.statusText);
+                stationCSV = provider.translate(ErrObj.responseText);
+            },
+            success: function (returnedData, statusMsg, returnedjqXHR) {
+                console.log("Success!");
+
+                stationCSV = provider.translate(returnedData);
+                //stationCSV = processPegelStations(returnedData);
+
+            },
+            complete: function () {
+                console.log("complete");
+                downloadCSV({ filename: provider.name + "-stations.csv", csv: stationCSV });
+            }
+
+        });
+    }
+
+    function downloadCSV(args) {
+        var csv, data, filename, link;
+
+        csv = args.csv;
+
+        if (csv == null) return;
+
+        filename = args.filename || 'export.csv';
+
+        data = encodeURI(csv);
+
+        link = document.createElement('a');
+        link.setAttribute('href', data);
+        link.setAttribute('download', filename);
+        link.click();
+    }
+</script>
+
+
+
+</body>
+</html>
