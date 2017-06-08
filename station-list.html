@@ -22,21 +22,21 @@
     var providerList = {
         'PEGEL': {
             'name': 'PEGELONLINE',
-            'url': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
+            'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
             'type': 'json',
-            'translate': processPegelStations
+            'siteParse': processPegelStations
         },
         'USGS-DV': {
             'name': 'USGS-DV',
-            'url': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
+            'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
             'type': 'text/plain',
-            'translate': processUSGSstations
+            'siteParse': processUSGSstations
         },
         'USGS-IV': {
             'name': 'USGS-IV',
-            'url': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
+            'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
             'type': 'text/plain',
-            'translate': processUSGSstations
+            'siteParse': processUSGSstations
         }
     };
 
@@ -82,19 +82,20 @@
         var stationCSV = null;
 
         $.ajax({
-            url: provider.url,
+            url: provider.siteURL,
             dataType: provider.type,
             error: function (ErrObj, ErrStr) {
                 console.warn(provider.name + " returned an error.");
                 console.dir(ErrObj);
                 window.alert(provider.name + " returned an error.\n" + ErrObj.statusText);
-                stationCSV = provider.translate(ErrObj.responseText);
+                //Confusion! USGS sometimes triggers error even though it has a 200 status and returns data.
+                //This will attempt to parse the response even if it triggers an error.
+                stationCSV = provider.siteParse(ErrObj.responseText);
             },
             success: function (returnedData, statusMsg, returnedjqXHR) {
                 console.log("Success!");
 
-                stationCSV = provider.translate(returnedData);
-                //stationCSV = processPegelStations(returnedData);
+                stationCSV = provider.siteParse(returnedData);
 
             },
             complete: function () {
