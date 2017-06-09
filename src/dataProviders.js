@@ -1,4 +1,3 @@
-
 var providerList = {
     'PEGELONLINE': {
         'name': 'PEGELONLINE',
@@ -63,8 +62,6 @@ function dischargeUsgsUrl(site, options) {
     return url;
 }
 
-
-
 function processUsgsStations(input) {
     console.log("processUSGSstations");
     var outCSV = 'TEMP for USGS!';
@@ -79,6 +76,7 @@ function processUsgsStations(input) {
     outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
     return outCSV;
 }
+
 function getDischarge(site, source, options) {
     //Get provider-related materials from the providerList
     var provider = providerList[source];

@@ -56,9 +56,9 @@ function drawMap() {
     var prefix = providerList[source].idPrefix;
     sId = prefix + sId;
     var siteDict = {id: sId,
-                     name: siteName,
-                     area: +event.row.DRAIN_SQKM.value,
-                     impervious: +event.row.IMPNLCD06.value
+                     name: siteName || null,
+                     area: +event.row.DRAIN_SQKM.value || null,
+                     impervious: +event.row.IMPNLCD06.value || null
     };
 
     //Update our viewModel with the current site information.
