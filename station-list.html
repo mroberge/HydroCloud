@@ -33,7 +33,7 @@
             'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
             'siteType': 'json',
             'siteParse': processPegelStations,
-            'dischargeURL': '',
+            'dischargeURL': dischargePegelUrl,
             'dischargeType': 'json',
             'dischargeParse': ''
         },
@@ -42,7 +42,7 @@
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
             'siteType': 'text',
             'siteParse': processUsgsStations,
-            'dischargeURL': '',
+            'dischargeURL': dischargeUsgsUrl,
             'dischargeType': 'json',
             'dischargeParse': ''
         },
@@ -51,7 +51,7 @@
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
             'siteType': 'text',
             'siteParse': processUsgsStations,
-            'dischargeURL': '',
+            'dischargeURL': dischargeUsgsUrl,
             'dischargeType': 'json',
             'dischargeParse': ''
         }
@@ -77,6 +77,18 @@
         return outCSV;
     }
 
+    function dischargePegelUrl(site, options) {
+        var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/48900237/W/measurements.json?start=P30D';
+        return url;
+    }
+
+    function dischargeUsgsUrl(site, options) {
+        var url = 'resources/USGSshort.txt';
+        return url;
+    }
+
+
+
     function processUsgsStations(input) {
         console.log("processUSGSstations");
         var outCSV = 'TEMP for USGS!';
@@ -98,7 +110,6 @@
     function getStations(providerName) {
         var provider = providerList[providerName];
         console.log("Get station list from " + provider.name);
-        var URL = '';
         var stationCSV = null;
 
         $.ajax({
