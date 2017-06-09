@@ -1,6 +1,6 @@
 
 var providerList = {
-    'PEGEL': {
+    'PEGELONLINE': {
         'name': 'PEGELONLINE',
         'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
         'siteType': 'json',
