@@ -1,4 +1,4 @@
-function requestData(id, name, info) {
+function requestData(id, source, siteName, siteDict) {
     //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(id);
@@ -14,7 +14,7 @@ function requestData(id, name, info) {
         //console.log(viewModel.siteIdArray().toString());
 
         //console.log(viewModel.siteDict().toString());
-        viewModel.siteDict.push(info);
+        viewModel.siteDict.push(siteDict);
         //console.log(viewModel.siteDict().toString());
 
         //Now collect the Stream Gage data and put in the dataArray
@@ -30,7 +30,11 @@ function requestData(id, name, info) {
             //The site is not in our siteIdArray and gage data is not in localStorage.
             //This is the first time we've ever selected this site!
             //console.log("No data in storage. Calling getUSGS(" + id + ");");
-            getUSGS(id);
+
+            //
+            //getUSGS(id);
+            var options = null;
+            getDischarge(id, source, options);
 
         }
     } else {

@@ -78,7 +78,7 @@ function drawMap() {
         });
     fusionLayerInfoWindow.open(map);
     
-    requestData(sId, siteName, siteDict);
+    requestData(sId, source, siteName, siteDict);
 
   });
   

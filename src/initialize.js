@@ -18,6 +18,7 @@ function initialize() {
     //console.log(viewModel.siteName());
     //console.log("setting viewModel values.");
     viewModel.siteId("dv01580000");
+    var source = 'USGS-DV';
     viewModel.siteName("Deer Creek at Rocks, MD");
     var initialSiteDict = {
         id : "dv01580000",
@@ -30,7 +31,7 @@ function initialize() {
     //console.log(viewModel.siteId());
     //console.log(viewModel.siteName());
     //console.log(viewModel.siteDict().toString());
-    requestData(viewModel.siteId(), viewModel.siteName(), initialSiteDict);
+    requestData(viewModel.siteId(), source, viewModel.siteName(), initialSiteDict);
 
     google.maps.event.addDomListener(window, 'load', drawMap);
     google.maps.event.addDomListener(window, 'load', redraw);
