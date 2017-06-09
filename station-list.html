@@ -6,8 +6,16 @@
     <script src="lib/jquery/jquery-2.0.2.js"></script>
 </head>
 <body>
-<h1>Request Lists of Stations</h1>
-
+<h1>Stream Gage Data Providers</h1>
+<p>
+    This is a list of the data providers used by HydroCloud. Click on the links below to query each
+    provider for a downloadable list of available stream gage sites.
+</p>
+<p>
+    <strong>We are always looking for more data providers!</strong> If you know of a data service that provides access
+    to stream discharge measurements, let us know by
+    <a href="https://github.com/mroberge/HydroCloud/issues">filing an issue on GitHub</a>.
+</p>
 <h3>Data Providers:</h3>
 <ul>
     <li>USGS Daily (USA): <a href='#' onclick='getStations("USGS-DV");'>Download CSV of stations</a></li>
@@ -24,19 +32,28 @@
             'name': 'PEGELONLINE',
             'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
             'siteType': 'json',
-            'siteParse': processPegelStations
+            'siteParse': processPegelStations,
+            'dischargeURL': '',
+            'dischargeType': 'json',
+            'dischargeParse': ''
         },
         'USGS-DV': {
             'name': 'USGS-DV',
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
             'siteType': 'text',
-            'siteParse': processUSGSstations
+            'siteParse': processUSGSstations,
+            'dischargeURL': '',
+            'dischargeType': 'json',
+            'dischargeParse': ''
         },
         'USGS-IV': {
             'name': 'USGS-IV',
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
             'siteType': 'text',
-            'siteParse': processUSGSstations
+            'siteParse': processUSGSstations,
+            'dischargeURL': '',
+            'dischargeType': 'json',
+            'dischargeParse': ''
         }
     };
 
@@ -73,6 +90,9 @@
         var csvHeader = 'data:text/csv;charset=utf-8,';
         outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
         return outCSV;
+    }
+    function getDischarge(providerName) {
+        
     }
 
     function getStations(providerName) {
