@@ -2,6 +2,7 @@
 var providerList = {
     'PEGELONLINE': {
         'name': 'PEGELONLINE',
+        'idPrefix': 'po',
         'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
         'siteType': 'json',
         'siteParse': processPegelStations,
@@ -11,6 +12,7 @@ var providerList = {
     },
     'USGS-DV': {
         'name': 'USGS-DV',
+        'idPrefix': 'dv',
         'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
         'siteType': 'text',
         'siteParse': processUsgsStations,
@@ -20,6 +22,7 @@ var providerList = {
     },
     'USGS-IV': {
         'name': 'USGS-IV',
+        'idPrefix': 'iv',
         'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
         'siteType': 'text',
         'siteParse': processUsgsStations,
