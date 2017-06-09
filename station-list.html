@@ -41,7 +41,7 @@
             'name': 'USGS-DV',
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
             'siteType': 'text',
-            'siteParse': processUSGSstations,
+            'siteParse': processUsgsStations,
             'dischargeURL': '',
             'dischargeType': 'json',
             'dischargeParse': ''
@@ -50,7 +50,7 @@
             'name': 'USGS-IV',
             'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
             'siteType': 'text',
-            'siteParse': processUSGSstations,
+            'siteParse': processUsgsStations,
             'dischargeURL': '',
             'dischargeType': 'json',
             'dischargeParse': ''
@@ -77,7 +77,7 @@
         return outCSV;
     }
 
-    function processUSGSstations(input) {
+    function processUsgsStations(input) {
         console.log("processUSGSstations");
         var outCSV = 'TEMP for USGS!';
         //remove header
