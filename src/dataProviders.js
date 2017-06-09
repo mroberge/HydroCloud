@@ -7,7 +7,7 @@ var providerList = {
         'siteParse': processPegelStations,
         'dischargeURL': dischargePegelUrl,
         'dischargeType': 'json',
-        'dischargeParse': ''
+        'dischargeParse': parsePegelDischarge
     },
     'USGS-DV': {
         'name': 'USGS-DV',
@@ -17,7 +17,7 @@ var providerList = {
         'siteParse': processUsgsStations,
         'dischargeURL': dischargeUsgsUrl,
         'dischargeType': 'json',
-        'dischargeParse': ''
+        'dischargeParse': parseUsgsDischarge
     },
     'USGS-IV': {
         'name': 'USGS-IV',
@@ -27,7 +27,7 @@ var providerList = {
         'siteParse': processUsgsStations,
         'dischargeURL': dischargeUsgsUrl,
         'dischargeType': 'json',
-        'dischargeParse': ''
+        'dischargeParse': parseUsgsDischarge
     }
 };
 
@@ -52,14 +52,56 @@ function processPegelStations(input) {
 }
 
 function dischargePegelUrl(site, options) {
-    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/48900237/W/measurements.json?start=P30D';
+    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/W/measurements.json?start=P30D';
     return url;
 }
 
 function dischargeUsgsUrl(site, options) {
     //strip the dv from the siteID
-    var url = 'resources/USGSshort.txt';
+    var url = 'https://waterservices.usgs.gov/nwis/dv/?format=json&sites=' + site + '&period=P30D&parameterCd=00060';
     return url;
+}
+
+function parsePegelDischarge(returnedData) {
+    output = [];
+    //check for no data or empty set.
+    if (returnedData < 1) {
+        return output;
+    }
+    returnedData.forEach(function (d, index, array) {
+        output[index] = [];
+        output[index][0] = new Date(d.timestamp);
+        //Screen out all negative, '', [], NaN, etc, and store as null.
+        output[index][1] = Math.max(0, +d.value) || null;
+        //TODO: how does PEGELONLINE data indicate bad values?
+    });
+    return output;
+}
+
+function parseUsgsDischarge(returnedData) {
+    output = [];
+    //process data
+    //    check for no data or empty set;
+    try {
+        var temp = returnedData.value.timeSeries[0].values[0].value;
+        temp.forEach(function (d, index, array) {
+            //    convert values to dates and numbers
+            output[index] = [];
+            output[index][0] = new Date(d.dateTime);
+            //screen out negative and non-number values; return null instead.
+            // 0 || null returns null.
+            var Q = Math.max(0, +d.value * 0.0283168)||null;
+            //convert cfs to cms.
+            output[index][1] = Q;
+            //    a more precise way would be to obtain the actual 'noDataValue'
+            //    located at: returnedData.value.timeSeries[0].variable.noDataValue
+        });
+    } catch (error) {
+        console.warn("The USGS did not have data for this site.");
+        console.log(error);
+    } finally {
+        return output;
+    }
 }
 
 function processUsgsStations(input) {
