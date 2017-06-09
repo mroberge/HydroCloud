@@ -77,28 +77,46 @@ function processUsgsStations(input) {
     return outCSV;
 }
 
-function getDischarge(site, source, options) {
+function getDischarge(siteId, source, options) {
     //Get provider-related materials from the providerList
     var provider = providerList[source];
-    var output;
+    //My internal site ID has a 2 letter prefix added to the provider's site ID to prevent confusion when two
+    // providers use the same site ID.
+    var site = siteId.slice(2);
+    //console.log("getDischarge siteId: " + siteId + "site: " + site);
+    var url = provider.dischargeURL(site, options);
+    var data = [];
 
     $.ajax({
-        url: provider.dischargeURL(site, options),
+        url: url,
         dataType: provider.dischargeType,
         error: function (ErrObj, ErrStr) {
-            console.log("error!");
+            console.warn("error!");
+            console.log("Data Source: " + provider.name);
+            console.log("Requested URL: " + url);
+            console.log("Returned Error Object:");
             console.log(ErrObj);
+            console.log("Returned Error String:");
             console.log(ErrStr);
+            //This seems to give good messages from USGS and PEGELONLINE:
+            console.log(ErrObj.statusText);
+            $('.googft-info-window').append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
         },
         success: function (returnedData, statusMsg, returnedjqXHR) {
             console.log("success!");
             console.log(returnedData);
             console.log(statusMsg);
             console.log(returnedjqXHR);
+            data = providerList[source].dischargeParse(returnedData);
 
         },
         complete: function () {
             console.log('complete!');
+            //save the data to localStorage
+            //If error, then data = []
+            saveData(siteId, data);
+            //add data to viewModel.dataArray
+            viewModel.dataArray.push(data);
 
         }
     });
