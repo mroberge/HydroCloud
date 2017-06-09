@@ -236,7 +236,7 @@ function scatterChart() {
                   // update the text with y value
                   d3.select(this).select('text')
                   //This refers to a global viewModel. Can't do that!
-                      .text(yScale.invert(pos.y).toFixed(2) + " cfs");
+                      .text(yScale.invert(pos.y).toFixed(2) + " cms");
                       //.text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
 
                   // return position
