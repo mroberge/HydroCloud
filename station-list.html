@@ -103,8 +103,32 @@
         outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
         return outCSV;
     }
-    function getDischarge(providerName) {
-        
+    function getDischarge(site, source, options) {
+        //Get provider-related materials from the providerList
+        var provider = providerList[source];
+        var output;
+
+        $.ajax({
+            url: provider.dischargeURL(site, options),
+            dataType: provider.dischargeType,
+            error: function (ErrObj, ErrStr) {
+                console.log("error!");
+                console.log(ErrObj);
+                console.log(ErrStr);
+            },
+            success: function (returnedData, statusMsg, returnedjqXHR) {
+                console.log("success!");
+                console.log(returnedData);
+                console.log(statusMsg);
+                console.log(returnedjqXHR);
+
+            },
+            complete: function () {
+                console.log('complete!');
+
+            }
+        });
+
     }
 
     function getStations(providerName) {
