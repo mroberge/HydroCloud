@@ -53,12 +53,14 @@ function processPegelStations(input) {
 
 function dischargePegelUrl(site, options) {
     var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/W/measurements.json?start=P30D';
+    if (options === undefined || options === null) options = {};
     return url;
 }
 
 function dischargeUsgsUrl(site, options) {
     //strip the dv from the siteID
     var url = 'https://waterservices.usgs.gov/nwis/dv/?format=json&sites=' + site + '&period=P30D&parameterCd=00060';
+    if (options === undefined || options === null) options = {};
     return url;
 }
 
@@ -120,6 +122,7 @@ function processUsgsStations(input) {
 }
 
 function getDischarge(siteId, source, options) {
+    if (options === undefined || options === null) options = {};
     //Get provider-related materials from the providerList
     var provider = providerList[source];
     //My internal site ID has a 2 letter prefix added to the provider's site ID to prevent confusion when two

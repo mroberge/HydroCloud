@@ -2,14 +2,15 @@
  * Created by Marty on 6/9/2017.
  */
 
-function downloadCSV(args) {
+function downloadCSV(options) {
+    if (options === undefined || options === null) options = {};
     var csv, data, filename, link;
 
-    csv = args.csv;
+    csv = options.csv;
 
     if (csv == null) return;
 
-    filename = args.filename || 'export.csv';
+    filename = options.filename || 'export.csv';
 
     data = encodeURI(csv);
 
