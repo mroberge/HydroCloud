@@ -225,6 +225,8 @@ function getStations(providerName, options) {
             console.log("complete");
             downloadCSV({ filename: provider.name + "-stations.csv", csv: stationCSV });
             //downloadJSON({ filename: provider.name + "-stations.json", json: stationCSV });
+            //Generic version
+            //download(options);
         }
 
     });

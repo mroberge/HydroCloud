@@ -37,3 +37,26 @@ function downloadJSON(options) {
     link.setAttribute('download', filename);
     link.click();
 }
+
+function download(options) {
+    if (options === undefined || options === null) options = {};
+    var json, data, filename, link;
+
+    if (json == null) {
+        //post error message
+        return;
+    }
+    filename = options.filename || 'export.' + type;
+
+    if (type == 'csv') {
+        //csv = parseJson2Csv(json);
+        data = encodeURI(csv);
+    } else if (type == 'json') {
+        data = JSON.stringify(json);
+    }
+
+    link = document.createElement('a');
+    link.setAttribute('href', data);
+    link.setAttribute('download', filename);
+    link.click();
+}
