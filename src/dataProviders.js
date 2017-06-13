@@ -65,15 +65,16 @@ function stationsUsgsUrl(options) {
 }
 
 function dischargePegelUrl(site, options) {
-    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/W/measurements.json?start=P30D';
     if (options === undefined || options === null) options = {};
+    var period = options.period || 'P30D';
+    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/W/measurements.json?start=' + period;
     return url;
 }
 
 function dischargeUsgsUrl(site, options) {
-    //strip the dv from the siteID
-    var url = 'https://waterservices.usgs.gov/nwis/dv/?format=json&sites=' + site + '&period=P30D&parameterCd=00060';
     if (options === undefined || options === null) options = {};
+    var period = options.period || 'P30D';
+    var url = 'https://waterservices.usgs.gov/nwis/dv/?format=json&sites=' + site + '&parameterCd=00060&period=' + period;
     return url;
 }
 
