@@ -182,7 +182,39 @@ function getDischarge(siteId, source, options) {
 
 }
 
-function getStations(providerName) {
+function getStations(providerName, options) {
+    if (options === undefined || options === null) options = {};
+    var provider = providerList[providerName];
+    console.log("Get station list from " + provider.name);
+    var stationCSV = null;
+
+    $.ajax({
+        url: provider.siteURL(options),
+        dataType: provider.siteType,
+        error: function (ErrObj, ErrStr) {
+            console.warn(provider.name + " returned an error.");
+            console.dir(ErrObj);
+            window.alert(provider.name + " returned an error.\n" + ErrObj.statusText);
+        },
+        success: function (returnedData, statusMsg, returnedjqXHR) {
+            console.log("Success!");
+
+            stationCSV = provider.siteParse(returnedData);
+
+        },
+        complete: function () {
+            console.log("complete");
+            downloadCSV({ filename: provider.name + "-stations.csv", csv: stationCSV });
+            //downloadJSON({ filename: provider.name + "-stations.json", json: stationCSV });
+        }
+
+    });
+}
+
+
+function requestStations(providerName, options) {
+    if (options === undefined || options === null) options = {};
+
     var provider = providerList[providerName];
     console.log("Get station list from " + provider.name);
     var stationCSV = null;
@@ -204,6 +236,7 @@ function getStations(providerName) {
         complete: function () {
             console.log("complete");
             downloadCSV({ filename: provider.name + "-stations.csv", csv: stationCSV });
+            downloadJSON({ filename: provider.name + "-stations.json", json: stationCSV });
         }
 
     });
