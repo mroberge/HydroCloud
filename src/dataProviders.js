@@ -2,7 +2,7 @@ var providerList = {
     'PEGELONLINE': {
         'name': 'PEGELONLINE',
         'idPrefix': 'po',
-        'siteURL': 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json',
+        'siteURL': stationsPegelUrl,
         'siteType': 'json',
         'siteParse': processPegelStations,
         'dischargeURL': dischargePegelUrl,
@@ -12,7 +12,7 @@ var providerList = {
     'USGS-DV': {
         'name': 'USGS-DV',
         'idPrefix': 'dv',
-        'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=dv',
+        'siteURL': stationsUsgsUrl,
         'siteType': 'text',
         'siteParse': processUsgsStations,
         'dischargeURL': dischargeUsgsUrl,
@@ -22,7 +22,7 @@ var providerList = {
     'USGS-IV': {
         'name': 'USGS-IV',
         'idPrefix': 'iv',
-        'siteURL': 'https://waterservices.usgs.gov/nwis/site/?stateCd=al&siteStatus=active&parameterCd=00060&outputDataTypeCd=iv',
+        'siteURL': stationsUsgsUrl,
         'siteType': 'text',
         'siteParse': processUsgsStations,
         'dischargeURL': dischargeUsgsUrl,
@@ -49,6 +49,19 @@ function processPegelStations(input) {
     });
     //console.dir(outJSON);
     return outCSV;
+}
+
+function stationsPegelUrl(options) {
+    if (options === undefined || options === null) options = {};
+    return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
+}
+
+function stationsUsgsUrl(options) {
+    if (options === undefined || options === null) options = {};
+    var state = options.state || 'al';
+    var service = options.service || 'dv';
+    var url = 'https://waterservices.usgs.gov/nwis/site/?stateCd=' + state + '&siteStatus=active&parameterCd=00060&outputDataTypeCd=' + service;
+    return url;
 }
 
 function dischargePegelUrl(site, options) {
