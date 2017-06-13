@@ -35,22 +35,24 @@
             }
 
 
-            $(".pegel").click(function () {
+            $(".request").click(function () {
                 var params = $(this).attr("params");
                 params = JSON.parse(params);
                 console.log("params parsed:");
                 console.log(params);
                 var source = params.source;
                 var options = params.options;
+                var anchorID = options.anchorID;
                 //Request data
-                //getStations("PEGELONLINE");
-                //disable the button now.
-                $(this).prop('disabled', true);
+                //getStations(source, options);
                 //add two new download buttons: json and csv
                 options.type = "CSV";
-                $(this).after(composeButton(source, options));
+                $(anchorID).after(composeButton(source, options));
                 options.type = "JSON";
-                $(this).after(composeButton(source, options));
+                $(anchorID).after(composeButton(source, options));
+                //disable the button now.
+                //$(this).prop('disabled', true);
+                $(this).remove();
             });
 
         });
@@ -74,19 +76,19 @@
         <!-- Split button -->
         <div class="btn-group">
             <button type="button" class="btn btn-xs btn-primary">Request Stations for </button>
-            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button id="USGS-req" type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 State<span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "AL"});'>Alabama</a></li>
-                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "GA"});'>Georgia</a></li>
-                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MD"});'>Maryland</a></li>
+                <li><a href="#" class="request" params='{"source": "USGS-DV", "options": {"state": "AL", "type": "dv", "anchorID": "#USGS-req"}}'>Alabama</a></li>
+                <li><a href="#" class="request" params='{"source": "USGS-DV", "options": {"state": "GA", "type": "dv", "anchorID": "#USGS-req"}}'>Georgia</a></li>
+                <li><a href="#" class="request" params='{"source": "USGS-DV", "options": {"state": "MD", "type": "dv", "anchorID": "#USGS-req"}}'>Maryland</a></li>
             </ul>
         </div>
     </li>
     <li>PEGEL-ONLINE (Germany):
-        <button type="button" class="pegel btn btn-xs btn-primary" params='{"source": "PEGELONLINE", "options": {}}'>Download CSV of stations</button>
+        <button id="pegel" type="button" class="request btn btn-xs btn-primary" params='{"source": "PEGELONLINE", "options": {"anchorID": "#pegel"}}'>Request stations</button>
     </li>
 </ul>
 
