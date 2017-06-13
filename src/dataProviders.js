@@ -60,19 +60,22 @@ function processUsgsStations(input) {
     var tempJSON = input.split('\n');
     console.log(input);
 
-    var outJSON = [];
+    //var outJSON = [];
     var outCSV = '';
-    //remove header
-    //remove items from list if they start with #
+
+    var header = 2;
     tempJSON.forEach(function (line) {
         if (line[0] == '#') {
-            // Do nothing with these header lines, unless you want to collect some data from them.
+            //Don't copy lines that start with #.
+        } else if (header > 0) {
+            //Don't copy the next two lines either.
+            header -= 1;
         } else {
             //replace tabs with commas
             var temp = line.split('\t');
-
             //remove unwanted columns
-            outJSON.push(['USGS', temp[1], temp[2], null, temp[11], temp[4], temp[5]]);
+            //outJSON.push(['USGS', temp[1], temp[2], null, temp[11], temp[4], temp[5]]);
+            outCSV += '"USGS", ' + temp[1] + ', ' + temp[2] + ', null, ' + temp[11] + ', ' + temp[4] + ', ' + temp[5] + '\n';
         }
     });
     
