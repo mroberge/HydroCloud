@@ -51,6 +51,37 @@ function processPegelStations(input) {
     return outCSV;
 }
 
+function processUsgsStations(input) {
+    console.log("processUSGSstations");
+    //remove all commas
+    var re = /,/gi;
+    input = input.replace(re, '');
+    //split text at newlines;
+    var tempJSON = input.split('\n');
+    console.log(input);
+
+    var outJSON = [];
+    var outCSV = '';
+    //remove header
+    //remove items from list if they start with #
+    tempJSON.forEach(function (line) {
+        if (line[0] == '#') {
+            // Do nothing with these header lines, unless you want to collect some data from them.
+        } else {
+            //replace tabs with commas
+            var temp = line.split('\t');
+
+            //remove unwanted columns
+            outJSON.push(['USGS', temp[1], temp[2], null, temp[11], temp[4], temp[5]]);
+        }
+    });
+    
+    //add csv header and header row
+    var csvHeader = 'data:text/csv;charset=utf-8,';
+    outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
+    return outCSV;
+}
+
 function stationsPegelUrl(options) {
     if (options === undefined || options === null) options = {};
     return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
@@ -118,21 +149,6 @@ function parseUsgsDischarge(returnedData) {
     } finally {
         return output;
     }
-}
-
-function processUsgsStations(input) {
-    console.log("processUSGSstations");
-    var outCSV = 'TEMP for USGS!';
-    //remove header
-
-    //replace tabs with commas
-
-    //remove unwanted columns
-
-    //add csv header and header row
-    var csvHeader = 'data:text/csv;charset=utf-8,';
-    outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
-    return outCSV;
 }
 
 function getDischarge(siteId, source, options) {
