@@ -34,6 +34,7 @@ Many of the features found in HydroCloud can be repurposed and re-used in your o
 ### Contribute to HydroCloud
 We welcome your comments, complaints, and pull requests!
 * Suggest a new feature or report a bug: [Issue List](https://github.com/mroberge/HydroCloud/issues)
+* Add more stream gages to the system: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Adding-More-Data-Providers)
 * Fork this project to your own GitHub account: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Contribute-to-HydroCloud)
 * Clone or download this project for local development: [Instructions](https://github.com/mroberge/HydroCloud/wiki/Contribute-to-HydroCloud)
 * [Style guide](https://github.com/mroberge/HydroCloud/wiki/Coding-Style-Conventions) for the code, branches, and pull requests. 

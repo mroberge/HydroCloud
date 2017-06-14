@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Download</title>
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <script src="src/download.js"></script>
+    <script src="src/dataProviders.js"></script>
+    <!-- jQuery, Bootstrap -->
+    <script src="lib/jquery/jquery-2.0.2.js"></script>
+    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        ul {line-height: 2;}
+    </style>
+    <script>
+        function downloadButton(source, options) {
+            console.log("source: " + source);
+            console.log("options: " + JSON.stringify(options));
+            getStations(source, options);
+        }
+    </script>
+</head>
+<body>
+<h1>Stream Gage Data Providers</h1>
+<p>
+    This is a list of the data providers used by HydroCloud. Click on the links below to query each
+    provider for a downloadable list of available stream gage sites.
+</p>
+<p>
+    <strong>We are always looking for more data providers!</strong> If you know of a data service that provides access
+    to stream discharge measurements, let us know by
+    <a href="https://github.com/mroberge/HydroCloud/issues">filing an issue on GitHub</a> and
+    <a href="https://github.com/mroberge/HydroCloud/wiki/Adding-More-Data-Providers">adding it to our system</a>!
+</p>
+<h3>Stream Discharge Data Providers:</h3>
+<ul>
+    <li>USGS Stream Gages (USA):
+        <!-- Split button -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-xs btn-primary">Download CSV of Stations for </button>
+            <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                State<span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "AL"});'>Alabama</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "AK"});'>Alaska</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "AZ"});'>Arizona</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "AR"});'>Arkansas</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "CA"});'>California</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "CO"});'>Colorado</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "CT"});'>Connecticut</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "DE"});'>Delaware</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "FL"});'>Florida</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "GA"});'>Georgia</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "HI"});'>Hawaii</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "ID"});'>Idaho</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "IL"});'>Illinois</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "IN"});'>Indiana</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "IA"});'>Iowa</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "KA"});'>Kansas</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "KY"});'>Kentucky</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "LA"});'>Louisiana</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "ME"});'>Maine</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MD"});'>Maryland</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MA"});'>Massachusetts</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MI"});'>Michigan</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MN"});'>Minnesota</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MS"});'>Mississippi</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MO"});'>Missouri</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "MT"});'>Montana</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NE"});'>Nebraska</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NV"});'>Nevada</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NH"});'>New Hampshire</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NJ"});'>New Jersey</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NM"});'>New Mexico</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NY"});'>New York</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "NC"});'>North Carolina</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "ND"});'>North Dakota</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "OH"});'>Ohio</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "OK"});'>Oklahoma</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "OR"});'>Oregon</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "PA"});'>Pennsylvania </a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "RI"});'>Rhode Island</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "SC"});'>South Carolina</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "SD"});'>South Dakota</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "TN"});'>Tennessee</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "TX"});'>Texas</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "UT"});'>Utah</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "VT"});'>Vermont</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "VA"});'>Virginia</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "WA"});'>Washington</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "WV"});'>West Virginia</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "WI"});'>Wisconsin</a></li>
+                <li><a href="#" onclick='downloadButton("USGS-DV", {"state": "WY"});'>Wyoming</a></li>
+            </ul>
+        </div>
+    </li>
+    <li>PEGEL-ONLINE Stream Gages(Germany):
+        <button type="button" class="btn btn-xs btn-primary" onclick='downloadButton("PEGELONLINE", {});'>Download CSV of stations</button>
+    </li>
+</ul>
+
+
+
+</body>
+</html>
