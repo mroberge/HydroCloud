@@ -31,10 +31,12 @@ function checkStorage(site){
                     d[0] = new Date(d[0]);
                 });
                 return data;
+            } else if (data==null) {
+                console.log("No data stored for this site.");
+                return false;
             } else {
                 console.log("Problem with retrieved data for site " + site);
                 console.log(data);
-                if (data === null) console.log("No data stored for this site.");
                 return false;
             }
         }

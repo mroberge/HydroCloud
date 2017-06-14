@@ -44,13 +44,21 @@ function drawMap() {
     //var siteArray = {id: sId, name: event.row.station_nm.value, area: +event.row.drain_area_va.value};
 
     //Parsing Gages II merge
-    //For now, we will only work with daily value sites. add "dv" to site id.
-    var sId = "dv" + event.row.STAID.value;
+
+    var sId = String(event.row.STAID.value);
     var siteName = event.row.STANAME.value;
+    //TODO: At some point it will be necessary to create a system that requests IV or Daily Values.
+
+    // Many of the USGS sites don't have their Source set yet, so automatically set to 'USGS-DV' if empty.
+    var source = event.row.Source.value || 'USGS-DV';
+    //TODO: Some USGS sites have Source set to 'USGS', which is not in the providerList right now.
+    if (source == 'USGS') source = 'USGS-DV';
+    var prefix = providerList[source].idPrefix;
+    sId = prefix + sId;
     var siteDict = {id: sId,
-                     name: siteName,
-                     area: +event.row.DRAIN_SQKM.value,
-                     impervious: +event.row.IMPNLCD06.value
+                     name: siteName || null,
+                     area: +event.row.DRAIN_SQKM.value || null,
+                     impervious: +event.row.IMPNLCD06.value || null
     };
 
     //Update our viewModel with the current site information.
@@ -70,7 +78,7 @@ function drawMap() {
         });
     fusionLayerInfoWindow.open(map);
     
-    requestData(sId, siteName, siteDict);
+    requestData(sId, source, siteName, siteDict);
 
   });
   
