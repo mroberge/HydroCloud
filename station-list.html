@@ -27,36 +27,6 @@
             console.log("options: " + JSON.stringify(options));
             getStations(source, options);
         }
-
-        $(function(){
-            //This complicated system works!
-            function composeButton(source, options) {
-                if (options === undefined || options === null) options = {};
-                var type = options.type || 'CSV';
-                var opts = JSON.stringify(options);
-                return "<button id='" + type + source + "' type='button' class='btn btn-xs btn-primary' onclick='downloadButton(\"" + source + "\", " +  opts + ")'>download " + type + "</button>";
-            }
-
-
-            $(".pegel").click(function () {
-                var params = $(this).attr("params");
-                params = JSON.parse(params);
-                console.log("params parsed:");
-                console.log(params);
-                var source = params.source;
-                var options = params.options;
-                //Request data
-                //getStations("PEGELONLINE");
-                //disable the button now.
-                $(this).prop('disabled', true);
-                //add two new download buttons: json and csv
-                options.type = "CSV";
-                $(this).after(composeButton(source, options));
-                options.type = "JSON";
-                $(this).after(composeButton(source, options));
-            });
-
-        });
     </script>
 </head>
 <body>
@@ -136,7 +106,7 @@
         </div>
     </li>
     <li>PEGEL-ONLINE Stream Gages(Germany):
-        <button type="button" class="pegel btn btn-xs btn-primary" onclick='downloadButton("PEGELONLINE", {});'>Download CSV of stations</button>
+        <button type="button" class="btn btn-xs btn-primary" onclick='downloadButton("PEGELONLINE", {});'>Download CSV of stations</button>
     </li>
 </ul>
 
