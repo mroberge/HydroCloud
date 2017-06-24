@@ -9,6 +9,16 @@ var providerList = {
         'dischargeType': 'json',
         'dischargeParse': parsePegelDischarge
     },
+    'UKEAengland': {
+        'name': 'UKEAengland',
+        'idPrefix': 'en',
+        'siteURL': stationsUKEAUrl,
+        'siteType': 'json',
+        'siteParse': processUKEAStations,
+        'dischargeURL': dischargePegelUrl,
+        'dischargeType': 'json',
+        'dischargeParse': parsePegelDischarge
+    },
     'USGS-DV': {
         'name': 'USGS-DV',
         'idPrefix': 'dv',
@@ -46,6 +56,31 @@ function processPegelStations(input) {
         outJSON.push(tempJSON);
 
         outCSV += 'PEGELONLINE,' + station['number'] + ',' + station['water']['longname'] + ' at ' + station['longname'] + ',null,null,' + station['latitude'] + ',' + station['longitude'] + '\n';
+    });
+    //console.dir(outJSON);
+    return outCSV;
+}
+
+function processUKEAStations(input) {
+    var outJSON = [];
+    var csvHeader = 'data:text/csv;charset=utf-8,';
+    var outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n';
+    input = input['items'];
+    //console.log(input);
+    input.forEach(function(station, index, array) {
+        var tempJSON = {};
+        tempJSON['Source'] = 'UKEAengland';
+        tempJSON['STAID'] = station['stationReference'];
+        var river = station['riverName'] || "";
+        if (station['riverName']) river += ' at ';
+        var site = station['label'];
+        tempJSON['STANAME'] = river + site;
+        tempJSON['LAT_GAGE'] = station['lat'];
+        tempJSON['LNG_GAGE'] = station['long'];
+
+        outJSON.push(tempJSON);
+
+        outCSV += 'UKEAengland,' + station['stationReference'] + ',' + river + site + ',null,null,' + station['lat'] + ',' + station['long'] + '\n';
     });
     //console.dir(outJSON);
     return outCSV;
@@ -90,6 +125,15 @@ function stationsPegelUrl(options) {
     return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
 }
 
+function stationsUKEAUrl(options) {
+    if (options === undefined || options === null) options = {};
+    //There is no 'Access-Control-Allow-Origin' header!
+    //return 'https://flood-warning-information.service.gov.uk/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326';
+    //return 'http://localhost:63342/HydroCloud/resources/UKEAengland.json';
+    //This seems like the official request. It seems to have the correct header!
+    return 'http://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow'
+}
+
 function stationsUsgsUrl(options) {
     if (options === undefined || options === null) options = {};
     var state = options.state || 'al';
@@ -104,6 +148,14 @@ function dischargePegelUrl(site, options) {
     var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/W/measurements.json?start=' + period;
     return url;
 }
+
+function dischargeUKEAUrl(site, options) {
+    if (options === undefined || options === null) options = {};
+    var period = options.period || 'P30D';
+    var url = 'https://environment.data.gov.uk/flood-monitoring/id/measures/' + site + '-level-stage-i-15_min-mASD/readings?_sorted&_limit=100';
+    return url;
+}
+
 
 function dischargeUsgsUrl(site, options) {
     if (options === undefined || options === null) options = {};
