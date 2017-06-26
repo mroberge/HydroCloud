@@ -15,9 +15,9 @@ var providerList = {
         'siteURL': stationsUKEAUrl,
         'siteType': 'json',
         'siteParse': processUKEAStations,
-        'dischargeURL': dischargePegelUrl,
+        'dischargeURL': dischargeUKEAUrl,
         'dischargeType': 'json',
-        'dischargeParse': parsePegelDischarge
+        'dischargeParse': parseUKEADischarge
     },
     'USGS-DV': {
         'name': 'USGS-DV',
@@ -127,9 +127,6 @@ function stationsPegelUrl(options) {
 
 function stationsUKEAUrl(options) {
     if (options === undefined || options === null) options = {};
-    //There is no 'Access-Control-Allow-Origin' header!
-    //return 'https://flood-warning-information.service.gov.uk/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326';
-    //return 'http://localhost:63342/HydroCloud/resources/UKEAengland.json';
     //This seems like the official request. It seems to have the correct header!
     return 'http://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow'
 }
@@ -178,6 +175,9 @@ function parsePegelDischarge(returnedData) {
         //TODO: how does PEGELONLINE data indicate bad values?
     });
     return output;
+}
+
+function parseUKEADischarge(returnedData) {
 }
 
 function parseUsgsDischarge(returnedData) {
