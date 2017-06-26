@@ -178,6 +178,21 @@ function parsePegelDischarge(returnedData) {
 }
 
 function parseUKEADischarge(returnedData) {
+    output = [];
+    try {
+        var temp = returnedData['items'];
+        temp.forEach(function (d, index, array) {
+            output[index] = [];
+            output[index][0] = new Date(d.dateTime);
+            output[index][1] = +d.value;
+        });
+
+    } catch (error) {
+        console.warn("The UK Environmental Agency did not have data for this site.");
+        console.log(error);
+    } finally {
+        return output;
+    }
 }
 
 function parseUsgsDischarge(returnedData) {
