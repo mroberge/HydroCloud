@@ -87,7 +87,10 @@ function processUsgsStations(input) {
 
 function stationsPegelUrl(options) {
     if (options === undefined || options === null) options = {};
-    return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
+    //return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
+
+    //This returns only stations that measure discharge.
+    return 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?timeseries=Q&includeTimeseries=true';
 }
 
 function stationsUsgsUrl(options) {
@@ -101,7 +104,7 @@ function stationsUsgsUrl(options) {
 function dischargePegelUrl(site, options) {
     if (options === undefined || options === null) options = {};
     var period = options.period || 'P30D';
-    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/W/measurements.json?start=' + period;
+    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/Q/measurements.json?start=' + period;
     return url;
 }
 
