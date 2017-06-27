@@ -9,6 +9,16 @@ var providerList = {
         'dischargeType': 'json',
         'dischargeParse': parsePegelDischarge
     },
+    'UKEAengland': {
+        'name': 'UKEAengland',
+        'idPrefix': 'en',
+        'siteURL': stationsUKEAUrl,
+        'siteType': 'json',
+        'siteParse': processUKEAStations,
+        'dischargeURL': dischargeUKEAUrl,
+        'dischargeType': 'json',
+        'dischargeParse': parseUKEADischarge
+    },
     'USGS-DV': {
         'name': 'USGS-DV',
         'idPrefix': 'dv',
@@ -46,6 +56,40 @@ function processPegelStations(input) {
         outJSON.push(tempJSON);
 
         outCSV += 'PEGELONLINE,' + station['number'] + ',' + station['water']['longname'] + ' at ' + station['longname'] + ',null,null,' + station['latitude'] + ',' + station['longitude'] + '\n';
+    });
+    //console.dir(outJSON);
+    return outCSV;
+}
+
+function processUKEAStations(input) {
+    var outJSON = [];
+    var csvHeader = 'data:text/csv;charset=utf-8,';
+    var outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n';
+    input = input['items'];
+    //console.log(input);
+
+    //The site name needs to include the part of the URL that changes. So, it should look like:
+    //F1906-flow-logged-i-15_min-m3_s
+    //six sites collect more than one type of flow. Taking the first isn't always the best. Still.
+
+    input.forEach(function(station, index, array) {
+        var tempJSON = {};
+        tempJSON['Source'] = 'UKEAengland';
+        //tempJSON['STAID'] = station['stationReference'];
+        var stationURL = station['measures'][0]['@id'];
+        var id = stationURL.slice(60);
+        tempJSON['STAID'] = id;
+        var river = station['riverName'] || "";
+        if (station['riverName']) river += ' at ';
+        var site = station['label'];
+        tempJSON['STANAME'] = river + site;
+        tempJSON['LAT_GAGE'] = station['lat'];
+        tempJSON['LNG_GAGE'] = station['long'];
+
+        outJSON.push(tempJSON);
+
+        //outCSV += 'UKEAengland,' + station['stationReference'] + ',' + river + site + ',null,null,' + station['lat'] + ',' + station['long'] + '\n';
+        outCSV += 'UKEAengland,' + id + ',' + river + site + ',null,null,' + station['lat'] + ',' + station['long'] + '\n';
     });
     //console.dir(outJSON);
     return outCSV;
@@ -93,6 +137,12 @@ function stationsPegelUrl(options) {
     return 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?timeseries=Q&includeTimeseries=true';
 }
 
+function stationsUKEAUrl(options) {
+    if (options === undefined || options === null) options = {};
+    //This seems like the official request. It seems to have the correct header!
+    return 'http://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow';
+}
+
 function stationsUsgsUrl(options) {
     if (options === undefined || options === null) options = {};
     var state = options.state || 'al';
@@ -107,6 +157,17 @@ function dischargePegelUrl(site, options) {
     var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/Q/measurements.json?start=' + period;
     return url;
 }
+
+function dischargeUKEAUrl(site, options) {
+    if (options === undefined || options === null) options = {};
+    var period = options.period || 'P30D'; //can't use this. Site only provides data from the past month. Has a since date query though.
+
+    //This query returns all of the data that they are willing to provide for a site. It is limited to the past month, unfortunately.
+    var url = 'https://environment.data.gov.uk/flood-monitoring/id/measures/' + site + '/readings?_sorted';
+    //var url = 'https://environment.data.gov.uk/flood-monitoring/id/measures/' + site + '-flow--i-15_min-m3_s/readings?_sorted&_limit=' + measurements;
+    return url;
+}
+
 
 function dischargeUsgsUrl(site, options) {
     if (options === undefined || options === null) options = {};
@@ -129,6 +190,24 @@ function parsePegelDischarge(returnedData) {
         //TODO: how does PEGELONLINE data indicate bad values?
     });
     return output;
+}
+
+function parseUKEADischarge(returnedData) {
+    output = [];
+    try {
+        var temp = returnedData['items'];
+        temp.forEach(function (d, index, array) {
+            output[index] = [];
+            output[index][0] = new Date(d.dateTime);
+            output[index][1] = +d.value;
+        });
+
+    } catch (error) {
+        console.warn("The UK Environmental Agency did not have data for this site.");
+        console.log(error);
+    } finally {
+        return output;
+    }
 }
 
 function parseUsgsDischarge(returnedData) {
