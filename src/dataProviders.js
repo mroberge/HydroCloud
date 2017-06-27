@@ -67,10 +67,18 @@ function processUKEAStations(input) {
     var outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n';
     input = input['items'];
     //console.log(input);
+
+    //The site name needs to include the part of the URL that changes. So, it should look like:
+    //F1906-flow-logged-i-15_min-m3_s
+    //six sites collect more than one type of flow. Taking the first isn't always the best. Still.
+
     input.forEach(function(station, index, array) {
         var tempJSON = {};
         tempJSON['Source'] = 'UKEAengland';
-        tempJSON['STAID'] = station['stationReference'];
+        //tempJSON['STAID'] = station['stationReference'];
+        var stationURL = station['measures'][0]['@id'];
+        var id = stationURL.slice(60);
+        tempJSON['STAID'] = id;
         var river = station['riverName'] || "";
         if (station['riverName']) river += ' at ';
         var site = station['label'];
@@ -80,7 +88,8 @@ function processUKEAStations(input) {
 
         outJSON.push(tempJSON);
 
-        outCSV += 'UKEAengland,' + station['stationReference'] + ',' + river + site + ',null,null,' + station['lat'] + ',' + station['long'] + '\n';
+        //outCSV += 'UKEAengland,' + station['stationReference'] + ',' + river + site + ',null,null,' + station['lat'] + ',' + station['long'] + '\n';
+        outCSV += 'UKEAengland,' + id + ',' + river + site + ',null,null,' + station['lat'] + ',' + station['long'] + '\n';
     });
     //console.dir(outJSON);
     return outCSV;
@@ -128,7 +137,7 @@ function stationsPegelUrl(options) {
 function stationsUKEAUrl(options) {
     if (options === undefined || options === null) options = {};
     //This seems like the official request. It seems to have the correct header!
-    return 'http://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow'
+    return 'http://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow';
 }
 
 function stationsUsgsUrl(options) {
