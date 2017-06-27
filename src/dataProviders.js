@@ -251,7 +251,7 @@ function getDischarge(siteId, source, options) {
         url: url,
         dataType: provider.dischargeType,
         error: function (ErrObj, ErrStr) {
-            console.warn("error!");
+            console.warn("error while requesting data!");
             console.log("Data Source: " + provider.name);
             console.log("Requested URL: " + url);
             console.log("Returned Error Object:");
@@ -312,7 +312,7 @@ function getStations(providerName, options) {
     });
 }
 
-
+//Not in use.
 function requestStations(providerName, options) {
     if (options === undefined || options === null) options = {};
 
