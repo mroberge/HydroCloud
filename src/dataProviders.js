@@ -160,7 +160,7 @@ function dischargeUKEAUrl(site, options) {
     var period = options.period || 'P30D'; //can't use this. Site only provides data from the past month. Has a since date query though.
 
     //This query returns all of the data that they are willing to provide for a site. It is limited to the past month, unfortunately.
-    var url = 'https://environment.data.gov.uk/flood-monitoring/id/measures/' + site + '-flow--i-15_min-m3_s/readings?_sorted';
+    var url = 'https://environment.data.gov.uk/flood-monitoring/id/measures/' + site + '/readings?_sorted';
     //var url = 'https://environment.data.gov.uk/flood-monitoring/id/measures/' + site + '-flow--i-15_min-m3_s/readings?_sorted&_limit=' + measurements;
     return url;
 }
