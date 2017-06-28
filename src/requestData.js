@@ -23,6 +23,19 @@ function requestData(id, source, siteName, siteDict) {
         var stored = checkStorage(id);
         //console.log(stored);
         if (stored) {
+            //We have some data in localStorage.
+
+            //Check if it is recent
+                //request more data if not
+                //var options = null; //or maybe set an update flag.
+                //getDischarge(id, source, options);
+                //take the data and compare it to what we have; need to integrate it.
+
+            //The stored data is up to date, or we updated it.
+            //Now store the data & push the data into the viewModel.dataArray //This job gets done by the finally clause of getDischarge.
+
+
+
             //console.log("Old data for site " + id + " retrieved from localStorage; length: " + stored.length);
             viewModel.dataArray.push(stored);
             //console.dir(viewModel.siteIdArray());
