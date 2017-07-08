@@ -23,13 +23,39 @@ function requestData(id, source, siteName, siteDict) {
         var stored = checkStorage(id);
         //console.log(stored);
         if (stored) {
-            //We have some data in localStorage.
+            //We have some data in localStorage. Add it to the viewModel, which triggers a viewModel.plotGraph() call.
 
-            //Check if it is recent
-                //request more data if not
-                //var options = null; //or maybe set an update flag.
-                //getDischarge(id, source, options);
+            //Check if latest reading in stored is from (today)  see ko.utils for array methods
+
+            if (!stored.length > 0) {
+                //The stored value is bad.
+                var options = null;
+                getDischarge(id, source, options);
+            } else {
+                //The stored value seems okay at first glance.
+                //Read the dateTime of the last element. Assume they are sorted.
+                var last = stored[stored.length -1][0];
+                var today = Date.now();
+                // has it been more than a day (86400000 milliseconds) since the last element was recorded?
+                if ((today - last) > 86400000) {
+                    //It has been more than a day since the last data point was collected.
+                    //request more data.
+                    var options = null; //set the request date for the last day that we have.
+                    //getDischarge will request data, parse it, store it, and push it to the viewModel.
+                    getDischarge(id, source, options);
+                } else {
+                    //It has been less than a day since the dateTime of the last element.
+                    //The stored data is up to date.
+                    //Push it to the viewModel.
+                    viewModel.dataArray.push(stored);
+                }
+
+
+
+            }
+
                 //take the data and compare it to what we have; need to integrate it.
+                //Comparing dates: https://stackoverflow.com/a/40347030
 
             //The stored data is up to date, or we updated it.
             //Now store the data & push the data into the viewModel.dataArray //This job gets done by the finally clause of getDischarge.

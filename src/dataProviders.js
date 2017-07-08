@@ -247,6 +247,9 @@ function getDischarge(siteId, source, options) {
     var url = provider.dischargeURL(site, options);
     var data = [];
 
+    //Consider this: What if we checked localStorage here and also integrated old & new data?
+
+
     $.ajax({
         url: url,
         dataType: provider.dischargeType,
@@ -269,7 +272,14 @@ function getDischarge(siteId, source, options) {
             console.log(statusMsg);
             console.log(returnedjqXHR);
             data = providerList[source].dischargeParse(returnedData);
-
+            //combine the data with whatever is already stored.
+            //read data from storage
+            var stored = checkStorage(siteId) || [];
+            console.log("Stored.length: " + stored.length + "  last: " + end(stored));
+            //combine stored with data; concatenate, sort, delete duplicates.
+            var newData = joinData(data, stored);
+            console.log("just joined data. request.length: " + data.length + " stored.length: " + stored.length + " new.length: " + newData.length);
+            data = newData;
         },
         complete: function () {
             console.log('complete!');
