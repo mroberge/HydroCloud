@@ -135,6 +135,31 @@ function tableJoin(input) {
 
   }
 }
+
+function joinData(array1, array2) {
+  // Combine two datasets, sort, and remove redundant elements based on the time the element was recorded.
+  // Keeps the value from the first array in the case of a duplicate.
+  var join = array1.concat(array2);
+  join.sort(function (a, b) {
+    return a[0] - b[0];
+  });
+  var result = [];
+  var temp;
+  var threshold = 100000; //100 seconds.
+  join.forEach(function (el, i, array){
+    var diff = Math.abs(el[0] - temp);
+    if(diff < threshold) {
+      //dateTimes are roughly the same. Close enough for me!
+      //We won't bother saving this element; we'll just keep the previous element.
+    } else {
+      //This element is a different time than the previous element, so keep it.
+      result.push(el);
+    }
+    temp = el[0];
+  });
+  return result;
+}
+
 function datatostring (data) {
   //Okay, there's not much point to this function.
   var string = JSON.stringify(data);
