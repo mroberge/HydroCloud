@@ -260,7 +260,8 @@ function getDischarge(siteId, source, options) {
             console.log(ErrStr);
             //This seems to give good messages from USGS and PEGELONLINE:
             console.log(ErrObj.statusText);
-            $('.googft-info-window').append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
+            //Unless we add the site ID as the element ID, this assumes that the window from this request is still open, and user didn't manage to click another window open quickly!
+            $('.googft-info-window#' + siteId).append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
         },
         success: function (returnedData, statusMsg, returnedjqXHR) {
             console.log("success!");

@@ -69,7 +69,7 @@ function drawMap() {
     fusionLayerInfoWindow.setOptions(
         {
           //content: event.infoWindowHtml, //You can also use the default html as set by the fusion table.
-          content: "<div class='googft-info-window'>" +
+          content: "<div class='googft-info-window' id='"+ sId +"'>" +
                     "<b>" + siteName + "</b><br>" +
                     "<b>site ID: </b>" + sId + "<br>" +
                     "</div>",
