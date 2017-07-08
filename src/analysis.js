@@ -135,3 +135,17 @@ function tableJoin(input) {
 
   }
 }
+function datatostring (data) {
+  //Okay, there's not much point to this function.
+  var string = JSON.stringify(data);
+  return string;
+}
+
+function stringtodata (string) {
+  var data = JSON.parse(string);
+  data.forEach(function(d, index, array){
+    d[0] = new Date(d[0]);
+    d[1] = +d[1];
+  });
+  return data;
+}
