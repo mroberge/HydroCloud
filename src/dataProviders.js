@@ -109,7 +109,7 @@ function processUsgsStations(input) {
 
     var header = 2;
     tempJSON.forEach(function (line) {
-        if (line[0] == '#') {
+        if (line[0] === '#') {
             //Don't copy lines that start with #.
         } else if (header > 0) {
             //Don't copy the next two lines either.
@@ -177,7 +177,7 @@ function dischargeUsgsUrl(site, options) {
 }
 
 function parsePegelDischarge(returnedData) {
-    output = [];
+    var output = [];
     //check for no data or empty set.
     if (returnedData < 1) {
         return output;
@@ -193,7 +193,7 @@ function parsePegelDischarge(returnedData) {
 }
 
 function parseUKEADischarge(returnedData) {
-    output = [];
+    var output = [];
     try {
         var temp = returnedData['items'];
         temp.forEach(function (d, index, array) {
@@ -211,7 +211,7 @@ function parseUKEADischarge(returnedData) {
 }
 
 function parseUsgsDischarge(returnedData) {
-    output = [];
+    var output = [];
     //process data
     //    check for no data or empty set;
     try {
@@ -272,7 +272,7 @@ function getDischarge(siteId, source, options) {
             console.log(statusMsg);
             console.log(returnedjqXHR);
             data = providerList[source].dischargeParse(returnedData);
-            //combine the data with whatever is already stored.
+
             //read data from storage
             var stored = checkStorage(siteId) || [];
             console.log("Stored.length: " + stored.length + "  last: " + end(stored));
