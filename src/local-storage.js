@@ -20,13 +20,17 @@ function checkStorage(site){
         try {
             var storage = window['localStorage'];
             var data = JSON.parse(storage.getItem(site));
-            //Need to check that the data are working; 
+            //Need to check that the data are working;
             //The data might look fine to whatever data-checking function I write, but the user might not like it.
             //In this case, I may want to have a refresh button near the graph to ask for more data.
             //
             if (Array.isArray(data)) {
                 //console.log("Retrieved data from site " + site + ". Length is:" + data.length);
                 //convert string to Date
+                if (!data.length > 0) {
+                    console.log("Site was stored with no data.");
+                    return false;
+                }
                 data.forEach(function(d, index, array){
                     d[0] = new Date(d[0]);
                 });

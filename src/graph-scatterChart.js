@@ -352,6 +352,20 @@ function scatterChart() {
     return chart;
   };
 
+  chart.xDomain = function(a) {
+    if (!arguments.length)
+      return xDomain;
+    xDomain = a;
+    return chart;
+  };
+
+  chart.yDomain = function(a) {
+    if (!arguments.length)
+      return yDomain;
+    yDomain = a;
+    return chart;
+  };
+
   chart.xscale = function(a) {
     if (!arguments.length){
       console.log(xScale);

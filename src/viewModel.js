@@ -51,6 +51,7 @@ var viewModel = {
         fusionLayerInfoWindow.close();
     },
     plotGraph : function() {
+        //console.log("Inside viewModel.plotGraph()");
         //console.log(this.graph());
         if (this.graph() === "flow") {
             flowduration(this.siteId());
