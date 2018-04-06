@@ -205,6 +205,7 @@ function parseUKEADischarge(returnedData) {
     } catch (error) {
         console.warn("The UK Environmental Agency did not have data for this site.");
         console.log(error);
+        output = [];
     } finally {
         return output;
     }
