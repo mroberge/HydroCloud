@@ -95,7 +95,7 @@ function drawMap() {
 
   var tileNEX = new google.maps.ImageMapType({
     getTileUrl : function(tile, zoom) {
-      return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
+      return "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
     },
     tileSize : new google.maps.Size(256, 256),
     opacity : 0.90,
@@ -105,7 +105,7 @@ function drawMap() {
 
   var goes = new google.maps.ImageMapType({
     getTileUrl : function(tile, zoom) {
-      return "http://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/goes-east-vis-1km-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
+      return "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/goes-east-vis-1km-900913/" + zoom + "/" + tile.x + "/" + tile.y + ".png?" + (new Date()).getTime();
     },
     tileSize : new google.maps.Size(256, 256),
     opacity : 0.40,
