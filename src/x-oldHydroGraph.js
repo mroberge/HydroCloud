@@ -279,7 +279,7 @@ function USGScsv(id) {//This will request fresh data and output as CSV.
   if (id == "local") {
     var filename = "resources/USGSshort.txt";
   } else {
-    var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+    var filename = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
   }
   data = [];
   d3.json(filename, function(error, json) {

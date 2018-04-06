@@ -90,7 +90,7 @@ function getUSGS2(id) {
   if (id == "local") {
     var filename = "resources/USGSshort.txt";
   } else {
-    var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+    var filename = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
   }
   //request data & deal with errors
 
@@ -131,7 +131,7 @@ function getUSGS(id) {
   if (id == "local") {
     var filename = "resources/USGSshort.txt";
   } else {
-    var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+    var filename = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
   }
   d3.json(filename, function(error, json) {
     if (error) {
@@ -164,7 +164,7 @@ function getUSGS(id) {
 };
 
 function getMike(id) {//This function is for grabbing data from the HydroCloud server.
-  var filename = "http://10.55.17.169:28017/hydroCloudTest/id01582500/?";
+  var filename = "https://10.55.17.169:28017/hydroCloudTest/id01582500/?";
   //Not allowed due to cross-domain request.
 
   //var filename = id + ".txt"; //A temp workaround the cross-domain issue. Requests a local file to test this function.
@@ -196,8 +196,8 @@ function getMike(id) {//This function is for grabbing data from the HydroCloud s
 };
 
 function getMike2(id) {//This function is for grabbing data from the HydroCloud server.
-  //var filename = "http://10.55.17.169:28017/hydroCloudTest/id01582500/?";//Not allowed due to cross-domain request.
-  //var filename = "http://10.55.17.48:5000/show_data/id01585200/2012-01-05/2013-06-12";
+  //var filename = "https://10.55.17.169:28017/hydroCloudTest/id01582500/?";//Not allowed due to cross-domain request.
+  //var filename = "https://10.55.17.48:5000/show_data/id01585200/2012-01-05/2013-06-12";
   var filename = "id01585200.json";
   //var filename = id + ".txt"; //A temp workaround the cross-domain issue. Requests a local file to test this function.
   //request data & deal with errors
