@@ -27,6 +27,10 @@ function checkStorage(site){
             if (Array.isArray(data)) {
                 //console.log("Retrieved data from site " + site + ". Length is:" + data.length);
                 //convert string to Date
+                if (!data.length > 0) {
+                    console.log("Site was stored with no data.");
+                    return false;
+                }
                 data.forEach(function(d, index, array){
                     d[0] = new Date(d[0]);
                 });

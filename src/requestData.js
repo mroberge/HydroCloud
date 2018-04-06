@@ -1,70 +1,45 @@
 function requestData(id, source, siteName, siteDict) {
+    console.log("Inside requestData!");
     //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(id);
-    //console.log("The siteIndex is: " + siteIndex);
+    console.log("requestData: The siteIndex is: " + siteIndex);
     if (siteIndex === -1) {
         //If the id is not in the siteIdArray, this will return -1.
-        //Now we must add the site to the siteIdArray and request data.
 
         //Update the viewModel with the new site id and site info.
-        //console.log("siteIndex is -1, so pushing id and site info to arrays. Before val:");
-        //console.log(viewModel.siteIdArray().toString());
         viewModel.siteIdArray.push(id);
-        //console.log(viewModel.siteIdArray().toString());
-
-        //console.log(viewModel.siteDict().toString());
         viewModel.siteDict.push(siteDict);
-        //console.log(viewModel.siteDict().toString());
 
         //Now collect the Stream Gage data and put in the dataArray
         //First check storage. We might have collected this data earlier, but not in this session.
         //console.log("Checking for gage data in localStorage. Result of stored:");
         var stored = checkStorage(id);
-        //console.log(stored);
         if (stored) {
-            //We have some data in localStorage. Add it to the viewModel, which triggers a viewModel.plotGraph() call.
-
-            //Check if latest reading in stored is from (today)  see ko.utils for array methods
-
-            if (!stored.length > 0) {
-                //The stored value is bad.
-                var options = null;
+            //We have some data in localStorage.
+            //Read the dateTime of the last element. Assume they are sorted.
+            var last = end(stored);
+            //console.log("last: ", last);
+            var today = new Date(); //The time right now, according to the local system. Of course, the user's system might be wrong.
+            //console.log("Today: ", today);
+            var diff = Math.abs(today.getTime() - last.getTime());
+            //console.log("diff: ", diff);
+            if (diff > 160400000) {
+                //console.log("It has been more than a day and a half since last request.");
+                //It has been more than a day since the last data point was collected.
+                // 24 hrs/day x 60 min/hr x 60 sec/min x 1000 ms/sec = 86,400,000 ms/day
+                //request more data.
+                var options = null; //set the request date for the last day that we have.
+                //getDischarge will request data, parse it, store it, and push it to the viewModel.
                 getDischarge(id, source, options);
             } else {
-                //The stored value seems okay at first glance.
-                //Read the dateTime of the last element. Assume they are sorted.
-                var last = stored[stored.length -1][0];
-                var today = Date.now();
-                // has it been more than a day (86400000 milliseconds) since the last element was recorded?
-                if ((today - last) > 86400000) {
-                    //It has been more than a day since the last data point was collected.
-                    //request more data.
-                    var options = null; //set the request date for the last day that we have.
-                    //getDischarge will request data, parse it, store it, and push it to the viewModel.
-                    getDischarge(id, source, options);
-                } else {
-                    //It has been less than a day since the dateTime of the last element.
-                    //The stored data is up to date.
-                    //Push it to the viewModel.
-                    viewModel.dataArray.push(stored);
-                }
-
-
-
+                //console.log("it has been less than a day; just push data to dataArray.");
+                //It has been less than a day since the dateTime of the last element.
+                //The stored data is up to date.
+                viewModel.dataArray.push(stored);
             }
-
-                //take the data and compare it to what we have; need to integrate it.
-                //Comparing dates: https://stackoverflow.com/a/40347030
-
             //The stored data is up to date, or we updated it.
-            //Now store the data & push the data into the viewModel.dataArray //This job gets done by the finally clause of getDischarge.
 
-
-
-            //console.log("Old data for site " + id + " retrieved from localStorage; length: " + stored.length);
-            viewModel.dataArray.push(stored);
-            //console.dir(viewModel.siteIdArray());
         } else {
             //The site is not in our siteIdArray and gage data is not in localStorage.
             //This is the first time we've ever selected this site!
@@ -77,9 +52,8 @@ function requestData(id, source, siteName, siteDict) {
 
         }
     } else {
-        //console.log("This site is already in the siteIdArray, so it is likely that we already have the data in the dataArray.");
-        //If we matched the site to our siteIdArray, then we should already have gage data. Plot.
-        viewModel.plotGraph();
+        //console.log("This site is already in the siteIdArray, so we have already requested data for this site this session.");
+        //This site is already in the siteIdArray, so we have already requested data for this site this session.
     }
 }
 
@@ -259,6 +233,7 @@ function redraw() {
     fourthChart.width(viewModel.width()).height(viewModel.height());
     //if there is data, plot the data.
     if (viewModel.dataArray().length) {
+        console.log("plotGraph() called from inside redraw()");
         viewModel.plotGraph();
     }
     //console.log("resize");
