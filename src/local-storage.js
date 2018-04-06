@@ -20,7 +20,7 @@ function checkStorage(site){
         try {
             var storage = window['localStorage'];
             var data = JSON.parse(storage.getItem(site));
-            //Need to check that the data are working; 
+            //Need to check that the data are working;
             //The data might look fine to whatever data-checking function I write, but the user might not like it.
             //In this case, I may want to have a refresh button near the graph to ask for more data.
             //

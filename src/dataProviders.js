@@ -122,7 +122,7 @@ function processUsgsStations(input) {
             outCSV += '"USGS", ' + temp[1] + ', ' + temp[2] + ', null, ' + temp[11] + ', ' + temp[4] + ', ' + temp[5] + '\n';
         }
     });
-    
+
     //add csv header and header row
     var csvHeader = 'data:text/csv;charset=utf-8,';
     outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
