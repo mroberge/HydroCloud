@@ -126,10 +126,23 @@ function scatterChart() {
       g.selectAll(".line").attr("d", line).attr("stroke", function(d, i) {return color(i);});
 
       // Update the x-axis.
-      g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis);
-
+      var xaxisg = g.select(".x.axis");
+      xaxisg.attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis);
+      xaxisg.append("svg:text")
+          .attr("text-anchor", "middle")
+          .attr("class", "axisTitle")
+          .attr("transform", "translate(" + xScale.range()[1]/2 + ", 27)")
+          .text("Time");
+      console.log(xScale.range()[1]);
+      console.log(yScale.range());
       // Update the y-axis.
-      g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
+      var yaxisg = g.select(".y.axis");
+      yaxisg.attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
+      yaxisg.append("svg:text")
+          .attr("text-anchor", "middle")
+          .attr("class", "axisTitle")
+          .attr("transform", "rotate(-90) translate(" + yScale.range()[0]/-2 + ",-27)")
+          .text("Stream Discharge (m3/s)");
 
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,-3)");

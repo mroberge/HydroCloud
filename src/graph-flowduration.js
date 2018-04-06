@@ -21,8 +21,8 @@ function flowduration(id) {
     var margin = {
         top : 10,
         right : 10,
-        bottom : 50,
-        left : 70
+        bottom : 40,
+        left : 40
     }, width = myScreen.width - margin.left - margin.right, height = myScreen.height - margin.top - margin.bottom;
 
     var xScale = d3.scale.linear().range([0, width]);
@@ -63,11 +63,23 @@ function flowduration(id) {
     focus.append("g").attr("class", "y axis").call(yAxis);
 
     //title block
-    var title = focus.append("g").attr("transform", "translate(125,20)");
+    var title = focus.append("g").attr("transform", "translate(50,20)");
     title.append("svg:text").attr("class", "Title").text(viewModel.siteName());
     title.append("svg:text").attr("class", "subTitle").attr("dy", "1em").text(data.length + " measurements");
 
     //axis labels
-    focus.append("text").attr("class", "axisTitle").attr("transform", "rotate(-90)").attr("x", 0).attr("y", 0).attr("dy", "1em").style("text-anchor", "end").text("instantaneous stream discharge (cfs)");
-    focus.append("text").attr("class", "axisTitle").attr("x", width).attr("y", height - 2).style("text-anchor", "end").text("Number of measurements that exceed this discharge");
+    focus.append("text")
+        .attr("class", "axisTitle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", height / -2)
+        .attr("y", -35)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Stream Discharge (m3/s)");
+    focus.append("text")
+        .attr("class", "axisTitle")
+        .attr("x", width / 2)
+        .attr("y", height + 30)
+        .style("text-anchor", "middle")
+        .text("Number of measurements that exceed this discharge");
 }
