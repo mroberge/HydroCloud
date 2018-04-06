@@ -29,7 +29,7 @@ function scatterChart() {
    *
    *   Take a look at example-hydrograph.html for a working copy!
    *
-   * graph-scatterChart.js 
+   * graph-scatterChart.js
    * Based on Mike Bostock's system for creating reusable charts, described
    * here: http://bost.ocks.org/mike/chart/
    *
@@ -58,7 +58,7 @@ function scatterChart() {
   var xScale = d3.time.scale();
   //var yScale = d3.scale.linear();
   var yScale = d3.scale.log();
-  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0);
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0).ticks(8);
   var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5).tickFormat(function (d) {
     return yScale.tickFormat(10, d3.format(",d"))(d);
   });
@@ -110,7 +110,7 @@ function scatterChart() {
 
       gEnter.append("g").attr("class", "x axis");//g given two classes: x and axis.
       gEnter.append("g").attr("class", "y axis");
-      
+
       var titleGroup = gEnter.append("g").attr("class", "titleGroup");
       titleGroup.append("svg:text").attr("class", "Title").text("Stream Hydrograph");
       titleGroup.append("svg:text").attr("class", "subtitle").attr("dy", "1em");
