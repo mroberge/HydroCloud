@@ -133,8 +133,7 @@ function scatterChart() {
           .attr("class", "axisTitle")
           .attr("transform", "translate(" + xScale.range()[1]/2 + ", 27)")
           .text("Time");
-      console.log(xScale.range()[1]);
-      console.log(yScale.range());
+
       // Update the y-axis.
       var yaxisg = g.select(".y.axis");
       yaxisg.attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
@@ -143,12 +142,12 @@ function scatterChart() {
           .attr("class", "axisTitle")
           .attr("transform", "rotate(-90) translate(" + yScale.range()[0]/-2 + ",-27)")
           .text("Stream Discharge (m3/s)");
+        yaxisg.on("click", myClickFunction);
 
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,-3)");
       g.select(".subtitle").text(dataArray.length + " sites");
       g.select(".subtitle2").text(dataArray[0].length + " measurements per line");
-      //title.on("click", myRClickFunction);
 
       //***************Tooltip Code ***************
 
@@ -260,6 +259,9 @@ function scatterChart() {
       //click function for handling mouseclicks on an object.
       function myClickFunction() {
         console.log("myClickFunction");
+        //chart is accessible from here
+        //this refers to the yaxis group, which has the .on attribute set.
+        console.log(this);
       }
 
       function myRClickFunction() {
@@ -327,7 +329,6 @@ function scatterChart() {
   function Y(d) {
     return yScale(d[1]);
   }
-
 
   chart.margin = function(a) {
     if (!arguments.length)
