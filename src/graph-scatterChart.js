@@ -176,11 +176,9 @@ function scatterChart() {
       // the circle
       mousePerLine.append("circle")
           .attr("r", 7)
-          .style("stroke", function(d) {
-            return color(d.name);
-          })
           .style("fill", "none")
-          .style("stroke-width", "1px")
+          .style("stroke", function(d, i) {return color(i);})
+          .style("stroke-width", "2px")
           .style("opacity", "0");
 
       // the text
@@ -249,7 +247,8 @@ function scatterChart() {
                   // update the text with y value
                   d3.select(this).select('text')
                   //This refers to a global viewModel. Can't do that!
-                      .text(yScale.invert(pos.y).toFixed(2) + " cms");
+                      .text(yScale.invert(pos.y).toFixed(2) + " cms")
+                      .attr("fill", color(i));
                       //.text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
 
                   // return position
