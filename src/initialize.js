@@ -22,14 +22,14 @@ function initialize() {
     //console.log(viewModel.siteId());
     //console.log(viewModel.siteName());
     //console.log("setting viewModel values.");
-    viewModel.siteId("dv01580000");
+    viewModel.siteId("dv07376500");
     var source = 'USGS-DV';
-    viewModel.siteName("Deer Creek at Rocks, MD");
+    viewModel.siteName("Natalbany River at Baptist, LA");
     var initialSiteDict = {
-        id : "dv01580000",
-        name : "DEER CREEK AT ROCKS, MD",
-        area : 94.4,
-        impervious : 1.26
+        id : "dv07376500",
+        name : "Natalbany River at Baptist, LA",
+        area : 205.2,
+        impervious : 1.57
     };
 
     //console.log("Initial call of requestData with: ");
