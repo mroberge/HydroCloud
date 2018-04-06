@@ -30,7 +30,7 @@
     <p>NOTE: This service is currently only available from TU IP addresses.</p>
     <ul>
       <li>
-        View JSON result: <a href="http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02">http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02</a>
+        View JSON result: <a href="https://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02">https://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02</a>
       </li>
       <li>
         HTTP status code: <span id="TUstatusCode"></span>
@@ -43,7 +43,7 @@
         <h4>USGS real-time stream gauge service</h4>
     <ul>
       <li>
-        View JSON result: <a href="http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060">http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060</a>
+        View JSON result: <a href="https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060">https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060</a>
       </li>
       <li>
         HTTP status code: <span id="USGSstatusCode"></span>
@@ -55,7 +55,7 @@
 
     <script type="text/javascript">
       $.ajax({
-        url : "http://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02",
+        url : "https://10.55.17.48:5000/nexradTS/id=01646500/startdate=2012-01-01/enddate=2012-01-02",
         dataType : "json",
         error : function(request, textStatus, errorThrown) {
           $("#statusCode").append(errorThrown);
@@ -69,7 +69,7 @@
       });
 
       $.ajax({
-        url : "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060",
+        url : "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060",
         dataType : "json",
         error : function(request, textStatus, errorThrown) {
           $("#USGSstatusCode").append(errorThrown);
