@@ -131,7 +131,7 @@ function processUsgsStations(input) {
 
 function stationsPegelUrl(options) {
     if (options === undefined || options === null) options = {};
-    //return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
+    //return 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
 
     //This returns only stations that measure discharge.
     return 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?timeseries=Q&includeTimeseries=true';
@@ -140,7 +140,7 @@ function stationsPegelUrl(options) {
 function stationsUKEAUrl(options) {
     if (options === undefined || options === null) options = {};
     //This seems like the official request. It seems to have the correct header!
-    return 'http://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow';
+    return 'https://environment.data.gov.uk/flood-monitoring/id/stations?parameter=flow';
 }
 
 function stationsUsgsUrl(options) {
@@ -154,7 +154,7 @@ function stationsUsgsUrl(options) {
 function dischargePegelUrl(site, options) {
     if (options === undefined || options === null) options = {};
     var period = options.period || 'P30D';
-    var url = 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/Q/measurements.json?start=' + period;
+    var url = 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/' + site + '/Q/measurements.json?start=' + period;
     return url;
 }
 
