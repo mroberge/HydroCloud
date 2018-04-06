@@ -52,7 +52,7 @@ function drawMap() {
     // Many of the USGS sites don't have their Source set yet, so automatically set to 'USGS-DV' if empty.
     var source = event.row.Source.value || 'USGS-DV';
     //TODO: Some USGS sites have Source set to 'USGS', which is not in the providerList right now.
-    if (source == 'USGS') source = 'USGS-DV';
+    if (source === 'USGS') source = 'USGS-DV';
     var prefix = providerList[source].idPrefix;
     sId = prefix + sId;
     var siteDict = {id: sId,
@@ -69,7 +69,7 @@ function drawMap() {
     fusionLayerInfoWindow.setOptions(
         {
           //content: event.infoWindowHtml, //You can also use the default html as set by the fusion table.
-          content: "<div class='googft-info-window'>" +
+          content: "<div class='googft-info-window' id='"+ sId +"'>" +
                     "<b>" + siteName + "</b><br>" +
                     "<b>site ID: </b>" + sId + "<br>" +
                     "</div>",
@@ -77,11 +77,11 @@ function drawMap() {
           pixelOffset: event.pixelOffset
         });
     fusionLayerInfoWindow.open(map);
-    
+
     requestData(sId, source, siteName, siteDict);
 
   });
-  
+
 /*
   //KML layers can use real-time updates from USGS, and will plot 5,000 points quickly... compared to plotting 5,000 points using other methods.
   //The KML layer still loads too slowly, or not at all.

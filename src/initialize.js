@@ -6,10 +6,15 @@ function initialize() {
 
     viewModel.time.start(new Date(2014,1,1));
     viewModel.time.end(new Date(2015,1,1));
-    viewModel.time.recent("90");
-    
+    viewModel.time.recent("P90D");
+
+    //viewModel.dataArray.subscribe(function(oldValue) {
+    //    console.log("new value about to be added to dataArray. ");
+    //    console.log(oldValue);
+    //}, null, "beforeChange");
     viewModel.dataArray.subscribe(function(newValue) {
-        //console.log("plotGraph() called with new value added to dataArray.");
+    //    console.log("plotGraph() called with new value added to dataArray.");
+    //    console.log(newValue);
         viewModel.plotGraph();
     });
 

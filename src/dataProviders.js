@@ -109,7 +109,7 @@ function processUsgsStations(input) {
 
     var header = 2;
     tempJSON.forEach(function (line) {
-        if (line[0] == '#') {
+        if (line[0] === '#') {
             //Don't copy lines that start with #.
         } else if (header > 0) {
             //Don't copy the next two lines either.
@@ -122,7 +122,7 @@ function processUsgsStations(input) {
             outCSV += '"USGS", ' + temp[1] + ', ' + temp[2] + ', null, ' + temp[11] + ', ' + temp[4] + ', ' + temp[5] + '\n';
         }
     });
-    
+
     //add csv header and header row
     var csvHeader = 'data:text/csv;charset=utf-8,';
     outCSV = csvHeader + 'Source,STAID,STANAME,DRAIN_SQKM,HUC02,LAT_GAGE,LNG_GAGE\n' + outCSV;
@@ -177,7 +177,7 @@ function dischargeUsgsUrl(site, options) {
 }
 
 function parsePegelDischarge(returnedData) {
-    output = [];
+    var output = [];
     //check for no data or empty set.
     if (returnedData < 1) {
         return output;
@@ -193,7 +193,7 @@ function parsePegelDischarge(returnedData) {
 }
 
 function parseUKEADischarge(returnedData) {
-    output = [];
+    var output = [];
     try {
         var temp = returnedData['items'];
         temp.forEach(function (d, index, array) {
@@ -205,13 +205,14 @@ function parseUKEADischarge(returnedData) {
     } catch (error) {
         console.warn("The UK Environmental Agency did not have data for this site.");
         console.log(error);
+        output = [];
     } finally {
         return output;
     }
 }
 
 function parseUsgsDischarge(returnedData) {
-    output = [];
+    var output = [];
     //process data
     //    check for no data or empty set;
     try {
@@ -247,11 +248,14 @@ function getDischarge(siteId, source, options) {
     var url = provider.dischargeURL(site, options);
     var data = [];
 
+    //Consider this: What if we checked localStorage here and also integrated old & new data?
+
+
     $.ajax({
         url: url,
         dataType: provider.dischargeType,
         error: function (ErrObj, ErrStr) {
-            console.warn("error!");
+            console.warn("error while requesting data!");
             console.log("Data Source: " + provider.name);
             console.log("Requested URL: " + url);
             console.log("Returned Error Object:");
@@ -260,7 +264,8 @@ function getDischarge(siteId, source, options) {
             console.log(ErrStr);
             //This seems to give good messages from USGS and PEGELONLINE:
             console.log(ErrObj.statusText);
-            $('.googft-info-window').append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
+            //Unless we add the site ID as the element ID, this assumes that the window from this request is still open, and user didn't manage to click another window open quickly!
+            $('.googft-info-window#' + siteId).append( "<p class='bg-warning'>An error occurred when requesting data for this site.</p>" );
         },
         success: function (returnedData, statusMsg, returnedjqXHR) {
             console.log("success!");
@@ -269,6 +274,13 @@ function getDischarge(siteId, source, options) {
             console.log(returnedjqXHR);
             data = providerList[source].dischargeParse(returnedData);
 
+            //read data from storage
+            var stored = checkStorage(siteId) || [];
+            console.log("Stored.length: " + stored.length + "  last: " + end(stored));
+            //combine stored with data; concatenate, sort, delete duplicates.
+            var newData = joinData(data, stored);
+            console.log("just joined data. request.length: " + data.length + " stored.length: " + stored.length + " new.length: " + newData.length);
+            data = newData;
         },
         complete: function () {
             console.log('complete!');
@@ -312,7 +324,7 @@ function getStations(providerName, options) {
     });
 }
 
-
+//Not in use.
 function requestStations(providerName, options) {
     if (options === undefined || options === null) options = {};
 

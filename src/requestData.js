@@ -1,31 +1,45 @@
 function requestData(id, source, siteName, siteDict) {
+    console.log("Inside requestData!");
     //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(id);
-    //console.log("The siteIndex is: " + siteIndex);
+    console.log("requestData: The siteIndex is: " + siteIndex);
     if (siteIndex === -1) {
         //If the id is not in the siteIdArray, this will return -1.
-        //Now we must add the site to the siteIdArray and request data.
 
         //Update the viewModel with the new site id and site info.
-        //console.log("siteIndex is -1, so pushing id and site info to arrays. Before val:");
-        //console.log(viewModel.siteIdArray().toString());
         viewModel.siteIdArray.push(id);
-        //console.log(viewModel.siteIdArray().toString());
-
-        //console.log(viewModel.siteDict().toString());
         viewModel.siteDict.push(siteDict);
-        //console.log(viewModel.siteDict().toString());
 
         //Now collect the Stream Gage data and put in the dataArray
         //First check storage. We might have collected this data earlier, but not in this session.
         //console.log("Checking for gage data in localStorage. Result of stored:");
         var stored = checkStorage(id);
-        //console.log(stored);
         if (stored) {
-            //console.log("Old data for site " + id + " retrieved from localStorage; length: " + stored.length);
-            viewModel.dataArray.push(stored);
-            //console.dir(viewModel.siteIdArray());
+            //We have some data in localStorage.
+            //Read the dateTime of the last element. Assume they are sorted.
+            var last = end(stored);
+            //console.log("last: ", last);
+            var today = new Date(); //The time right now, according to the local system. Of course, the user's system might be wrong.
+            //console.log("Today: ", today);
+            var diff = Math.abs(today.getTime() - last.getTime());
+            //console.log("diff: ", diff);
+            if (diff > 160400000) {
+                //console.log("It has been more than a day and a half since last request.");
+                //It has been more than a day since the last data point was collected.
+                // 24 hrs/day x 60 min/hr x 60 sec/min x 1000 ms/sec = 86,400,000 ms/day
+                //request more data.
+                var options = null; //set the request date for the last day that we have.
+                //getDischarge will request data, parse it, store it, and push it to the viewModel.
+                getDischarge(id, source, options);
+            } else {
+                //console.log("it has been less than a day; just push data to dataArray.");
+                //It has been less than a day since the dateTime of the last element.
+                //The stored data is up to date.
+                viewModel.dataArray.push(stored);
+            }
+            //The stored data is up to date, or we updated it.
+
         } else {
             //The site is not in our siteIdArray and gage data is not in localStorage.
             //This is the first time we've ever selected this site!
@@ -38,9 +52,8 @@ function requestData(id, source, siteName, siteDict) {
 
         }
     } else {
-        //console.log("This site is already in the siteIdArray, so it is likely that we already have the data in the dataArray.");
-        //If we matched the site to our siteIdArray, then we should already have gage data. Plot.
-        viewModel.plotGraph();
+        //console.log("This site is already in the siteIdArray, so we have already requested data for this site this session.");
+        //This site is already in the siteIdArray, so we have already requested data for this site this session.
     }
 }
 
@@ -220,6 +233,7 @@ function redraw() {
     fourthChart.width(viewModel.width()).height(viewModel.height());
     //if there is data, plot the data.
     if (viewModel.dataArray().length) {
+        console.log("plotGraph() called from inside redraw()");
         viewModel.plotGraph();
     }
     //console.log("resize");
