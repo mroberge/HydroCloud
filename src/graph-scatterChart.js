@@ -58,7 +58,7 @@ function scatterChart() {
   var xScale = d3.time.scale();
   //var yScale = d3.scale.linear();
   var yScale = d3.scale.log();
-  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0).ticks(8);
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0).ticks(6);
   var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5).tickFormat(function (d) {
     return yScale.tickFormat(10, d3.format(",d"))(d);
   });

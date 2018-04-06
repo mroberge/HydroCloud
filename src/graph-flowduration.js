@@ -33,7 +33,9 @@ function flowduration(id) {
     //Dealt with trouble switching to log by changing y.domain to have a min of 1, not zero.
 
     var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-    var yAxis = d3.svg.axis().scale(yScale).orient("left");
+    var yAxis = d3.svg.axis().scale(yScale).orient("left").tickFormat(function (d) {
+        return yScale.tickFormat(10, d3.format(",d"))(d);
+    });
 
     var rank = 0;
 
