@@ -89,8 +89,8 @@ function getTuNexrad(id) {
     console.log("requesting data from TU NEXRAD service");
     var endstr = "/enddate=" + dateStr(time.end);
     var startstr = "/startdate=" + dateStr(time.start);
-    var urlDates = "http://10.55.15.196:5000/nexradTS/id=" + id + startstr + endstr;
-    var urlRecent = "http://10.55.15.196:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
+    var urlDates = "https://10.55.15.196:5000/nexradTS/id=" + id + startstr + endstr;
+    var urlRecent = "https://10.55.15.196:5000/nexradTSrecent/id=" + id + "/recent=" + time.recent;
 
     //console.log(endstr);
     var result = $.ajax({

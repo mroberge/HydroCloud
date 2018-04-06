@@ -5,7 +5,7 @@
   <meta name="description" content="A light-weight data viewer for hydrologic data" />
   <meta name="author" content="Martin Roberge" />
   <meta name="keywords" content="HydroCloud, hydrology, stream gauges, USGS, data" />
-  <link href='http://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Vollkorn:700italic' rel='stylesheet' type='text/css'>
 
   <title>HydroCloud hydrograph demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -227,10 +227,10 @@
 
     }
   </style>
-  <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="lib/jquery/jquery-2.0.2.js"></script>
   <script>
-  
+
     var viewState = "map";
     function checkState() {
       console.log("checkState: " + viewState);
@@ -319,7 +319,7 @@
       });
     });
   </script>
-  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxmwq7svGGXSeaXHsxfW27LDaXytc3nBY&sensor=false"></script>
   <script src="src/initialize.js"></script>
 
   <body>
@@ -361,7 +361,7 @@
         if (id == "local") {
           var filename = "resources/USGSshort.txt";
         } else {
-          var filename = "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
+          var filename = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + id + "&period=P30D&parameterCd=00060";
         }
         d3.json(filename, function(error, json) {
           if (error) {
@@ -410,7 +410,7 @@
           Visit our GitHub repository: <a href="https://github.com/mroberge/HydroCloud">https://github.com/mroberge/HydroCloud</a>
         </li>
         <li>
-          The Towson University <a href="http://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
+          The Towson University <a href="https://www.towson.edu/set/Projects/HydroCloud.asp">School of Emerging Technologies</a>
         </li>
       </ul>
       <p></p>
@@ -419,13 +419,13 @@
       </p>
       <ul>
         <li>
-          <a href="http://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
+          <a href="https://mroberge.github.io/" >Our first app</a> This site was our first proof-of-concept and was meant for large screens and desktop analysis.
         </li>
         <li>
-          <a href="http://mroberge.github.io/HydroCloud/" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="http://d3js.org/">D3 library</a> for graphing.
+          <a href="https://mroberge.github.io/HydroCloud/" >Our second app</a> We set this site up to test the feasibility of graphing data on a mobile phone. It uses the <a href="https://d3js.org/">D3 library</a> for graphing.
         </li>
         <li>
-          <a href="http://mroberge.github.io/HydroCloud/bootstraplayout.html" >Our latest app</a> This site is set up using <a href="http://getbootstrap.com/">Bootstrap</a> for the styling.
+          <a href="https://mroberge.github.io/HydroCloud/bootstraplayout.html" >Our latest app</a> This site is set up using <a href="https://getbootstrap.com/">Bootstrap</a> for the styling.
         </li>
       </ul>
     </div>

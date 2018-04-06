@@ -131,7 +131,7 @@ function processUsgsStations(input) {
 
 function stationsPegelUrl(options) {
     if (options === undefined || options === null) options = {};
-    //return 'http://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
+    //return 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json';
 
     //This returns only stations that measure discharge.
     return 'https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?timeseries=Q&includeTimeseries=true';

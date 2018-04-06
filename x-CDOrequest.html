@@ -25,14 +25,14 @@
     </header>
     <p>I finally have this working!</p>
 
-    <p>Learn more here: <a href="http://www.ncdc.noaa.gov/cdo-web/webservices/v2">http://www.ncdc.noaa.gov/cdo-web/webservices/v2</a></p>
+    <p>Learn more here: <a href="https://www.ncdc.noaa.gov/cdo-web/webservices/v2">https://www.ncdc.noaa.gov/cdo-web/webservices/v2</a></p>
     <hr><br/>
     <div id="target"> </div>
-    
+
     <script>
-    // A working request (must also add header) 
-    //http://www.ncdc.noaa.gov/cdo-web/api/v2/data?limit=1000&datasetid=PRECIP_15&stationid=COOP:180700&startdate=2000-01-01&enddate=2001-01-01
-      var url = "http://www.ncdc.noaa.gov/cdo-web/api/v2/data";
+    // A working request (must also add header)
+    //https://www.ncdc.noaa.gov/cdo-web/api/v2/data?limit=1000&datasetid=PRECIP_15&stationid=COOP:180700&startdate=2000-01-01&enddate=2001-01-01
+      var url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/data";
       var myToken = "pWmAdZysIShKsPkxbGeKAjeutJYqpOus";
       var request1 = {
         "limit" : "1000",
@@ -41,9 +41,9 @@
         "startdate" : "2000-01-01",
         "enddate" : "2000-05-01"
       };
-      
+
       // Another working request
-      // http://www.ncdc.noaa.gov/cdo-web/api/v2/data?limit=105&datasetid=GHCND&stationid=GHCND:USW00013872&startdate=2012-05-01&enddate=2012-06-02
+      // https://www.ncdc.noaa.gov/cdo-web/api/v2/data?limit=105&datasetid=GHCND&stationid=GHCND:USW00013872&startdate=2012-05-01&enddate=2012-06-02
       var request2 = {
         "datasetid" : "GHCND",
         "stationid" : "GHCND:USW00013872",
@@ -65,7 +65,7 @@
           $("#target").append(JSON.stringify(data)).addClass("ready");
         });
       }
-      
+
       CDOrequest(request1);
       CDOrequest(request2);
     </script>

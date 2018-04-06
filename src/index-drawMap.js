@@ -85,7 +85,7 @@ function drawMap() {
 /*
   //KML layers can use real-time updates from USGS, and will plot 5,000 points quickly... compared to plotting 5,000 points using other methods.
   //The KML layer still loads too slowly, or not at all.
-  var points = new google.maps.KmlLayer("http://waterwatch.usgs.gov/kmls/real.kmz", {
+  var points = new google.maps.KmlLayer("https://waterwatch.usgs.gov/kmls/real.kmz", {
     suppressInfoWindows : true,
     preserveViewport : true,
     map : map
