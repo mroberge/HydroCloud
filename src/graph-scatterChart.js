@@ -64,7 +64,8 @@ function scatterChart() {
   });
 
   //var color = d3.scaleOrdinal(d3.schemeCategory10);
-  var color = d3.scale.category20();
+  //var color = d3.scale.category20();
+  var color = colors; //this function is in analysis.js
 
   var line = d3.svg.line()
       .interpolate("step-before")

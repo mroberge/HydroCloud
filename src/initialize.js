@@ -29,7 +29,8 @@ function initialize() {
         id : "dv07376500",
         name : "Natalbany River at Baptist, LA",
         area : 205.2,
-        impervious : 1.57
+        impervious : 1.57,
+        color: "white"
     };
 
     //console.log("Initial call of requestData with: ");

@@ -3,12 +3,13 @@ function requestData(id, source, siteName, siteDict) {
     //Check if this site is already in our siteIdArray.
     // This will not match strings and integers. Be careful that both are integers or strings...
     var siteIndex = viewModel.siteIdArray.indexOf(id);
-    console.log("requestData: The siteIndex is: " + siteIndex);
     if (siteIndex === -1) {
         //If the id is not in the siteIdArray, this will return -1.
-
         //Update the viewModel with the new site id and site info.
         viewModel.siteIdArray.push(id);
+        var index = viewModel.siteDict().length;
+        //assign a color to the site.
+        siteDict.color = colors(index);
         viewModel.siteDict.push(siteDict);
 
         //Now collect the Stream Gage data and put in the dataArray

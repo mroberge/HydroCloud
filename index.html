@@ -291,6 +291,7 @@
         </p>
         <ol data-bind="foreach: viewModel.siteDict">
           <li>
+            <span data-bind="style: { color: $data.color}">█</span>
             <span data-bind="text: $data.name"></span>
           </li>
         </ol>
