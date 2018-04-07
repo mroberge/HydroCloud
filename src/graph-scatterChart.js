@@ -64,7 +64,7 @@ function scatterChart() {
   });
 
   //var color = d3.scaleOrdinal(d3.schemeCategory10);
-  var color = d3.scale.category10();
+  var color = d3.scale.category20();
 
   var line = d3.svg.line()
       .interpolate("step-before")
@@ -180,7 +180,20 @@ function scatterChart() {
           .style("stroke-width", "2px")
           .style("opacity", "0");
 
-      // the text
+      // tooltip background rectangle
+      mousePerLine.append("rect")
+          .attr("transform", "translate(10,-8)")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("rx", 4)
+          .attr("ry", 4)
+          //.attr("width", "88")
+          .attr("height", 16)
+          .style("fill", "white")
+          .style("opacity", "0.5");
+          //visibility="hidden"
+
+            // the text
       mousePerLine.append("text")
           .attr("transform", "translate(10,3)");
 
@@ -195,6 +208,8 @@ function scatterChart() {
                 .style("opacity", "0");
             d3.selectAll(".mouse-per-line circle")
                 .style("opacity", "0");
+            d3.selectAll(".mouse-per-line rect")
+                .style("opacity", "0");
             d3.selectAll(".mouse-per-line text")
                 .style("opacity", "0");
           })
@@ -203,6 +218,8 @@ function scatterChart() {
                 .style("opacity", "1");
             d3.selectAll(".mouse-per-line circle")
                 .style("opacity", "1");
+            d3.selectAll(".mouse-per-line rect")
+                .style("opacity", "0.5");
             d3.selectAll(".mouse-per-line text")
                 .style("opacity", "1");
           })
@@ -212,7 +229,7 @@ function scatterChart() {
             // move the vertical line
             d3.select(".mouse-line")
                 .attr("d", function() {
-                  var d = "M" + mouse[0] + "," + height;
+                  var d = "M" + mouse[0] + "," + (height - margin.bottom - margin.top);
                   d += " " + mouse[0] + "," + 0;
                   return d;
                 });
@@ -246,9 +263,13 @@ function scatterChart() {
                   // update the text with y value
                   d3.select(this).select('text')
                   //This refers to a global viewModel. Can't do that!
-                      .text(yScale.invert(pos.y).toFixed(2) + " cms")
+                      //.text(yScale.invert(pos.y).toFixed(2) + " cms")
+                      .text(yScale.invert(pos.y).toFixed(2) + " cms for " + viewModel.siteDict()[i].name)
                       .attr("fill", color(i));
-                      //.text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
+                      //.getComputedTextLength();
+                  var textLength = d3.select(this).select('text').node().getComputedTextLength();
+                  d3.select(this).select('rect')
+                      .attr("width", textLength+4);
 
                   // return position
                   return "translate(" + mouse[0] + "," + pos.y +")";
