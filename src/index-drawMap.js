@@ -1,11 +1,11 @@
 var map;
 var fusionLayerInfoWindow;
-var center = new google.maps.LatLng(39.395, -76.609);
+var center = new google.maps.LatLng(30.3, -89.8);
 
 function drawMap() {
   var mapOptions = {
     zoom : 8,
-    center : new google.maps.LatLng(39.395, -76.609),
+    center : center,
     mapTypeId : google.maps.MapTypeId.TERRAIN
   };
 

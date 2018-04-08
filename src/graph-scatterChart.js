@@ -58,13 +58,14 @@ function scatterChart() {
   var xScale = d3.time.scale();
   //var yScale = d3.scale.linear();
   var yScale = d3.scale.log();
-  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0).ticks(8);
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom").tickSize(6, 0).ticks(6);
   var yAxis = d3.svg.axis().scale(yScale).orient("left").tickSize(6, 0).ticks(5).tickFormat(function (d) {
     return yScale.tickFormat(10, d3.format(",d"))(d);
   });
 
   //var color = d3.scaleOrdinal(d3.schemeCategory10);
-  var color = d3.scale.category10();
+  //var color = d3.scale.category20();
+  var color = colors; //this function is in analysis.js
 
   var line = d3.svg.line()
       .interpolate("step-before")
@@ -126,16 +127,28 @@ function scatterChart() {
       g.selectAll(".line").attr("d", line).attr("stroke", function(d, i) {return color(i);});
 
       // Update the x-axis.
-      g.select(".x.axis").attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis);
+      var xaxisg = g.select(".x.axis");
+      xaxisg.attr("transform", "translate(0," + yScale.range()[0] + ")").call(xAxis);
+      xaxisg.append("svg:text")
+          .attr("text-anchor", "middle")
+          .attr("class", "axisTitle")
+          .attr("transform", "translate(" + xScale.range()[1]/2 + ", 27)")
+          .text("Time");
 
       // Update the y-axis.
-      g.select(".y.axis").attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
+      var yaxisg = g.select(".y.axis");
+      yaxisg.attr("transform", "translate(0," + xScale.range()[0] + ")").call(yAxis);
+      yaxisg.append("svg:text")
+          .attr("text-anchor", "middle")
+          .attr("class", "axisTitle")
+          .attr("transform", "rotate(-90) translate(" + yScale.range()[0]/-2 + ",-27)")
+          .text("Stream Discharge (m3/s)");
+        yaxisg.on("click", myClickFunction);
 
       // Update the title.
       g.select(".titleGroup").attr("transform", "translate(10,-3)");
       g.select(".subtitle").text(dataArray.length + " sites");
       g.select(".subtitle2").text(dataArray[0].length + " measurements per line");
-      //title.on("click", myRClickFunction);
 
       //***************Tooltip Code ***************
 
@@ -163,14 +176,25 @@ function scatterChart() {
       // the circle
       mousePerLine.append("circle")
           .attr("r", 7)
-          .style("stroke", function(d) {
-            return color(d.name);
-          })
           .style("fill", "none")
-          .style("stroke-width", "1px")
+          .style("stroke", function(d, i) {return color(i);})
+          .style("stroke-width", "2px")
           .style("opacity", "0");
 
-      // the text
+      // tooltip background rectangle
+      mousePerLine.append("rect")
+          .attr("transform", "translate(10,-8)")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("rx", 4)
+          .attr("ry", 4)
+          //.attr("width", "88")
+          .attr("height", 16)
+          .style("fill", "white")
+          .style("opacity", "0.5");
+          //visibility="hidden"
+
+            // the text
       mousePerLine.append("text")
           .attr("transform", "translate(10,3)");
 
@@ -185,6 +209,8 @@ function scatterChart() {
                 .style("opacity", "0");
             d3.selectAll(".mouse-per-line circle")
                 .style("opacity", "0");
+            d3.selectAll(".mouse-per-line rect")
+                .style("opacity", "0");
             d3.selectAll(".mouse-per-line text")
                 .style("opacity", "0");
           })
@@ -193,6 +219,8 @@ function scatterChart() {
                 .style("opacity", "1");
             d3.selectAll(".mouse-per-line circle")
                 .style("opacity", "1");
+            d3.selectAll(".mouse-per-line rect")
+                .style("opacity", "0.5");
             d3.selectAll(".mouse-per-line text")
                 .style("opacity", "1");
           })
@@ -202,7 +230,7 @@ function scatterChart() {
             // move the vertical line
             d3.select(".mouse-line")
                 .attr("d", function() {
-                  var d = "M" + mouse[0] + "," + height;
+                  var d = "M" + mouse[0] + "," + (height - margin.bottom - margin.top);
                   d += " " + mouse[0] + "," + 0;
                   return d;
                 });
@@ -236,8 +264,13 @@ function scatterChart() {
                   // update the text with y value
                   d3.select(this).select('text')
                   //This refers to a global viewModel. Can't do that!
-                      .text(yScale.invert(pos.y).toFixed(2) + " cms");
-                      //.text(yScale.invert(pos.y).toFixed(2) + " cfs for " + viewModel.siteDict()[i].name);
+                      //.text(yScale.invert(pos.y).toFixed(2) + " cms")
+                      .text(yScale.invert(pos.y).toFixed(2) + " cms for " + viewModel.siteDict()[i].name)
+                      .attr("fill", color(i));
+                      //.getComputedTextLength();
+                  var textLength = d3.select(this).select('text').node().getComputedTextLength();
+                  d3.select(this).select('rect')
+                      .attr("width", textLength+4);
 
                   // return position
                   return "translate(" + mouse[0] + "," + pos.y +")";
@@ -248,6 +281,9 @@ function scatterChart() {
       //click function for handling mouseclicks on an object.
       function myClickFunction() {
         console.log("myClickFunction");
+        //chart is accessible from here
+        //this refers to the yaxis group, which has the .on attribute set.
+        console.log(this);
       }
 
       function myRClickFunction() {
@@ -315,7 +351,6 @@ function scatterChart() {
   function Y(d) {
     return yScale(d[1]);
   }
-
 
   chart.margin = function(a) {
     if (!arguments.length)

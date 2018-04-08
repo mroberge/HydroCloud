@@ -125,7 +125,7 @@ function interLinear(series, time) {
 
 function tableJoin(input) {
   if (input) {
-    
+
     var result = {
       id : ["time", "name1", "name2"],
       data : [[1, 2, 3], [1, 2, 3]]
@@ -173,4 +173,9 @@ function stringtodata (string) {
     d[1] = +d[1];
   });
   return data;
+}
+
+function colors(n) {
+    var colorList = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+    return colorList[n % colorList.length];
 }

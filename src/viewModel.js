@@ -4,6 +4,7 @@ var viewModel = {
     width : ko.observable($(window).width()),
     height : ko.observable($(".carousel-inner").height()),
     showLegend : ko.observable(false),
+    showFeedback : ko.observable(false),
     time : {
       start : ko.observable(),
       end : ko.observable(),
@@ -13,7 +14,10 @@ var viewModel = {
         //console.log("toggleLegend click");
         this.showLegend() ? this.showLegend(false) : this.showLegend(true);
     },
-
+    toggleFeedback : function() {
+        console.log("toggleFeedback click");
+        this.showFeedback() ? this.showFeedback(false) : this.showFeedback(true);
+    },
     view : ko.observable("map"),
     graph : ko.observable("scatter"),
     hydro : function() {
