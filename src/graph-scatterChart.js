@@ -194,52 +194,50 @@ function scatterChart() {
           .style("opacity", "0.5");
           //visibility="hidden"
 
-            // the text
+      // the text
       mousePerLine.append("text")
           .attr("transform", "translate(10,3)");
 
-      // rect to capture mouse movements
-      mouseG.append('svg:rect')
-          .attr('width', width)
-          .attr('height', height)
-          .attr('fill', 'none')
-          .attr('pointer-events', 'all')
-          .on('mouseout', function() { // on mouse out hide line, circles and text
-            d3.select(".mouse-line")
-                .style("opacity", "0");
-            d3.selectAll(".mouse-per-line circle")
-                .style("opacity", "0");
-            d3.selectAll(".mouse-per-line rect")
-                .style("opacity", "0");
-            d3.selectAll(".mouse-per-line text")
-                .style("opacity", "0");
-          })
-          .on('mouseover', function() { // on mouse in show line, circles and text
-            d3.select(".mouse-line")
+      function showTooltip() {
+          console.log("show Tooltip");
+          // on mouse in show line, circles and text
+          d3.select(".mouse-line")
                 .style("opacity", "1");
-            d3.selectAll(".mouse-per-line circle")
+          d3.selectAll(".mouse-per-line circle")
                 .style("opacity", "1");
-            d3.selectAll(".mouse-per-line rect")
+          d3.selectAll(".mouse-per-line rect")
                 .style("opacity", "0.5");
-            d3.selectAll(".mouse-per-line text")
+          d3.selectAll(".mouse-per-line text")
                 .style("opacity", "1");
-          })
-          .on('mousemove', function() { // mouse moving over canvas
-            var mouse = d3.mouse(this);
+      }
 
-            // move the vertical line
+      function hideTooltip() {
+          // on mouse out hide line, circles and text
+          console.log("hide Tooltip");
             d3.select(".mouse-line")
-                .attr("d", function() {
-                  var d = "M" + mouse[0] + "," + (height - margin.bottom - margin.top);
-                  d += " " + mouse[0] + "," + 0;
-                  return d;
-                });
+                .style("opacity", "0");
+            d3.selectAll(".mouse-per-line circle")
+                .style("opacity", "0");
+            d3.selectAll(".mouse-per-line rect")
+                .style("opacity", "0");
+            d3.selectAll(".mouse-per-line text")
+                .style("opacity", "0");
+        }
 
-            // position the circle and text
-            d3.selectAll(".mouse-per-line")
-                .attr("transform", function(d, i) {
+      function moveTooltip(coor) {
+          // move the vertical line
+          d3.select(".mouse-line")
+              .attr("d", function() {
+                  var d = "M" + coor[0] + "," + (height - margin.bottom - margin.top);
+                  d += " " + coor[0] + "," + 0;
+                  return d;
+              });
+
+          // position the circle and text
+          d3.selectAll(".mouse-per-line")
+              .attr("transform", function(d, i) {
                   if(d.length < 1) { return; } //return if empty set.
-                  var xDate = xScale.invert(mouse[0]),
+                  var xDate = xScale.invert(coor[0]),
                       bisect = d3.bisector(function(d) { return d[0]; }).right;
                   var idx = bisect(d[1], xDate); //Sometimes an empty set is in viewModel.dataArray and an error occurs.
 
@@ -251,31 +249,52 @@ function scatterChart() {
                   var end = lines[i].getTotalLength(); //getTotalLength() is a method of SVGGeometryElement
 
                   while (true){
-                    var target = Math.floor((beginning + end) / 2);
-                    var pos = lines[i].getPointAtLength(target); //getPointAtLength() is a method of SVGGeometryElement
-                    if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-                      break;
-                    }
-                    if (pos.x > mouse[0])      end = target;
-                    else if (pos.x < mouse[0]) beginning = target;
-                    else break; //position found
+                      var target = Math.floor((beginning + end) / 2);
+                      var pos = lines[i].getPointAtLength(target); //getPointAtLength() is a method of SVGGeometryElement
+                      if ((target === end || target === beginning) && pos.x !== coor[0]) {
+                          break;
+                      }
+                      if (pos.x > coor[0])      end = target;
+                      else if (pos.x < coor[0]) beginning = target;
+                      else break; //position found
                   }
 
                   // update the text with y value
                   d3.select(this).select('text')
                   //This refers to a global viewModel. Can't do that!
-                      //.text(yScale.invert(pos.y).toFixed(2) + " cms")
+                  //.text(yScale.invert(pos.y).toFixed(2) + " cms")
                       .text(yScale.invert(pos.y).toFixed(2) + " cms for " + viewModel.siteDict()[i].name)
                       .attr("fill", color(i));
-                      //.getComputedTextLength();
+                  //.getComputedTextLength();
                   var textLength = d3.select(this).select('text').node().getComputedTextLength();
                   d3.select(this).select('rect')
                       .attr("width", textLength+4);
 
                   // return position
-                  return "translate(" + mouse[0] + "," + pos.y +")";
-                });
+                  return "translate(" + coor[0] + "," + pos.y +")";
+              });
+      }
+
+      // rect to capture mouse movements
+      mouseG.append('svg:rect')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('fill', 'none')
+          .attr('pointer-events', 'all')
+          .on('mouseout', hideTooltip)
+          .on('mouseover', showTooltip)
+          .on('touchstart', showTooltip)
+          .on('mousemove', function () {
+              var XY = d3.mouse(this);
+              //console.log(XY);
+              moveTooltip(XY);
+          })
+          .on('touchmove', function () {
+              var XY = d3.touches(this)[0];
+              //console.log(XY);
+              moveTooltip(XY);
           });
+
       //***************End Tooltip Code ***************
 
       //click function for handling mouseclicks on an object.
