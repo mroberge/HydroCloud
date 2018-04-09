@@ -19,11 +19,18 @@
     <script src='lib/knockout-3.0.0.js'></script>
     <script src="lib/d3/d3.min.js"></script>
     <script>
-      <!-- This is to collapse the navbar menu after a selection. -->
+      /* This is to collapse the navbar menu after a selection. */
         $(document).ready(function () {
-            $("nav").find("li").on("click", "a", function () {
+            $(".close-nav").on("click", "a", function () {
                 $('.navbar-collapse.in').collapse('hide');
             });
+
+            var feedbackModalDismiss = document.getElementById("feedback-modal-dismiss");
+            feedbackModalDismiss.addEventListener("touchstart", function () {
+                //console.log("touchstart registered.");
+                viewModel.toggleFeedback();
+            }, false);
+
         });
     </script>
 
@@ -153,6 +160,13 @@
         font-family: sans-serif;
       }
 
+      #feedback-modal-dismiss:after {
+        content:'';
+        position:absolute;
+        top:-10px; bottom:-10px;
+        left:-10px; right:-10px;
+      }
+
       #feedback {
 
           position: relative;
@@ -204,7 +218,7 @@
 
       path {
         fill: none;
-        stroke-width: 2;
+        stroke-width: 2px;
       }
 
       /* keep the .filled selector for filled hydrographs.*/
@@ -267,31 +281,31 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li data-target="#carousel-example-generic" data-slide-to="0">
+            <li class="close-nav" data-target="#carousel-example-generic" data-slide-to="0">
               <a href="#" data-bind="click: map">Map</a>
             </li>
             <li class="dropdown" data-target="#carousel-example-generic" data-slide-to="1">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graph <b class="caret"> </b></a>
               <ul class="dropdown-menu">
-                <li>
+                <li class="close-nav">
                   <a href="#"  data-bind="click: scatter">Hydrograph</a>
                 </li>
-                <li>
+                <li class="close-nav">
                   <a href="#" data-bind="click: flow">Flow Duration</a>
                 </li>
                 <li class="divider"></li>
-                <li>
+                <li class="close-nav">
                   <a href="#" data-bind="click: toggleLegend">Show Legend</a>
                 </li>
               </ul>
             </li>
-            <li data-target="#carousel-example-generic" data-slide-to="2">
+            <li class="close-nav" data-target="#carousel-example-generic" data-slide-to="2">
               <a href="#">Stats</a>
             </li>
-            <li data-target="#carousel-example-generic" data-slide-to="3">
+            <li class="close-nav" data-target="#carousel-example-generic" data-slide-to="3">
               <a href="#"><strong>?</strong></a>
             </li>
-            <li>
+            <li class="close-nav">
               <a href="#" data-bind="click: toggleFeedback" class="glyphicon glyphicon-comment"></a>
             </li>
           </ul>
