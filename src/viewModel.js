@@ -15,7 +15,7 @@ var viewModel = {
         this.showLegend() ? this.showLegend(false) : this.showLegend(true);
     },
     toggleFeedback : function() {
-        console.log("toggleFeedback click");
+        //console.log("toggleFeedback click");
         this.showFeedback() ? this.showFeedback(false) : this.showFeedback(true);
     },
     view : ko.observable("map"),
