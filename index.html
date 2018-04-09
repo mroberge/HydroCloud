@@ -19,11 +19,18 @@
     <script src='lib/knockout-3.0.0.js'></script>
     <script src="lib/d3/d3.min.js"></script>
     <script>
-      <!-- This is to collapse the navbar menu after a selection. -->
+      /* This is to collapse the navbar menu after a selection. */
         $(document).ready(function () {
             $(".close-nav").on("click", "a", function () {
                 $('.navbar-collapse.in').collapse('hide');
             });
+
+            var feedbackModalDismiss = document.getElementById("feedback-modal-dismiss");
+            feedbackModalDismiss.addEventListener("touchstart", function () {
+                //console.log("touchstart registered.");
+                viewModel.toggleFeedback();
+            }, false);
+
         });
     </script>
 
@@ -153,6 +160,13 @@
         font-family: sans-serif;
       }
 
+      #feedback-modal-dismiss:after {
+        content:'';
+        position:absolute;
+        top:-10px; bottom:-10px;
+        left:-10px; right:-10px;
+      }
+
       #feedback {
 
           position: relative;
@@ -204,7 +218,7 @@
 
       path {
         fill: none;
-        stroke-width: 2;
+        stroke-width: 2px;
       }
 
       /* keep the .filled selector for filled hydrographs.*/
