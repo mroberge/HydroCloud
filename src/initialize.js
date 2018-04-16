@@ -8,6 +8,9 @@ function initialize() {
     viewModel.time.end(new Date(2015,1,1));
     viewModel.time.recent("P90D");
 
+    startPos = {lat: 30.3, lng: -89.8};
+    getUserLocation();
+
     //viewModel.dataArray.subscribe(function(oldValue) {
     //    console.log("new value about to be added to dataArray. ");
     //    console.log(oldValue);

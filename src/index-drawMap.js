@@ -1,11 +1,12 @@
-var map;
+var map = false;
 var fusionLayerInfoWindow;
-var center = new google.maps.LatLng(30.3, -89.8);
+var startPos;
 
 function drawMap() {
+  console.log("drawMap() just called.");
   var mapOptions = {
     zoom : 8,
-    center : center,
+    center : new google.maps.LatLng(startPos.lat, startPos.lng),
     mapTypeId : google.maps.MapTypeId.TERRAIN,
     fullscreenControl: false
   };
@@ -119,5 +120,7 @@ function drawMap() {
   //Add the GOES cloud imagery layer
   //map.overlayMapTypes.setAt("0", goes);
   map.overlayMapTypes.setAt("1", tileNEX);
+
+  return map;
 }
 
