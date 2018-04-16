@@ -6,7 +6,8 @@ function drawMap() {
   var mapOptions = {
     zoom : 8,
     center : center,
-    mapTypeId : google.maps.MapTypeId.TERRAIN
+    mapTypeId : google.maps.MapTypeId.TERRAIN,
+    fullscreenControl: false
   };
 
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
