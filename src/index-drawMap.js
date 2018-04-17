@@ -8,7 +8,8 @@ function drawMap() {
     zoom : 8,
     center : new google.maps.LatLng(startPos.lat, startPos.lng),
     mapTypeId : google.maps.MapTypeId.TERRAIN,
-    fullscreenControl: false
+    fullscreenControl: false,
+    gestureHandling: 'greedy'
   };
 
   map = new google.maps.Map(document.getElementById('map_div'), mapOptions);
