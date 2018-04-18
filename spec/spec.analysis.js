@@ -124,16 +124,16 @@ describe("The tableJoin() function", function() {
     data: [[new Date(2012, 0, 1, 3, 0), 200],[new Date(2012, 0, 1, 3, 15), 200],[new Date(2012, 0, 1, 3, 30), 200],[new Date(2012, 0, 1, 3, 45), 200],[new Date(2012, 0, 1, 4, 0), 200],[new Date(2012, 0, 1, 4, 15), 200]]
   };
   console.log(data2);
-  
+
   it("will return undefined if called with no parameters", function() {
-    expect(tableJoin()).toBeUndefined;
+    expect(tableJoin()).toBeUndefined();
   });
   it("will return an object with two properties: data and id", function() {
     var joined = tableJoin(data1, data2);
     expect(joined.data).toBeDefined();
     expect(joined.id).toBeDefined();
   });
-  
+
   describe("contains a validate() function that", function() {
     xit("returns 'invalid' if a data object is invalid", function() {
       expect(tableJoin.validate()).toEqual("invalid");
@@ -143,7 +143,7 @@ describe("The tableJoin() function", function() {
       expect(result).toBeDefined();
     });
   });
-  
+
 
   xit("accepts multiple data objects as input", function() {
     var result = tableJoin(data1,data2,data1);
@@ -158,5 +158,5 @@ describe("The tableJoin() function", function() {
     expect(result.data).toBeNull();
     expect(result.id).toBeNull();
   });
-  
+
 });
